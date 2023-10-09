@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>True</UseWPF>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpVectors" Version="1.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="icons\anvil.svg" />
+    <Resource Include="icons\compass-regular.svg" />
+    <Resource Include="icons\flask-solid.svg" />
+    <Resource Include="icons\scale-balanced-solid.svg" />
+    <Resource Include="icons\user-solid.svg" />
+    <Resource Include="images\Cities\Eldoria.png" />
+    <Resource Include="images\Graphics\LoginScreen.png" />
+    <Resource Include="images\Graphics\LoginScreen2.png" />
+    <Resource Include="images\Graphics\LoginScreen3.png" />
+  </ItemGroup>
+
+</Project>
