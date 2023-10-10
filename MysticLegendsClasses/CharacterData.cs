@@ -1,8 +1,9 @@
 ﻿namespace MysticLegendsClasses
 {
-    public struct PlayerData
+    public struct CharacterData
     {
-        public string OwnersAccount;
+        public ulong OwnersAccountId;
+        public ulong CharacterId;
         public CharacterClass CharacterClass;
         public uint CurrencyGold;
         public InventoryData Inventory;
