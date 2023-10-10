@@ -2,10 +2,10 @@
 {
     public struct CharacterData
     {
-        public ulong OwnersAccountId;
-        public ulong CharacterId;
-        public CharacterClass CharacterClass;
-        public uint CurrencyGold;
-        public InventoryData Inventory;
+        public ulong OwnersAccountId { get; set; }
+        public ulong CharacterId { get; set; }
+        public CharacterClass CharacterClass { get; set; }
+        public uint CurrencyGold { get; set; }
+        public InventoryData Inventory { get; set; }
     }
 }

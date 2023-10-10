@@ -2,8 +2,8 @@
 {
     public struct InventoryData
     {
-        public uint Capacity;
-        public uint MaxCapacity;
-        public List<ItemData> Items;
+        public uint Capacity { get; set; }
+        public uint MaxCapacity { get; set; }
+        public List<ItemData> Items { get; set; }
     }
 }

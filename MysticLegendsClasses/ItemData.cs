@@ -2,11 +2,11 @@
 {
     public struct ItemData
     {
-        public uint ItemId;
-        public string Name;
-        public ItemType ItemType;
-        public CharacterClass EquipableByCharClass;
-        public uint StackCount;
-        public uint MaxStack;
+        public uint ItemId { get; set; }
+        public string Name { get; set; }
+        public ItemType ItemType { get; set; }
+        public CharacterClass EquipableByCharClass { get; set; }
+        public uint StackCount { get; set; }
+        public uint MaxStack { get; set; }
     }
 }
