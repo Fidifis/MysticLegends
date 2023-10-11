@@ -1,11 +1,12 @@
-﻿using System.Windows;
+﻿using MysticLegendsClient.Controls;
+using System.Windows;
 
 namespace MysticLegendsClient
 {
     /// <summary>
     /// Interakční logika pro CityWindow.xaml
     /// </summary>
-    public partial class CityWindow : Window
+    public abstract partial class CityWindow : Window
     {
         public CityWindow()
         {

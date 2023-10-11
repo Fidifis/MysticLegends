@@ -13,7 +13,7 @@
 		WindowStartupLocation="CenterScreen">
     <Grid>
         <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
-        <Grid x:Name="topBarGrid" Height="40" VerticalAlignment="Top" Background="Azure">
+        <Grid Height="40" VerticalAlignment="Top" Background="Azure">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -33,6 +33,7 @@
             </StackPanel>
         </Grid>
         </ScrollViewer>
+        
         <Grid Margin="0 40 0 0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" MinWidth="350" MaxWidth="500"/>
@@ -41,8 +42,8 @@
 
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <Grid Background="Gray">
-                    <Label Content="Eldoria" FontSize="40" VerticalAlignment="Top" HorizontalAlignment="Center" />
-                    <StackPanel Grid.Column="0" Margin="20,100,20,20">
+                    <Label x:Name="cityNameLabel" Content="a city" FontSize="40" VerticalAlignment="Top" HorizontalAlignment="Center" />
+                    <StackPanel x:Name="CityModulesPanel" Grid.Column="0" Margin="20,100,20,20">
                         <controls:CityModuleButton InnerPadding="20 10 20 10" Margin="0 0 0 10" TextGap="50" FontSize="20" UniformSvgSize="50" SvgSource="/icons/anvil.svg" LabelText="Blacksmith"/>
                         <controls:CityModuleButton InnerPadding="20 10 20 10" Margin="0 0 0 10" TextGap="50" FontSize="20" UniformSvgSize="50" SvgSource="/icons/flask-solid.svg" LabelText="Potions"/>
                         <controls:CityModuleButton InnerPadding="20 10 20 10" Margin="0 0 0 10" TextGap="50" FontSize="20" UniformSvgSize="50" SvgSource="/icons/scale-balanced-solid.svg" LabelText="Trade Market"/>

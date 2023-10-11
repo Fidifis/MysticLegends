@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using MysticLegendsClient.CityWindows;
+using System.Windows;
 using System.Windows.Media.Imaging;
 
 namespace MysticLegendsClient
@@ -30,7 +31,7 @@ namespace MysticLegendsClient
 
         private void Login_Click(object sender, RoutedEventArgs e)
         {
-            new CityWindow().Show();
+            new AyreimCity().Show();
             Close();
         }
 
