@@ -14,6 +14,10 @@ namespace MysticLegendsClient.Controls
             DataContext = this;
         }
 
+        public event RoutedEventHandler? Click;
+
+        private void Button_Click(object sender, RoutedEventArgs e) => Click?.Invoke(sender, e);
+
         public static readonly DependencyProperty svgSource = DependencyProperty.Register("SvgSource", typeof(string), typeof(CityModuleButton));
         public static readonly DependencyProperty labelText = DependencyProperty.Register("LabelText", typeof(string), typeof(CityModuleButton));
         public static readonly DependencyProperty uniformSvgSize = DependencyProperty.Register("UniformSvgSize", typeof(string), typeof(CityModuleButton));

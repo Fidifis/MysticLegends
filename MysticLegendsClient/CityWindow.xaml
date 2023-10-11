@@ -23,7 +23,7 @@
             <StackPanel Grid.Column="2" Orientation="Horizontal" FlowDirection="RightToLeft">
                 <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" InnerPadding="5" SvgSource="/icons/gear-solid.svg"/>
                 <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" TextGap = "7" InnerPadding="5" SvgSource="/icons/compass-regular.svg" LabelText="World"/>
-                <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" TextGap = "7" InnerPadding="5" SvgSource="/icons/user-solid.svg" LabelText="Charcter"/>
+                <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" TextGap = "7" InnerPadding="5" SvgSource="/icons/user-solid.svg" LabelText="Charcter" Click="CharacterButton_Click"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Border Padding="10">

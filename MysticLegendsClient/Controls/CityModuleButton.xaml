@@ -7,12 +7,12 @@
              xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Button HorizontalContentAlignment="Left">
-            <Border Padding="{Binding InnerPadding}">
-        <StackPanel Orientation="Horizontal">
+    <Button HorizontalContentAlignment="Left" Click="Button_Click">
+        <Border Padding="{Binding InnerPadding}">
+            <StackPanel Orientation="Horizontal">
                 <svgc:SvgViewbox Width="{Binding UniformSvgSize}" Height="{Binding UniformSvgSize}" Source="{Binding SvgSource}" HorizontalAlignment="Right"/>
             <Label Content="{Binding LabelText}" Margin="{Binding InnerMargin}" Padding="0" HorizontalAlignment="Center" VerticalContentAlignment="Center"/>
-        </StackPanel>
-            </Border>
+            </StackPanel>
+        </Border>
     </Button>
 </UserControl>
