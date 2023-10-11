@@ -21,8 +21,10 @@
     <Resource Include="icons\anvil.svg" />
     <Resource Include="icons\coins-solid.svg" />
     <Resource Include="icons\compass-regular.svg" />
+    <Resource Include="icons\dragon-solid.svg" />
     <Resource Include="icons\flask-solid.svg" />
     <Resource Include="icons\gear-solid.svg" />
+    <Resource Include="icons\rebel.svg" />
     <Resource Include="icons\scale-balanced-solid.svg" />
     <Resource Include="icons\user-solid.svg" />
     <Resource Include="images\Cities\Eldoria.png" />
