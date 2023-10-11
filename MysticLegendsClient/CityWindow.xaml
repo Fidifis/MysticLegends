@@ -4,41 +4,25 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MysticLegendsClient"
+        xmlns:controls="clr-namespace:MysticLegendsClient.Controls"
         xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
         mc:Ignorable="d"
         Title="CityWindow"
 		Height="800" Width="1642"
         MinWidth="363" MinHeight="400"
-		WindowStartupLocation="CenterScreen">
+		WindowStartupLocation="CenterScreen" SizeChanged="Window_SizeChanged">
     <Grid>
-        <Grid Height="40" VerticalAlignment="Top" Background="Azure">
+        <Grid x:Name="topBarGrid" Height="40" VerticalAlignment="Top" Background="Azure">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+
             <StackPanel Grid.Column="2" Orientation="Horizontal" FlowDirection="RightToLeft">
-                <Button Margin="10 0">
-                    <Border Padding="5">
-                        <svgc:SvgViewbox Source="/icons/gear-solid.svg"/>
-                    </Border>
-                </Button>
-                <Button Margin="10 0">
-                    <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
-                        <Border Padding="5">
-                            <svgc:SvgViewbox HorizontalAlignment="Right" Source="/icons/compass-regular.svg"/>
-                        </Border>
-                        <Label Content="World" Margin="5 0" Padding="0" FontSize="20" VerticalContentAlignment="Center"/>
-                    </StackPanel>
-                </Button>
-                <Button Margin="10 0">
-                    <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
-                        <Border Padding="5">
-                            <svgc:SvgViewbox HorizontalAlignment="Right" Source="/icons/user-solid.svg"/>
-                        </Border>
-                        <Label Content="Charcter" Margin="5 0" Padding="0" FontSize="20" VerticalContentAlignment="Center"/>
-                    </StackPanel>
-                </Button>
+                <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" InnerPadding="5" SvgSource="/icons/gear-solid.svg"/>
+                <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" TextGap = "7" InnerPadding="5" SvgSource="/icons/compass-regular.svg" LabelText="World"/>
+                <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" TextGap = "7" InnerPadding="5" SvgSource="/icons/user-solid.svg" LabelText="Charcter"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Border Padding="10">
@@ -57,30 +41,9 @@
                 <Grid Background="Gray">
                     <Label Content="Eldoria" FontSize="40" VerticalAlignment="Top" HorizontalAlignment="Center" />
                     <StackPanel Grid.Column="0" Margin="20,100,20,20">
-                        <Button HorizontalContentAlignment="Left" Margin="0 0 0 10">
-                            <Border Padding="20 10 20 10">
-                                <StackPanel Orientation="Horizontal">
-                                    <svgc:SvgViewbox Height="50" Width="50" Source="/icons/anvil.svg"/>
-                                    <Label Content="Blacksmith" Margin="50 0 0 0" HorizontalAlignment="Center" FontSize="20" VerticalContentAlignment="Center"/>
-                                </StackPanel>
-                            </Border>
-                        </Button>
-                        <Button HorizontalContentAlignment="Left" Margin="0 0 0 10">
-                            <Border Padding="20 10 20 10">
-                                <StackPanel Orientation="Horizontal">
-                                    <svgc:SvgViewbox Height="50" Width="50" Source="/icons/flask-solid.svg"/>
-                                    <Label Content="Potions" Margin="50 0 0 0" HorizontalAlignment="Center" FontSize="20" VerticalContentAlignment="Center"/>
-                                </StackPanel>
-                            </Border>
-                        </Button>
-                        <Button HorizontalContentAlignment="Left" Margin="0 0 0 10">
-                            <Border Padding="20 10 20 10">
-                                <StackPanel Orientation="Horizontal">
-                                    <svgc:SvgViewbox Height="50" Width="50" Source="/icons/scale-balanced-solid.svg"/>
-                                    <Label Content="Trade Market" Margin="50 0 0 0" HorizontalAlignment="Center" FontSize="20" VerticalContentAlignment="Center"/>
-                                </StackPanel>
-                            </Border>
-                        </Button>
+                        <controls:CityModuleButton InnerPadding="20 10 20 10" Margin="0 0 0 10" TextGap="50" FontSize="20" UniformSvgSize="50" SvgSource="/icons/anvil.svg" LabelText="Blacksmith"/>
+                        <controls:CityModuleButton InnerPadding="20 10 20 10" Margin="0 0 0 10" TextGap="50" FontSize="20" UniformSvgSize="50" SvgSource="/icons/flask-solid.svg" LabelText="Potions"/>
+                        <controls:CityModuleButton InnerPadding="20 10 20 10" Margin="0 0 0 10" TextGap="50" FontSize="20" UniformSvgSize="50" SvgSource="/icons/scale-balanced-solid.svg" LabelText="Trade Market"/>
                     </StackPanel>
                 </Grid>
             </ScrollViewer>

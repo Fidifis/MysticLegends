@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace MysticLegendsClient
 {
@@ -23,5 +11,8 @@ namespace MysticLegendsClient
         {
             InitializeComponent();
         }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e) =>
+            topBarGrid.ColumnDefinitions[0].Width = e.NewSize.Width < 700 ? new GridLength(0) : new GridLength(1, GridUnitType.Star);
     }
 }
