@@ -11,8 +11,5 @@ namespace MysticLegendsClient
         {
             InitializeComponent();
         }
-
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e) =>
-            topBarGrid.ColumnDefinitions[0].Width = e.NewSize.Width < 700 ? new GridLength(0) : new GridLength(1, GridUnitType.Star);
     }
 }
