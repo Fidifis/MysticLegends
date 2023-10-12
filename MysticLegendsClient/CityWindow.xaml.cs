@@ -1,5 +1,4 @@
-﻿using MysticLegendsClient.Controls;
-using System.Windows;
+﻿using System.Windows;
 
 namespace MysticLegendsClient
 {
@@ -21,7 +20,7 @@ namespace MysticLegendsClient
 
         private void CharacterButton_Click(object sender, RoutedEventArgs e)
         {
-            CharacterWindow.ShowWindow(this);
+            CharacterWindow.ShowWindow();
         }
     }
 }

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MysticLegendsClient"
         xmlns:controls="clr-namespace:MysticLegendsClient.Controls"
+        xmlns:resources="clr-namespace:MysticLegendsClient.Resources"
         xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
         mc:Ignorable="d"
         Title="CityWindow"
@@ -22,8 +23,8 @@
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" FlowDirection="RightToLeft">
                 <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" InnerPadding="5" SvgSource="/icons/gear-solid.svg"/>
-                <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" TextGap = "7" InnerPadding="5" SvgSource="/icons/compass-regular.svg" LabelText="World"/>
-                <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" TextGap = "7" InnerPadding="5" SvgSource="/icons/user-solid.svg" LabelText="Charcter" Click="CharacterButton_Click"/>
+                <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" TextGap = "7" InnerPadding="5" SvgSource="{x:Static resources:Icons.bar_worldMap}" LabelText="World"/>
+                <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" TextGap = "7" InnerPadding="5" SvgSource="{x:Static resources:Icons.bar_character}" LabelText="Charcter" Click="CharacterButton_Click"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Border Padding="10">
@@ -44,9 +45,9 @@
                 <Grid Background="Gray">
                     <Label x:Name="cityNameLabel" Content="a city" FontSize="40" VerticalAlignment="Top" HorizontalAlignment="Center" />
                     <StackPanel x:Name="CityModulesPanel" Grid.Column="0" Margin="20,100,20,20">
-                        <controls:CityModuleButton InnerPadding="20 10 20 10" Margin="0 0 0 10" TextGap="50" FontSize="20" UniformSvgSize="50" SvgSource="/icons/anvil.svg" LabelText="Blacksmith"/>
-                        <controls:CityModuleButton InnerPadding="20 10 20 10" Margin="0 0 0 10" TextGap="50" FontSize="20" UniformSvgSize="50" SvgSource="/icons/flask-solid.svg" LabelText="Potions"/>
-                        <controls:CityModuleButton InnerPadding="20 10 20 10" Margin="0 0 0 10" TextGap="50" FontSize="20" UniformSvgSize="50" SvgSource="/icons/scale-balanced-solid.svg" LabelText="Trade Market"/>
+                        <controls:CityModuleButton InnerPadding="20 10 20 10" Margin="0 0 0 10" TextGap="50" FontSize="20" UniformSvgSize="50" SvgSource="{x:Static resources:Icons.city_blacksmith}" LabelText="Blacksmith"/>
+                        <controls:CityModuleButton InnerPadding="20 10 20 10" Margin="0 0 0 10" TextGap="50" FontSize="20" UniformSvgSize="50" SvgSource="{x:Static resources:Icons.city_potions}" LabelText="Potions"/>
+                        <controls:CityModuleButton InnerPadding="20 10 20 10" Margin="0 0 0 10" TextGap="50" FontSize="20" UniformSvgSize="50" SvgSource="{x:Static resources:Icons.city_tradeMarket}" LabelText="Trade Market"/>
                     </StackPanel>
                 </Grid>
             </ScrollViewer>

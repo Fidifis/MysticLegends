@@ -4,12 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MysticLegendsClient"
+        xmlns:controls="clr-namespace:MysticLegendsClient.Controls"
         mc:Ignorable="d"
         Title="CharacterWindow"
         Height="500" Width="800"
         MinWidth="363" MinHeight="400"
         Closed="Window_Closed" >
     <Grid>
-        
+        <controls:CharacterView/>
     </Grid>
 </Window>
