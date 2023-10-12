@@ -20,7 +20,7 @@
                 <Label/>
                 <local:StatLabel StaticContent="Resilience: " VarContent="n/a"/>
                 <local:StatLabel StaticContent="Evade: " VarContent="n/a"/>
-                <local:StatLabel StaticContent="Magic aura: " VarContent="n/a"/>
+                <local:StatLabel StaticContent="Magic protection: " VarContent="n/a"/>
                 <Label/>
                 <local:StatLabel StaticContent="Fire Resistance: " VarContent="n/a"/>
                 <local:StatLabel StaticContent="Cold Resistance: " VarContent="n/a"/>
@@ -28,22 +28,24 @@
                 <local:StatLabel StaticContent="Arcane Resistance: " VarContent="n/a"/>
             </StackPanel>
         </ScrollViewer>
-        <Grid Margin="200,40,0,0" HorizontalAlignment="Left"  Width="450" Height="320" VerticalAlignment="Top">
-            <Border Margin="0,0,0,20" VerticalAlignment="Bottom" HorizontalAlignment="Center" BorderThickness="3" BorderBrush="Black">
-                <Image Width="100" Height="150" Source="/items/armor/Full_Chainmail_inventory_icon.png" />
-            </Border>
-            <Border Margin="0,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" BorderThickness="3" BorderBrush="Black">
-                <Image Width="100" Height="100" />
-            </Border>
-            <Border Margin="20,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="3" BorderBrush="Black">
-                <Image Width="100" Height="200" />
-            </Border>
-            <Border Margin="0,40,20,0" VerticalAlignment="Top" HorizontalAlignment="Right" BorderThickness="3" BorderBrush="Black">
-                <Image Width="100" Height="100" />
-            </Border>
-            <Border Margin="0,0,20,40" VerticalAlignment="Bottom" HorizontalAlignment="Right" BorderThickness="3" BorderBrush="Black">
-                <Image Width="100" Height="100" />
-            </Border>
-        </Grid>
+        <Viewbox Margin="200,40,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform">
+            <Grid Width="450" Height="320">
+                <Border Margin="0,0,0,20" VerticalAlignment="Bottom" HorizontalAlignment="Center" BorderThickness="3" BorderBrush="Black">
+                    <Image Width="100" Height="150" Source="/items/armor/Full_Chainmail_inventory_icon.png" />
+                </Border>
+                <Border Margin="0,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" BorderThickness="3" BorderBrush="Black">
+                    <Image Width="100" Height="100" />
+                </Border>
+                <Border Margin="20,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="3" BorderBrush="Black">
+                    <Image Width="100" Height="200" />
+                </Border>
+                <Border Margin="0,40,20,0" VerticalAlignment="Top" HorizontalAlignment="Right" BorderThickness="3" BorderBrush="Black">
+                    <Image Width="100" Height="100" />
+                </Border>
+                <Border Margin="0,0,20,40" VerticalAlignment="Bottom" HorizontalAlignment="Right" BorderThickness="3" BorderBrush="Black">
+                    <Image Width="100" Height="100" />
+                </Border>
+            </Grid>
+        </Viewbox>
     </Grid>
 </UserControl>
