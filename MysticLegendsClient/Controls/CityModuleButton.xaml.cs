@@ -18,12 +18,12 @@ namespace MysticLegendsClient.Controls
 
         private void Button_Click(object sender, RoutedEventArgs e) => Click?.Invoke(sender, e);
 
-        public static readonly DependencyProperty svgSource = DependencyProperty.Register("SvgSource", typeof(string), typeof(CityModuleButton));
-        public static readonly DependencyProperty labelText = DependencyProperty.Register("LabelText", typeof(string), typeof(CityModuleButton));
-        public static readonly DependencyProperty uniformSvgSize = DependencyProperty.Register("UniformSvgSize", typeof(string), typeof(CityModuleButton));
-        public static readonly DependencyProperty innerPadding = DependencyProperty.Register("InnerPadding", typeof(string), typeof(CityModuleButton));
-        public static readonly DependencyProperty innerMargin = DependencyProperty.Register("InnerMargin", typeof(string), typeof(CityModuleButton));
-        public static readonly int textGap = 0;
+        private static readonly DependencyProperty svgSource = DependencyProperty.Register("SvgSource", typeof(string), typeof(CityModuleButton));
+        private static readonly DependencyProperty labelText = DependencyProperty.Register("LabelText", typeof(string), typeof(CityModuleButton));
+        private static readonly DependencyProperty uniformSvgSize = DependencyProperty.Register("UniformSvgSize", typeof(string), typeof(CityModuleButton));
+        private static readonly DependencyProperty innerPadding = DependencyProperty.Register("InnerPadding", typeof(string), typeof(CityModuleButton));
+        private static readonly DependencyProperty innerMargin = DependencyProperty.Register("InnerMargin", typeof(string), typeof(CityModuleButton));
+        private int textGap = 0;
 
         public string SvgSource
         {

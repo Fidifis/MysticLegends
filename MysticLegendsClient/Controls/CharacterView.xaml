@@ -8,6 +8,26 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Label Content='{}{CharacterName}' Margin="20" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="20"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto"  Margin="20 60 0 0" HorizontalAlignment="Left" Width="170">
+            <StackPanel>
+                <local:StatLabel StaticContent="Strength: " VarContent="n/a"/>
+                <local:StatLabel StaticContent="Dexterity: " VarContent="n/a"/>
+                <local:StatLabel StaticContent="Inteligence: " VarContent="n/a"/>
+                <Label/>
+                <local:StatLabel StaticContent="Phisycal damage: " VarContent="n/a"/>
+                <local:StatLabel StaticContent="Swiftness: " VarContent="n/a"/>
+                <local:StatLabel StaticContent="Magic strength: " VarContent="n/a"/>
+                <Label/>
+                <local:StatLabel StaticContent="Resilience: " VarContent="n/a"/>
+                <local:StatLabel StaticContent="Evade: " VarContent="n/a"/>
+                <local:StatLabel StaticContent="Magic aura: " VarContent="n/a"/>
+                <Label/>
+                <local:StatLabel StaticContent="Fire Resistance: " VarContent="n/a"/>
+                <local:StatLabel StaticContent="Cold Resistance: " VarContent="n/a"/>
+                <local:StatLabel StaticContent="Venom Resistance: " VarContent="n/a"/>
+                <local:StatLabel StaticContent="Arcane Resistance: " VarContent="n/a"/>
+            </StackPanel>
+        </ScrollViewer>
         <Grid Margin="200,40,0,0" HorizontalAlignment="Left"  Width="450" Height="320" VerticalAlignment="Top">
             <Border Margin="0,0,0,20" VerticalAlignment="Bottom" HorizontalAlignment="Center" BorderThickness="3" BorderBrush="Black">
                 <Image Width="100" Height="150" Source="/items/armor/Full_Chainmail_inventory_icon.png" />
