@@ -24,7 +24,7 @@
                 <Label/>
                 <local:StatLabel StaticContent="Fire Resistance: " VarContent="n/a"/>
                 <local:StatLabel StaticContent="Cold Resistance: " VarContent="n/a"/>
-                <local:StatLabel StaticContent="Venom Resistance: " VarContent="n/a"/>
+                <local:StatLabel StaticContent="Poison Resistance: " VarContent="n/a"/>
                 <local:StatLabel StaticContent="Arcane Resistance: " VarContent="n/a"/>
             </StackPanel>
         </ScrollViewer>

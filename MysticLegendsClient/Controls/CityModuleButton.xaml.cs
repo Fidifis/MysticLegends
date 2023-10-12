@@ -51,14 +51,17 @@ namespace MysticLegendsClient.Controls
 
         private string InnerMargin
         {
-            get { return (string)GetValue(innerMargin); }
             set { SetValue(innerMargin, value); }
         }
 
         public int TextGap
         {
             get { return textGap; }
-            set { InnerMargin = $"{value} 0 0 0"; }
+            set
+            {
+                textGap = value;
+                InnerMargin = $"{value} 0 0 0";
+            }
         }
     }
 }
