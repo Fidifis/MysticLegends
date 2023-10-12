@@ -7,5 +7,6 @@
         public CharacterClass CharacterClass { get; set; }
         public uint CurrencyGold { get; set; }
         public InventoryData Inventory { get; set; }
+        public List<ItemData> EquipedItems { get; set; }
     }
 }

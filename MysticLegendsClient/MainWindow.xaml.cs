@@ -29,8 +29,13 @@ namespace MysticLegendsClient
             splashImage.Source = bitmapImage;
         }
 
-        private void Login_Click(object sender, RoutedEventArgs e)
+        private async void Login_Click(object sender, RoutedEventArgs e)
         {
+            if (!await ConnectToServer())
+            {
+                MessageBox.Show("Can't connect to server", "Connection failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             new AyreimCity().Show();
             Close();
         }
@@ -41,6 +46,19 @@ namespace MysticLegendsClient
             customServerControls.Visibility =
                 serverSelect.SelectedIndex == serverSelect.Items.Count - 1 ?
                 Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private async Task<bool> ConnectToServer()
+        {
+            try
+            {
+                await ApiClient.Connect("http://localhost:5281");
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

@@ -3,7 +3,7 @@
     public enum CharacterClass: uint
     {
         Warrior,
-        Hunter,
+        Assasin,
         Mage,
     }
 }

@@ -9,41 +9,40 @@ namespace MysticLegendsServer.Controllers
     [ApiController]
     public class PlayerController : ControllerBase
     {
-        // GET: api/<PlayerController>
-        [HttpGet]
-        public CharacterData Get()
-        {
-            return new CharacterData
-            {
-                OwnersAccountId = 1,
-                CharacterId = 1,
-                CharacterClass = CharacterClass.Hunter,
-                Inventory = new InventoryData
-                {
-                    Capacity = 5,
-                    MaxCapacity = 10,
-                    Items = new List<ItemData>()
-                },
-                CurrencyGold = 100,
-            };
-        }
-
         // GET api/<PlayerController>/5
-        [HttpGet("{id}")]
-        public CharacterData Get(int id)
+        [HttpGet("{accountId}/{characterId}")]
+        public CharacterData Get(uint accountId, uint characterId)
         {
             return new CharacterData
             {
-                OwnersAccountId = (uint)id,
-                CharacterId = (uint)id,
-                CharacterClass = CharacterClass.Hunter,
+                OwnersAccountId = accountId,
+                CharacterId = characterId,
+                CharacterClass = CharacterClass.Warrior,
+                CurrencyGold = 100,
+                EquipedItems = new(),
                 Inventory = new InventoryData
                 {
                     Capacity = 5,
                     MaxCapacity = 10,
-                    Items = new List<ItemData>()
+                    Items = new()
+                    {
+                        new()
+                        {
+                            ItemId = 0,
+                            Name = "Drsnej armor",
+                            ItemType = ItemType.BodyArmor,
+                            EquipableByCharClass = CharacterClass.Warrior,
+                            MaxStack = 1,
+                            StackCount = 1,
+                            BattleStats = new()
+                            {
+                                Resilience = 100,
+                                FireResistance = 10,
+                                Swiftness = -2,
+                            }
+                        },
+                    },
                 },
-                CurrencyGold = 100,
             };
         }
 
@@ -52,18 +51,6 @@ namespace MysticLegendsServer.Controllers
         public string Post([FromBody] string value)
         {
             return value;
-        }
-
-        // PUT api/<PlayerController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<PlayerController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }
