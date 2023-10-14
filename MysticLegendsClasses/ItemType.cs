@@ -7,9 +7,11 @@
         Gloves,
         Boots,
         ArmorMaterial,
-        Weapon,
+
+        Weapon = 10,
         WeaponMaterial,
-        Potion,
+
+        Potion = 15,
         PotionMaterial,
     }
 }

@@ -1,47 +1,82 @@
-﻿namespace MysticLegendsClasses
+﻿using System.Collections.Immutable;
+
+namespace MysticLegendsClasses
 {
-    public struct BattleStats
+    using MutableStatsType = Dictionary<BattleStat.Type, BattleStat>;
+    using ImmutableStatsType = ImmutableDictionary<BattleStat.Type, BattleStat>;
+
+    public class BattleStats
     {
-        public int Strength { get; set; }
-        public int Dexterity { get; set; }
-        public int Intelligence { get; set; }
+        public ImmutableStatsType Stats { get; set; } = ImmutableDictionary.Create<BattleStat.Type, BattleStat>();
 
-        public int PhysicalDamage { get; set; }
-        public int Swiftness { get; set; }
-        public int MagicStrength { get; set; }
+        public BattleStats() { }
 
-        public int Resilience { get; set; }
-        public int Evade { get; set; }
-        public int MagicProtection { get; set; }
-
-        public int FireDamage { get; set; }
-        public int ColdStrength { get; set; }
-        public int PoisonDamage { get; set; }
-        public int ArcaneStrength { get; set; }
-
-        public int FireResistance { get; set; }
-        public int ColdResistance { get; set; }
-        public int PoisonResistance { get; set; }
-        public int ArcaneResistance { get; set; }
-
-        public static BattleStats Sum(IEnumerable<BattleStats> stats)
+        public BattleStats(MutableStatsType stats)
         {
-            BattleStats sum = new();
-            Type battleStatsType = typeof(BattleStats);
+            Stats = stats.ToImmutableDictionary();
+        }
 
-            foreach (var item in stats)
+        public BattleStats(IEnumerable<BattleStat> stats)
+        {
+            var mutableStats = new MutableStatsType();
+            foreach (var stat in stats)
             {
-                foreach (var property in battleStatsType.GetProperties())
+                if (mutableStats.ContainsKey(stat.BattleStatType))
+                    throw new InvalidOperationException("BattleStat array can't contain two BattleStat with same BattleStat.Type");
+                mutableStats[stat.BattleStatType] = stat;
+            }
+            Stats = mutableStats.ToImmutableDictionary();
+        }
+
+        public BattleStats(IEnumerable<BattleStats> external)
+        {
+            var mutableStats = new MutableStatsType();
+            MutateStats(ref mutableStats, external);
+            Stats = mutableStats.ToImmutableDictionary();
+        }
+
+        public BattleStats ApplyExternalStats(IEnumerable<BattleStats> external)
+        {
+            var mutableStats = new MutableStatsType(Stats);
+            MutateStats(ref mutableStats, external);
+            return new(mutableStats);
+        }
+
+        // NOTE: ref is here to make it clear what is mutable
+        private static void MutateStats(ref MutableStatsType internalStats, IEnumerable<BattleStats> external)
+        {
+            MutateStatsByMethod(ref internalStats, external, BattleStat.Method.Add);
+            MutateStatsByMethod(ref internalStats, external, BattleStat.Method.Multiply);
+        }
+
+        private static void MutateStatsByMethod(ref MutableStatsType internalStats, IEnumerable<BattleStats> external, BattleStat.Method method)
+        {
+            foreach (var externalBattleStat in external)
+            {
+                foreach (var externalStat in externalBattleStat.Stats.Values)
                 {
-                    if (property.PropertyType == typeof(int))
+                    if (externalStat.BattleStatMethod != method)
+                        continue;
+
+                    BattleStat battleStat = !internalStats.ContainsKey(externalStat.BattleStatType)
+                        ? new BattleStat() { BattleStatType = externalStat.BattleStatType }
+                        : internalStats[externalStat.BattleStatType];
+
+                    switch (method)
                     {
-                        int currentValue = (int?)property.GetValue(sum) ?? 0;
-                        int itemValue = (int?)property.GetValue(item) ?? 0;
-                        property.SetValue(sum, currentValue + itemValue);
+                        case BattleStat.Method.Base:
+                        case BattleStat.Method.Add:
+                            battleStat.Value += externalStat.Value;
+                            break;
+
+                        case BattleStat.Method.Multiply:
+                            battleStat.Value *= externalStat.Value;
+                            break;
                     }
+
+                    internalStats[battleStat.BattleStatType] = battleStat;
                 }
             }
-            return sum;
         }
     }
 }

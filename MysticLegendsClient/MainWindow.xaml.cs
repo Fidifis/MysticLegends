@@ -36,6 +36,10 @@ namespace MysticLegendsClient
                 MessageBox.Show("Can't connect to server", "Connection failed", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+
+            if (remember.IsChecked == true)
+                TokenStore.SaveAccessToken("random");
+
             new AyreimCity().Show();
             Close();
         }

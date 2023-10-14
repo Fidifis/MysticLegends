@@ -15,13 +15,13 @@ namespace MysticLegendsClient
                 throw new InvalidOperationException("Connection already established");
 
             var newClient = new ApiClient(address);
-            if (!await newClient.CheckServerStatus())
+            if (!await newClient.CheckServerStatusAsync())
                 throw new HttpRequestException("Connection failed");
 
             Connection = newClient;
         }
 
-        private async Task<bool> CheckServerStatus()
+        private async Task<bool> CheckServerStatusAsync()
         {
             var status = await GetAsync<Dictionary<string, string>>("api/Health");
             try

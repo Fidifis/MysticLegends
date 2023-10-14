@@ -11,7 +11,7 @@ namespace MysticLegendsServer.Controllers
     {
         // GET api/<PlayerController>/5
         [HttpGet("{accountId}/{characterId}")]
-        public CharacterData Get(uint accountId, uint characterId)
+        public CharacterData Get(uint accountId, uint characterId, string sessionToken)
         {
             return new CharacterData
             {
@@ -34,12 +34,26 @@ namespace MysticLegendsServer.Controllers
                             EquipableByCharClass = CharacterClass.Warrior,
                             MaxStack = 1,
                             StackCount = 1,
-                            BattleStats = new()
-                            {
-                                Resilience = 100,
-                                FireResistance = 10,
-                                Swiftness = -2,
-                            }
+                            BattleStats = new
+                            (
+                                new BattleStat[] {
+                                    new() {
+                                        BattleStatMethod = BattleStat.Method.Base,
+                                        BattleStatType = BattleStat.Type.Resilience,
+                                        Value = 10,
+                                    },
+                                    new() {
+                                        BattleStatMethod = BattleStat.Method.Base,
+                                        BattleStatType = BattleStat.Type.Swiftness,
+                                        Value = -1,
+                                    },
+                                    new() {
+                                        BattleStatMethod = BattleStat.Method.Base,
+                                        BattleStatType = BattleStat.Type.FireResistance,
+                                        Value = 1.5,
+                                    },
+                                }
+                            ),
                         },
                     },
                 },
