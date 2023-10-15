@@ -12,7 +12,7 @@ namespace MysticLegendsServer.Controllers
     {
         // GET api/<PlayerController>/5
         [HttpGet("{username}/{characterName}")]
-        public CharacterData Get(string username, string characterName, string sessionToken)
+        public CharacterData Get(string username, string characterName, string accessToken)
         {
             return new CharacterData
             {
@@ -20,43 +20,58 @@ namespace MysticLegendsServer.Controllers
                 CharacterName = characterName,
                 CharacterClass = CharacterClass.Warrior,
                 CurrencyGold = 100,
-                EquipedItems = ImmutableList.Create<ItemData>(),
-                Inventory = new InventoryData
+                Inventory = new(),
+                EquipedItems = new List<ItemData>()
                 {
-                    Capacity = 5,
-                    MaxCapacity = 10,
-                    Items = new List<ItemData>()
+                    new()
                     {
-                        new()
-                        {
-                            Name = "Drsnej armor",
-                            Icon = "armor_coolBody",
-                            ItemType = ItemType.BodyArmor,
-                            MaxStack = 1,
-                            StackCount = 1,
-                            BattleStats = new
-                            (
-                                new BattleStat[] {
-                                    new() {
-                                        BattleStatMethod = BattleStat.Method.Base,
-                                        BattleStatType = BattleStat.Type.Resilience,
-                                        Value = 10,
-                                    },
-                                    new() {
-                                        BattleStatMethod = BattleStat.Method.Base,
-                                        BattleStatType = BattleStat.Type.Swiftness,
-                                        Value = -1,
-                                    },
-                                    new() {
-                                        BattleStatMethod = BattleStat.Method.Base,
-                                        BattleStatType = BattleStat.Type.FireResistance,
-                                        Value = 1.5,
-                                    },
-                                }
-                            ),
-                        },
-                    }.ToImmutableList(),
-                },
+                        Name = "Helmet of Ayreim warriors",
+                        Icon = "helmet/ayreimWarrior",
+                        ItemType = ItemType.Helmet,
+                        StackMeansDurability = true,
+                        MaxStack = 100,
+                        StackCount = 90,
+                        BattleStats = new
+                        (
+                            new BattleStat[] {
+                                new() {
+                                    BattleStatType = BattleStat.Type.Resilience,
+                                    BattleStatMethod = BattleStat.Method.Multiply,
+                                    Value = 1.05,
+                                },
+                            }
+                        ),
+                    },
+                    new()
+                    {
+                        Name = "Armor of Ayreim warriors",
+                        Icon = "bodyArmor/ayreimWarrior",
+                        ItemType = ItemType.BodyArmor,
+                        StackMeansDurability = true,
+                        MaxStack = 100,
+                        StackCount = 90,
+                        BattleStats = new
+                        (
+                            new BattleStat[] {
+                                new() {
+                                    BattleStatType = BattleStat.Type.Resilience,
+                                    BattleStatMethod = BattleStat.Method.Add,
+                                    Value = 10,
+                                },
+                                new() {
+                                    BattleStatType = BattleStat.Type.Swiftness,
+                                    BattleStatMethod = BattleStat.Method.Add,
+                                    Value = -1,
+                                },
+                                new() {
+                                    BattleStatType = BattleStat.Type.FireResistance,
+                                    BattleStatMethod = BattleStat.Method.Add,
+                                    Value = 1.5,
+                                },
+                            }
+                        ),
+                    },
+                }.ToImmutableList(),
             };
         }
 

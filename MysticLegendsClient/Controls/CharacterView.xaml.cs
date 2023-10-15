@@ -17,9 +17,12 @@ namespace MysticLegendsClient.Controls
         public void FillData(CharacterData characterData)
         {
             characterName.Content = characterData.CharacterName;
-            var battleStats = ComputeBattleStats(characterData.EquipedItems!);
-            FillBattleStats(battleStats);
-            FillEquipedItems(characterData.EquipedItems!);
+            if (characterData.EquipedItems is not null)
+            {
+                var battleStats = ComputeBattleStats(characterData.EquipedItems!);
+                FillBattleStats(battleStats);
+                FillEquipedItems(characterData.EquipedItems!);
+            }
         }
 
         private void FillEquipedItems(IEnumerable<ItemData> equipedItems)

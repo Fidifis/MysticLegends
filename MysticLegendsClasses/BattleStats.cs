@@ -1,14 +1,13 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics;
 
 namespace MysticLegendsClasses
 {
     using MutableStatsType = Dictionary<BattleStat.Type, BattleStat>;
     using ImmutableStatsType = ImmutableDictionary<BattleStat.Type, BattleStat>;
 
-    public struct BattleStats
+    public readonly struct BattleStats
     {
-        public ImmutableStatsType Stats { get; private set; }
+        public ImmutableStatsType Stats { get; init; }
 
         public BattleStats()
         {
@@ -35,25 +34,24 @@ namespace MysticLegendsClasses
         public BattleStats(IEnumerable<BattleStats> external)
         {
             var mutableStats = new MutableStatsType();
-            MutateStats(ref mutableStats, external);
+            MutateStats(mutableStats, external);
             Stats = mutableStats.ToImmutableDictionary();
         }
 
-        public BattleStats ApplyExternalStats(IEnumerable<BattleStats> external)
+        public readonly BattleStats ApplyExternalStats(IEnumerable<BattleStats> external)
         {
             var mutableStats = new MutableStatsType(Stats);
-            MutateStats(ref mutableStats, external);
+            MutateStats(mutableStats, external);
             return new(mutableStats);
         }
 
-        // NOTE: ref is here to make it clear what is mutable
-        private static void MutateStats(ref MutableStatsType internalStats, IEnumerable<BattleStats> external)
+        private static void MutateStats(MutableStatsType internalStats, IEnumerable<BattleStats> external)
         {
-            MutateStatsByMethod(ref internalStats, external, BattleStat.Method.Add);
-            MutateStatsByMethod(ref internalStats, external, BattleStat.Method.Multiply);
+            MutateStatsByMethod(internalStats, external, BattleStat.Method.Add);
+            MutateStatsByMethod(internalStats, external, BattleStat.Method.Multiply);
         }
 
-        private static void MutateStatsByMethod(ref MutableStatsType internalStats, IEnumerable<BattleStats> external, BattleStat.Method method)
+        private static void MutateStatsByMethod(MutableStatsType internalStats, IEnumerable<BattleStats> external, BattleStat.Method method)
         {
             foreach (var externalBattleStat in external)
             {

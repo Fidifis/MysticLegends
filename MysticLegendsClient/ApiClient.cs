@@ -1,9 +1,15 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Immutable;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
 namespace MysticLegendsClient
 {
+    internal class NetworkException : Exception
+    {
+        public NetworkException(string message): base(message) { }
+    }
+
     internal class ApiClient: IDisposable
     {
         public static ApiClient? Connection = null;
@@ -56,18 +62,23 @@ namespace MysticLegendsClient
             client.Dispose();
         }
 
-        public async Task<T?> GetAsync<T>(string path, params string[] arguments)
+        public async Task<T?> GetAsync<T>(string path, params KeyValuePair<string,string>[] parameters)
         {
-            var combinedPath = arguments.Length > 0 ?
-                string.Join("/", path.TrimEnd('/'), arguments) :
-                path;
+            path = path.TrimEnd('/');
+            var combined = path;
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                combined += i == 0 ? "?" : "&";
+                combined += $"{parameters[i].Key}={parameters[i].Value}";
+            }
 
-            var response = await client.GetAsync(combinedPath);
+            var response = await client.GetAsync(combined);
             if (!response.IsSuccessStatusCode)
                 return default;
 
+            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
             var json = await response.Content.ReadAsStreamAsync();
-            return await JsonSerializer.DeserializeAsync<T>(json);
+            return await JsonSerializer.DeserializeAsync<T>(json, options);
         }
     }
 }
