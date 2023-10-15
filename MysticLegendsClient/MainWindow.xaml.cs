@@ -25,8 +25,7 @@ namespace MysticLegendsClient
 
         private void ChangeSplashImage(string resource)
         {
-            BitmapImage bitmapImage = new BitmapImage(new Uri($"pack://application:,,,{resource}", UriKind.Absolute));
-            splashImage.Source = bitmapImage;
+            splashImage.Source = BitmapTools.FromResource(resource);
         }
 
         private async void Login_Click(object sender, RoutedEventArgs e)
@@ -38,7 +37,7 @@ namespace MysticLegendsClient
             }
 
             if (remember.IsChecked == true)
-                TokenStore.SaveAccessToken("random");
+                TokenStore.SaveRefreshToken("random");
 
             new AyreimCity().Show();
             Close();

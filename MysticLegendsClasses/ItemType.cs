@@ -2,16 +2,18 @@
 {
     public enum ItemType: uint
     {
-        BodyArmor,
+        RegularItem,
+
+        Weapon = 5,
+        WeaponMaterial,
+
+        BodyArmor = 10,
         Helmet,
         Gloves,
         Boots,
         ArmorMaterial,
 
-        Weapon = 10,
-        WeaponMaterial,
-
-        Potion = 15,
+        Potion = 20,
         PotionMaterial,
     }
 }

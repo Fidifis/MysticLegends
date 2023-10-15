@@ -1,5 +1,4 @@
 ﻿using MysticLegendsClient.Controls;
-using MysticLegendsClient.Resources;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -22,7 +21,7 @@ namespace MysticLegendsClient
 
         protected void AddButton(string title, string icon)
         {
-            CityModulesPanel.Children.Add(new CityModuleButton { InnerPadding="20 10 20 10", Margin=new Thickness(0, 0, 0, 10), TextGap=50, FontSize=20, UniformSvgSize="50", SvgSource=icon, LabelText=title });
+            cityModulesPanel.Children.Add(new CityModuleButton { InnerPadding="20 10 20 10", Margin=new Thickness(0, 0, 0, 10), TextGap=50, FontSize=20, UniformSvgSize="50", SvgSource=icon, LabelText=title });
         }
 
         private void CharacterButton_Click(object sender, RoutedEventArgs e)

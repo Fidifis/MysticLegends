@@ -7,43 +7,42 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Label Content='{}{CharacterName}' Margin="20" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="20"/>
+        <Label x:Name="characterName" Content='{}{CharacterName}' Margin="20" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="20"/>
         <ScrollViewer VerticalScrollBarVisibility="Auto"  Margin="20 60 0 0" HorizontalAlignment="Left" Width="170">
             <StackPanel>
-                <local:StatLabel StaticContent="Strength: " VarContent="n/a"/>
-                <local:StatLabel StaticContent="Dexterity: " VarContent="n/a"/>
-                <local:StatLabel StaticContent="Inteligence: " VarContent="n/a"/>
+                <local:StatLabel x:Name="strength" StaticContent="Strength: " VarContent="n/a"/>
+                <local:StatLabel x:Name="dexterity" StaticContent="Dexterity: " VarContent="n/a"/>
+                <local:StatLabel x:Name="intelligence" StaticContent="Intelligence: " VarContent="n/a"/>
                 <Label/>
-                <local:StatLabel StaticContent="Phisycal damage: " VarContent="n/a"/>
-                <local:StatLabel StaticContent="Swiftness: " VarContent="n/a"/>
-                <local:StatLabel StaticContent="Magic strength: " VarContent="n/a"/>
+                <local:StatLabel x:Name="physicalDamage" StaticContent="Physical damage: " VarContent="n/a"/>
+                <local:StatLabel x:Name="swiftness" StaticContent="Swiftness: " VarContent="n/a"/>
+                <local:StatLabel x:Name="magicStrength" StaticContent="Magic strength: " VarContent="n/a"/>
                 <Label/>
-                <local:StatLabel StaticContent="Resilience: " VarContent="n/a"/>
-                <local:StatLabel StaticContent="Evade: " VarContent="n/a"/>
-                <local:StatLabel StaticContent="Magic protection: " VarContent="n/a"/>
+                <local:StatLabel x:Name="resilience" StaticContent="Resilience: " VarContent="n/a"/>
+                <local:StatLabel x:Name="evade" StaticContent="Evade: " VarContent="n/a"/>
+                <local:StatLabel x:Name="magicProtection" StaticContent="Magic protection: " VarContent="n/a"/>
                 <Label/>
-                <local:StatLabel StaticContent="Fire Resistance: " VarContent="n/a"/>
-                <local:StatLabel StaticContent="Cold Resistance: " VarContent="n/a"/>
-                <local:StatLabel StaticContent="Poison Resistance: " VarContent="n/a"/>
-                <local:StatLabel StaticContent="Arcane Resistance: " VarContent="n/a"/>
+                <local:StatLabel x:Name="fireResistance" StaticContent="Fire Resistance: " VarContent="n/a"/>
+                <local:StatLabel x:Name="poisonResistance" StaticContent="Poison Resistance: " VarContent="n/a"/>
+                <local:StatLabel x:Name="arcaneResistance" StaticContent="Arcane Resistance: " VarContent="n/a"/>
             </StackPanel>
         </ScrollViewer>
         <Viewbox Margin="200,40,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform">
             <Grid Width="450" Height="320">
                 <Border Margin="0,0,0,20" VerticalAlignment="Bottom" HorizontalAlignment="Center" BorderThickness="3" BorderBrush="Black">
-                    <Image Width="100" Height="150" Source="/items/armor/Full_Chainmail_inventory_icon.png" />
+                    <Image x:Name="bodyArmorImage" Width="100" Height="150" />
                 </Border>
                 <Border Margin="0,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" BorderThickness="3" BorderBrush="Black">
-                    <Image Width="100" Height="100" />
+                    <Image x:Name="helmetImage" Width="100" Height="100" />
                 </Border>
                 <Border Margin="20,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="3" BorderBrush="Black">
-                    <Image Width="100" Height="200" />
+                    <Image x:Name="weaponImage" Width="100" Height="200" />
                 </Border>
                 <Border Margin="0,40,20,0" VerticalAlignment="Top" HorizontalAlignment="Right" BorderThickness="3" BorderBrush="Black">
-                    <Image Width="100" Height="100" />
+                    <Image x:Name="glovesImage" Width="100" Height="100" />
                 </Border>
                 <Border Margin="0,0,20,40" VerticalAlignment="Bottom" HorizontalAlignment="Right" BorderThickness="3" BorderBrush="Black">
-                    <Image Width="100" Height="100" />
+                    <Image x:Name="bootsImage" Width="100" Height="100" />
                 </Border>
             </Grid>
         </Viewbox>

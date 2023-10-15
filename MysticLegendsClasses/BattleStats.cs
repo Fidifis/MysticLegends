@@ -1,15 +1,19 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace MysticLegendsClasses
 {
     using MutableStatsType = Dictionary<BattleStat.Type, BattleStat>;
     using ImmutableStatsType = ImmutableDictionary<BattleStat.Type, BattleStat>;
 
-    public class BattleStats
+    public struct BattleStats
     {
-        public ImmutableStatsType Stats { get; set; } = ImmutableDictionary.Create<BattleStat.Type, BattleStat>();
+        public ImmutableStatsType Stats { get; private set; }
 
-        public BattleStats() { }
+        public BattleStats()
+        {
+            Stats = ImmutableDictionary.Create<BattleStat.Type, BattleStat>();
+        }
 
         public BattleStats(MutableStatsType stats)
         {

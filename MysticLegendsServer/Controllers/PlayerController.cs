@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MysticLegendsClasses;
+using System.Collections.Immutable;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,28 +11,27 @@ namespace MysticLegendsServer.Controllers
     public class PlayerController : ControllerBase
     {
         // GET api/<PlayerController>/5
-        [HttpGet("{accountId}/{characterId}")]
-        public CharacterData Get(uint accountId, uint characterId, string sessionToken)
+        [HttpGet("{username}/{characterName}")]
+        public CharacterData Get(string username, string characterName, string sessionToken)
         {
             return new CharacterData
             {
-                OwnersAccountId = accountId,
-                CharacterId = characterId,
+                OwnersAccount = username,
+                CharacterName = characterName,
                 CharacterClass = CharacterClass.Warrior,
                 CurrencyGold = 100,
-                EquipedItems = new(),
+                EquipedItems = ImmutableList.Create<ItemData>(),
                 Inventory = new InventoryData
                 {
                     Capacity = 5,
                     MaxCapacity = 10,
-                    Items = new()
+                    Items = new List<ItemData>()
                     {
                         new()
                         {
-                            ItemId = 0,
                             Name = "Drsnej armor",
+                            Icon = "armor_coolBody",
                             ItemType = ItemType.BodyArmor,
-                            EquipableByCharClass = CharacterClass.Warrior,
                             MaxStack = 1,
                             StackCount = 1,
                             BattleStats = new
@@ -55,7 +55,7 @@ namespace MysticLegendsServer.Controllers
                                 }
                             ),
                         },
-                    },
+                    }.ToImmutableList(),
                 },
             };
         }
