@@ -6,6 +6,6 @@ namespace MysticLegendsClasses
     {
         public uint Capacity { get; set; }
         public uint MaxCapacity { get; set; }
-        public ImmutableList<ItemData>? Items { get; set; }
+        public ImmutableList<ItemData?>? Items { get; set; }
     }
 }

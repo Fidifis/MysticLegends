@@ -22,6 +22,7 @@ namespace MysticLegendsClient.Controls
                 var battleStats = ComputeBattleStats(characterData.EquipedItems!);
                 FillBattleStats(battleStats);
                 FillEquipedItems(characterData.EquipedItems!);
+                characterName.Content = characterData.CharacterName;
             }
         }
 

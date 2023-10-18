@@ -1,4 +1,5 @@
 ﻿using MysticLegendsClasses;
+using System.Collections.Immutable;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -36,6 +37,8 @@ namespace MysticLegendsClient
         {
             var characterData = await (ApiClient.Connection?.GetAsync<CharacterData>("/api/Player/gogomantv/shishka", KeyValuePair.Create("accessToken","lol")) ?? throw new NetworkException("No connection"));
             characterView.FillData(characterData);
+
+            inventoryView.FillData(characterData.Inventory);
         }
     }
 }

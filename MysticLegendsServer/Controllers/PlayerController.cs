@@ -20,7 +20,25 @@ namespace MysticLegendsServer.Controllers
                 CharacterName = characterName,
                 CharacterClass = CharacterClass.Warrior,
                 CurrencyGold = 100,
-                Inventory = new(),
+                Inventory = new InventoryData
+                {
+                    Capacity = 10,
+                    Items = ImmutableList.Create<ItemData?>(
+                    null,
+                    new ItemData
+                    {
+                        Icon = "bodyArmor/ayreimWarrior"
+                    },
+                    new ItemData
+                    {
+                        Icon = "helmet/ayreimWarrior"
+                    },
+                    null,
+                    new ItemData
+                    {
+                        Icon = "bodyArmor/ayreimWarrior"
+                    }),
+                },
                 EquipedItems = new List<ItemData>()
                 {
                     new()

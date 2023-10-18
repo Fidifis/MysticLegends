@@ -16,6 +16,6 @@
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
         <controls:CharacterView x:Name="characterView" Grid.Row="0"/>
-        <controls:InventoryView Grid.Row="1"/>
+        <controls:InventoryView x:Name="inventoryView" Grid.Row="1"/>
     </Grid>
 </Window>
