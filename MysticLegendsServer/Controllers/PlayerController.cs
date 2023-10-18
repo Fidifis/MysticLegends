@@ -94,10 +94,10 @@ namespace MysticLegendsServer.Controllers
         }
 
         // POST api/<PlayerController>
-        [HttpPost]
-        public string Post([FromBody] string value)
+        [HttpPost("{username}/{characterName}/inventoryswap")]
+        public string Post(string username, string characterName, [FromBody] Dictionary<string, string> paramters)
         {
-            return value;
+            return "hi";
         }
     }
 }

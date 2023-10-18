@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using MysticLegendsClient.Resources;
+using System.Windows.Input;
 
 namespace MysticLegendsClient.Controls
 {
@@ -18,11 +19,14 @@ namespace MysticLegendsClient.Controls
             DataContext = this;
         }
 
+        public delegate void ItemDrop(InventoryItemContext source, InventoryItemContext target);
+        public ItemDrop? ItemDropCallback { get; set; }
+
         private int ItemCount { get => ImgSlots.Count(item => item.Source is not null); }
         private int Capacity { get => ImgSlots.Count; }
         private string CapacityCounter { get => $"{ItemCount}/{Capacity}"; }
 
-        private List<Image> ImgSlots = new();
+        private readonly List<Image> ImgSlots = new();
 
         private UIElement CreateSlot(out Image image)
         {
@@ -31,12 +35,15 @@ namespace MysticLegendsClient.Controls
                 Width = 75,
                 Height = 75,
             };
+            image.MouseLeftButtonDown += Image_MouseLeftButtonDown;
+            image.Drop += Image_Drop;
             return new Border
             {
                 Margin = new Thickness(5),
                 BorderThickness = new Thickness(3),
                 BorderBrush = Brushes.Black,
-                Child = image
+                AllowDrop = true,
+                Child = image,
             };
         }
 
@@ -46,15 +53,19 @@ namespace MysticLegendsClient.Controls
             ImgSlots.RemoveRange(index, count);
         }
 
+        private void AddToSlot(UIElement element, Image image)
+        {
+            inventoryPanel.Children.Add(element);
+            ImgSlots.Add(image);
+            image.Tag = new InventoryItemContext(this, ImgSlots.Count - 1);
+        }
+
         private void UpdateSlots(int count)
         {
             Debug.Assert(ImgSlots.Count == inventoryPanel.Children.Count, "list counts differ");
             if (count > ImgSlots.Count)
                 for (int i = ImgSlots.Count; i < count; i++)
-                {
-                    inventoryPanel.Children.Add(CreateSlot(out Image image));
-                    ImgSlots.Add(image);
-                }
+                    AddToSlot(CreateSlot(out Image image), image);
             else if (count < ImgSlots.Count)
                 RemoveSlotRange(count, ImgSlots.Count - count);
         }
@@ -82,6 +93,23 @@ namespace MysticLegendsClient.Controls
             }
 
             UpdateCapacityCounter();
+        }
+
+        private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var data = new DataObject(typeof(Image), sender);
+            DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Move);
+        }
+
+        private void Image_Drop(object sender, DragEventArgs e)
+        {
+            Image targetImage = (Image)sender;
+
+            if (e.Data.GetDataPresent(typeof(Image)))
+            {
+                Image sourceImage = (Image)e.Data.GetData(typeof(Image));
+                ItemDropCallback?.Invoke((InventoryItemContext)sourceImage.Tag, (InventoryItemContext)targetImage.Tag);
+            }
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Immutable;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 
 namespace MysticLegendsClient
@@ -62,23 +64,43 @@ namespace MysticLegendsClient
             client.Dispose();
         }
 
-        public async Task<T?> GetAsync<T>(string path, params KeyValuePair<string,string>[] parameters)
+        private static IImmutableDictionary<string, string> AppendToken(IImmutableDictionary<string, string>? paramters)
         {
+            var builder = ImmutableDictionary.CreateBuilder<string, string>();
+            if (paramters is not null) builder.AddRange(paramters);
+            builder["accessToken"] = "lol";
+            return builder.ToImmutable();
+        }
+
+        public async Task<T?> GetAsync<T>(string path, IImmutableDictionary<string,string>? parameters = null)
+        {
+            parameters = AppendToken(parameters);
             path = path.TrimEnd('/');
             var combined = path;
-            for (int i = 0; i < parameters.Length; i++)
+
+            int i = 0;
+            foreach (var param in parameters)
             {
-                combined += i == 0 ? "?" : "&";
-                combined += $"{parameters[i].Key}={parameters[i].Value}";
+                combined += i++ == 0 ? "?" : "&";
+                combined += $"{param.Key}={param.Value}";
             }
 
-            var response = await client.GetAsync(combined);
+            using var response = await client.GetAsync(combined);
             if (!response.IsSuccessStatusCode)
                 return default;
 
-            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-            var json = await response.Content.ReadAsStreamAsync();
-            return await JsonSerializer.DeserializeAsync<T>(json, options);
+            return await response.Content.ReadFromJsonAsync<T>();
+        }
+
+        public async Task<T?> PostAsync<T>(string path, IImmutableDictionary<string, string>? parameters = null)
+        {
+            parameters = AppendToken(parameters);
+
+            using var response = await client.PostAsJsonAsync(path, parameters);
+            if (!response.IsSuccessStatusCode)
+                return default;
+
+            return await response.Content.ReadFromJsonAsync<T>();
         }
     }
 }

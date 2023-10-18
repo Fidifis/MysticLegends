@@ -26,6 +26,7 @@ namespace MysticLegendsClient
         public CharacterWindow()
         {
             InitializeComponent();
+            inventoryView.ItemDropCallback = InventoryDrop;
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -35,10 +36,27 @@ namespace MysticLegendsClient
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            var characterData = await (ApiClient.Connection?.GetAsync<CharacterData>("/api/Player/gogomantv/shishka", KeyValuePair.Create("accessToken","lol")) ?? throw new NetworkException("No connection"));
-            characterView.FillData(characterData);
+            await Refresh();
+        }
 
+        private async Task Refresh()
+        {
+            var characterData = await(ApiClient.Connection?.GetAsync<CharacterData>("/api/Player/gogomantv/shishka") ?? throw new NetworkException("No connection"));
+            characterView.FillData(characterData);
             inventoryView.FillData(characterData.Inventory);
+        }
+
+        private async void InventoryDrop(InventoryItemContext source, InventoryItemContext target)
+        {
+            if (source.Owner == target.Owner)
+            {
+                var parameters = new Dictionary<string, string>
+                {
+                    ["sourceItem"] = source.Id.ToString(),
+                    ["targetItem"] = target.Id.ToString(),
+                };
+                var response = await (ApiClient.Connection?.PostAsync<string>("/api/Player/gogomantv/shishka/inventoryswap", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            }
         }
     }
 }
