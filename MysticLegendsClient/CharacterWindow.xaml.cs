@@ -55,7 +55,8 @@ namespace MysticLegendsClient
                     ["sourceItem"] = source.Id.ToString(),
                     ["targetItem"] = target.Id.ToString(),
                 };
-                var response = await (ApiClient.Connection?.PostAsync<string>("/api/Player/gogomantv/shishka/inventoryswap", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+                var newInventory = await (ApiClient.Connection?.PostAsync<InventoryData>("/api/Player/gogomantv/shishka/inventoryswap", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+                inventoryView.FillData(newInventory);
             }
         }
     }

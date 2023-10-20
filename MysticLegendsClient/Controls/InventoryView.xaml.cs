@@ -84,12 +84,12 @@ namespace MysticLegendsClient.Controls
             }
 
             UpdateSlots((int)inventoryData.Capacity);
-            for (int i = 0; i < inventoryData.Items.Count; i++)
+            for (int i = 0; i < ImgSlots.Count; i++)
+                ImgSlots[i].Source = null;
+
+            foreach (var item in inventoryData.Items)
             {
-                if (inventoryData.Items[i] is null)
-                    ImgSlots[i].Source = null;
-                else
-                    ImgSlots[i].Source = BitmapTools.FromResource(Items.ResourceManager.GetString(inventoryData.Items[i]!.Value.Icon)!);
+                ImgSlots[(int)item.InventoryPosition].Source = BitmapTools.FromResource(Items.ResourceManager.GetString(item.Icon)!);
             }
 
             UpdateCapacityCounter();
