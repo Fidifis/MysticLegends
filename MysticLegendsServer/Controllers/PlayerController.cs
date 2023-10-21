@@ -104,19 +104,28 @@ namespace MysticLegendsServer.Controllers
             var sourcePosition = uint.Parse(paramters["sourceItem"]);
             var targetPosition = uint.Parse(paramters["targetItem"]);
             var newItems = lolool.Inventory.Items!.ToList();
-            var newInv = lolool.Inventory;
 
             var sourceIndex = newItems.FindIndex(item => item.InventoryPosition == sourcePosition);
             var targetIndex = newItems.FindIndex(item => item.InventoryPosition == targetPosition);
-            var sourceItem = newItems[sourceIndex];
-            var targetItem = newItems[targetIndex];
 
-            sourceItem.InventoryPosition = targetPosition;
-            newItems[sourceIndex] = sourceItem;
+            if (sourceIndex == targetIndex)
+                return lolool.Inventory;
 
-            targetItem.InventoryPosition = sourcePosition;
-            newItems[targetIndex] = targetItem;
+            if (sourceIndex >= 0)
+            {
+                var sourceItem = newItems[sourceIndex];
+                sourceItem.InventoryPosition = targetPosition;
+                newItems[sourceIndex] = sourceItem;
+            }
 
+            if (targetIndex >= 0)
+            {
+                var targetItem = newItems[targetIndex];
+                targetItem.InventoryPosition = sourcePosition;
+                newItems[targetIndex] = targetItem;
+            }
+
+            var newInv = lolool.Inventory;
             newInv.Items = newItems.ToImmutableList();
             lolool.Inventory = newInv;
 

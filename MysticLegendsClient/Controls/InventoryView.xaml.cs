@@ -28,23 +28,32 @@ namespace MysticLegendsClient.Controls
 
         private readonly List<Image> ImgSlots = new();
 
-        private UIElement CreateSlot(out Image image)
+        private FrameworkElement CreateSlot(out Image image)
         {
             image = new Image
             {
                 Width = 75,
                 Height = 75,
             };
-            image.MouseLeftButtonDown += Image_MouseLeftButtonDown;
-            image.Drop += Image_Drop;
-            return new Border
+            var border = new Border
             {
                 Margin = new Thickness(5),
                 BorderThickness = new Thickness(3),
                 BorderBrush = Brushes.Black,
-                AllowDrop = true,
                 Child = image,
             };
+
+            var grid = new Grid()
+            {
+                AllowDrop = true,
+            };
+            grid.Drop += Image_Drop;
+            grid.MouseLeftButtonDown += Image_MouseLeftButtonDown;
+
+            grid.Children.Add(new Label());
+            grid.Children.Add(border);
+
+            return grid;
         }
 
         private void RemoveSlotRange(int index, int count)
@@ -53,11 +62,11 @@ namespace MysticLegendsClient.Controls
             ImgSlots.RemoveRange(index, count);
         }
 
-        private void AddToSlot(UIElement element, Image image)
+        private void AddToSlot(FrameworkElement element, Image image)
         {
             inventoryPanel.Children.Add(element);
             ImgSlots.Add(image);
-            image.Tag = new InventoryItemContext(this, ImgSlots.Count - 1);
+            element.Tag = new InventoryItemContext(this, ImgSlots.Count - 1);
         }
 
         private void UpdateSlots(int count)
@@ -97,17 +106,20 @@ namespace MysticLegendsClient.Controls
 
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var data = new DataObject(typeof(Image), sender);
-            DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Move);
+            if (((FrameworkElement)sender).Tag is InventoryItemContext context && ImgSlots[context.Id].Source is not null)
+            {
+                var data = new DataObject(typeof(FrameworkElement), sender);
+                DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Copy);
+            }
         }
 
         private void Image_Drop(object sender, DragEventArgs e)
         {
-            Image targetImage = (Image)sender;
+            var targetImage = (FrameworkElement)sender;
 
-            if (e.Data.GetDataPresent(typeof(Image)))
+            if (e.Data.GetDataPresent(typeof(FrameworkElement)))
             {
-                Image sourceImage = (Image)e.Data.GetData(typeof(Image));
+                var sourceImage = (FrameworkElement)e.Data.GetData(typeof(FrameworkElement));
                 ItemDropCallback?.Invoke((InventoryItemContext)sourceImage.Tag, (InventoryItemContext)targetImage.Tag);
             }
         }
