@@ -94,8 +94,10 @@ namespace MysticLegendsServer.Controllers
 
         // GET api/<PlayerController>/5
         [HttpGet("{username}/{characterName}")]
-        public CharacterData Get(string username, string characterName, string accessToken)
+        public async Task<CharacterData> Get(string username, string characterName, string accessToken)
         {
+            List<List<string>> data = await DB.Connection!.Query("select * from character");
+            
             return lolool;
         }
 
