@@ -109,18 +109,18 @@ namespace MysticLegendsClient.Controls
             if (((FrameworkElement)sender).Tag is InventoryItemContext context && ImgSlots[context.Id].Source is not null)
             {
                 var data = new DataObject(typeof(FrameworkElement), sender);
-                DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Copy);
+                DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Move);
             }
         }
 
         private void Image_Drop(object sender, DragEventArgs e)
         {
-            var targetImage = (FrameworkElement)sender;
+            var target = (FrameworkElement)sender;
 
             if (e.Data.GetDataPresent(typeof(FrameworkElement)))
             {
-                var sourceImage = (FrameworkElement)e.Data.GetData(typeof(FrameworkElement));
-                ItemDropCallback?.Invoke((InventoryItemContext)sourceImage.Tag, (InventoryItemContext)targetImage.Tag);
+                var source = (FrameworkElement)e.Data.GetData(typeof(FrameworkElement));
+                ItemDropCallback?.Invoke((InventoryItemContext)source.Tag, (InventoryItemContext)target.Tag);
             }
         }
     }

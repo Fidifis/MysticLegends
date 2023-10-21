@@ -23,17 +23,20 @@ namespace MysticLegendsServer.Controllers
                         new ItemData
                         {
                             InventoryPosition = 1,
-                            Icon = "bodyArmor/ayreimWarrior"
+                            Icon = "bodyArmor/ayreimWarrior",
+                            ItemType = ItemType.BodyArmor,
                         },
                         new ItemData
                         {
                             InventoryPosition = 4,
-                            Icon = "helmet/ayreimWarrior"
+                            Icon = "helmet/ayreimWarrior",
+                            ItemType = ItemType.Helmet,
                         },
                         new ItemData
                         {
                             InventoryPosition = 3,
-                            Icon = "bodyArmor/ayreimWarrior"
+                            Icon = "bodyArmor/ayreimWarrior",
+                            ItemType = ItemType.BodyArmor,
                         }),
             },
             EquipedItems = new List<ItemData>()
@@ -89,7 +92,6 @@ namespace MysticLegendsServer.Controllers
                     }.ToImmutableList(),
         };
 
-
         // GET api/<PlayerController>/5
         [HttpGet("{username}/{characterName}")]
         public CharacterData Get(string username, string characterName, string accessToken)
@@ -99,7 +101,7 @@ namespace MysticLegendsServer.Controllers
 
         // POST api/<PlayerController>
         [HttpPost("{username}/{characterName}/inventoryswap")]
-        public InventoryData Post(string username, string characterName, [FromBody] Dictionary<string, string> paramters)
+        public ObjectResult InventorySwap(string username, string characterName, [FromBody] Dictionary<string, string> paramters)
         {
             var sourcePosition = uint.Parse(paramters["sourceItem"]);
             var targetPosition = uint.Parse(paramters["targetItem"]);
@@ -109,7 +111,7 @@ namespace MysticLegendsServer.Controllers
             var targetIndex = newItems.FindIndex(item => item.InventoryPosition == targetPosition);
 
             if (sourceIndex == targetIndex)
-                return lolool.Inventory;
+                return BadRequest("{username}/{characterName}/inventoryswap => swaping empty positions");
 
             if (sourceIndex >= 0)
             {
@@ -129,7 +131,91 @@ namespace MysticLegendsServer.Controllers
             newInv.Items = newItems.ToImmutableList();
             lolool.Inventory = newInv;
 
-            return lolool.Inventory;
+            return Ok(lolool.Inventory);
+        }
+
+        [HttpPost("{username}/{characterName}/equipitem")]
+        public ObjectResult EquipItem(string username, string characterName, [FromBody] Dictionary<string, string> paramters)
+        {
+            var inventoryItems = lolool.Inventory.Items!.ToList();
+            var equipedItems = lolool.EquipedItems!.ToList();
+
+            if (paramters.ContainsKey("itemToEquip"))
+            {
+                var itemToEquipPosition = uint.Parse(paramters["itemToEquip"]);
+                var itemToEquipIndex = inventoryItems.FindIndex(item => item.InventoryPosition == itemToEquipPosition);
+
+                if (itemToEquipIndex >= 0)
+                {
+                    var itemToEquip = inventoryItems[itemToEquipIndex];
+                    var itemToUnequipIndex = equipedItems.FindIndex(item => item.ItemType == itemToEquip.ItemType);
+
+                    equipedItems.Add(itemToEquip);
+                    inventoryItems.RemoveAt(itemToEquipIndex);
+
+                    if (itemToUnequipIndex >= 0)
+                    {
+                        var itemToUnequip = equipedItems[itemToUnequipIndex];
+                        itemToUnequip.InventoryPosition = itemToEquip.InventoryPosition;
+
+                        equipedItems.RemoveAt(itemToUnequipIndex);
+                        inventoryItems.Add(itemToUnequip);
+                    }
+
+                    var newInventory = lolool.Inventory;
+                    newInventory.Items = inventoryItems.ToImmutableList();
+                    lolool.Inventory = newInventory;
+
+                    lolool.EquipedItems = equipedItems.ToImmutableList();
+
+                    return Ok(lolool);
+                }
+            }
+            if (paramters.ContainsKey("itemToUnequip"))
+            {
+                if (inventoryItems.Count >= lolool.Inventory.Capacity)
+                    return BadRequest("{username}/{characterName}/equipitem => inventory full");
+
+                var itemToUnequipPosition = uint.Parse(paramters["itemToUnequip"]);
+                var itemToUnequipIndex = equipedItems.FindIndex(item => item.ItemType == (ItemType)itemToUnequipPosition);
+
+                if (itemToUnequipIndex >= 0)
+                {
+                    var itemToUnequip = equipedItems[itemToUnequipIndex];
+
+                    uint itemNewInventoryPosition = 0;
+                    if (paramters.ContainsKey("itemToEquip"))
+                        itemNewInventoryPosition = uint.Parse(paramters["itemToEquip"]);
+                    else
+                        itemNewInventoryPosition = itemToUnequip.InventoryPosition;
+
+                    for (int i = 0; i < inventoryItems.Count; i++)
+                    {
+                        if (inventoryItems.FindIndex(item => item.InventoryPosition == itemNewInventoryPosition) >= 0)
+                        {
+                            itemNewInventoryPosition++;
+                            itemNewInventoryPosition = itemNewInventoryPosition >= (uint)inventoryItems.Count ? itemNewInventoryPosition - (uint)inventoryItems.Count : itemNewInventoryPosition;
+                        }
+                        else
+                            break;
+                    }
+
+                    itemToUnequip.InventoryPosition = itemNewInventoryPosition;
+
+                    equipedItems.RemoveAt(itemToUnequipIndex);
+                    inventoryItems.Add(itemToUnequip);
+
+                    var newInventory = lolool.Inventory;
+                    newInventory.Items = inventoryItems.ToImmutableList();
+                    lolool.Inventory = newInventory;
+
+                    lolool.EquipedItems = equipedItems.ToImmutableList();
+
+                    return Ok(lolool);
+                }
+            }
+
+            return BadRequest("something went wrong try again :)");
         }
     }
 }

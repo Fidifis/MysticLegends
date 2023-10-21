@@ -1,6 +1,8 @@
 ﻿using MysticLegendsClasses;
 using MysticLegendsClient.Resources;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MysticLegendsClient.Controls
 {
@@ -9,9 +11,18 @@ namespace MysticLegendsClient.Controls
     /// </summary>
     public partial class CharacterView : UserControl
     {
+        public delegate void ItemDrop(InventoryItemContext source, InventoryItemContext target);
+        public ItemDrop? ItemDropCallback { get; set; }
+
         public CharacterView()
         {
             InitializeComponent();
+
+            bodyArmorSlot.Tag = new InventoryItemContext(this, (int)ItemType.BodyArmor);
+            helmetSlot.Tag = new InventoryItemContext(this, (int)ItemType.Helmet);
+            glovesSlot.Tag = new InventoryItemContext(this, (int)ItemType.Gloves);
+            bootsSlot.Tag = new InventoryItemContext(this, (int)ItemType.Boots);
+            weaponSlot.Tag = new InventoryItemContext(this, (int)ItemType.Weapon);
         }
 
         public void FillData(CharacterData characterData)
@@ -26,8 +37,16 @@ namespace MysticLegendsClient.Controls
             }
         }
 
+        private void ClearEquipedItems()
+        {
+            var images = new Image[] { weaponImage, bodyArmorImage, helmetImage, glovesImage, bootsImage };
+            foreach (var image in images)
+                image.Source = null;
+        }
+
         private void FillEquipedItems(IEnumerable<ItemData> equipedItems)
         {
+            ClearEquipedItems();
             foreach (var item in equipedItems)
             {
                 var iconResource = Items.ResourceManager.GetString(item.Icon);
@@ -39,20 +58,22 @@ namespace MysticLegendsClient.Controls
                 }
                 var bitmap = BitmapTools.FromResource(iconResource);
 
-                Image? imageControl = item.ItemType switch
-                {
-                    ItemType.Helmet => helmetImage,
-                    ItemType.BodyArmor => bodyArmorImage,
-                    ItemType.Gloves => glovesImage,
-                    ItemType.Boots => bootsImage,
-                    ItemType.Weapon => weaponImage,
-                    _ => null,
-                };
+                Image? imageControl = GetImageByItemType(item.ItemType);
 
                 if (imageControl is null) continue;
                 imageControl.Source = bitmap;
             }
         }
+
+        private Image? GetImageByItemType(ItemType itemType) => itemType switch
+        {
+            ItemType.Weapon => weaponImage,
+            ItemType.BodyArmor => bodyArmorImage,
+            ItemType.Helmet => helmetImage,
+            ItemType.Gloves => glovesImage,
+            ItemType.Boots => bootsImage,
+            _ => null,
+        };
 
         private BattleStats ComputeBattleStats(IEnumerable<ItemData> items)
         {
@@ -80,6 +101,26 @@ namespace MysticLegendsClient.Controls
             fireResistance.VarContent = stats.Get(BattleStat.Type.FireResistance).Value.ToString();
             poisonResistance.VarContent = stats.Get(BattleStat.Type.PoisonResistance).Value.ToString();
             arcaneResistance.VarContent = stats.Get(BattleStat.Type.ArcaneResistance).Value.ToString();
+        }
+
+        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (((FrameworkElement)sender).Tag is InventoryItemContext context && GetImageByItemType((ItemType)context.Id)?.Source is not null)
+            {
+                var data = new DataObject(typeof(FrameworkElement), sender);
+                DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Move);
+            }
+        }
+
+        private void Grid_Drop(object sender, DragEventArgs e)
+        {
+            var target = (FrameworkElement)sender;
+
+            if (e.Data.GetDataPresent(typeof(FrameworkElement)))
+            {
+                var source = (FrameworkElement)e.Data.GetData(typeof(FrameworkElement));
+                ItemDropCallback?.Invoke((InventoryItemContext)source.Tag, (InventoryItemContext)target.Tag);
+            }
         }
     }
 }

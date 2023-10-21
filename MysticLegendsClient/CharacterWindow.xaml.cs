@@ -1,5 +1,6 @@
 ﻿using MysticLegendsClasses;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -27,6 +28,7 @@ namespace MysticLegendsClient
         {
             InitializeComponent();
             inventoryView.ItemDropCallback = InventoryDrop;
+            characterView.ItemDropCallback = InventoryDrop;
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -42,22 +44,54 @@ namespace MysticLegendsClient
         private async Task Refresh()
         {
             var characterData = await(ApiClient.Connection?.GetAsync<CharacterData>("/api/Player/gogomantv/shishka") ?? throw new NetworkException("No connection"));
+            FillData(characterData);
+        }
+
+        private void FillData(CharacterData characterData)
+        {
             characterView.FillData(characterData);
             inventoryView.FillData(characterData.Inventory);
         }
 
-        private async void InventoryDrop(InventoryItemContext source, InventoryItemContext target)
+        private void InventoryDrop(InventoryItemContext source, InventoryItemContext target)
         {
-            if (source.Owner == target.Owner)
+            if (source.Owner == inventoryView && target.Owner == inventoryView)
             {
-                var parameters = new Dictionary<string, string>
-                {
-                    ["sourceItem"] = source.Id.ToString(),
-                    ["targetItem"] = target.Id.ToString(),
-                };
-                var newInventory = await (ApiClient.Connection?.PostAsync<InventoryData>("/api/Player/gogomantv/shishka/inventoryswap", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
-                inventoryView.FillData(newInventory);
+                SwapServerCall(source, target);
+                return;
             }
+            else if (source.Owner == inventoryView && target.Owner == characterView)
+            {
+                EquipServerCall(source,target);
+            }
+            else if (source.Owner == characterView && target.Owner == inventoryView)
+            {
+                EquipServerCall(target, source);
+            }
+            else
+                Debug.Assert(false);
+        }
+
+        private async void SwapServerCall(InventoryItemContext source, InventoryItemContext target)
+        {
+            var parameters1 = new Dictionary<string, string>
+            {
+                ["sourceItem"] = source.Id.ToString(),
+                ["targetItem"] = target.Id.ToString(),
+            };
+            var newInventory1 = await (ApiClient.Connection?.PostAsync<InventoryData>("/api/Player/gogomantv/shishka/inventoryswap", parameters1.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            inventoryView.FillData(newInventory1);
+        }
+
+        private async void EquipServerCall(InventoryItemContext itemToEquip, InventoryItemContext itemToUnequip)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                ["itemToEquip"] = itemToEquip.Id.ToString(),
+                ["itemToUnequip"] = itemToUnequip.Id.ToString(),
+            };
+            var characterData = await (ApiClient.Connection?.PostAsync<CharacterData>("/api/Player/gogomantv/shishka/equipitem", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            FillData(characterData);
         }
     }
 }
