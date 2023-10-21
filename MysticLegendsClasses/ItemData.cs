@@ -2,6 +2,7 @@
 {
     public struct ItemData
     {
+        public int ItemId { get; set; }
         public string Name { get; set; }
         public string Icon { get; set; }
         public ItemType ItemType { get; set; }
