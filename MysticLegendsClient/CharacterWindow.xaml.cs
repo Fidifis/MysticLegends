@@ -43,7 +43,7 @@ namespace MysticLegendsClient
 
         private async Task Refresh()
         {
-            var characterData = await(ApiClient.Connection?.GetAsync<CharacterData>("/api/Player/gogomantv/shishka") ?? throw new NetworkException("No connection"));
+            var characterData = await(ApiClient.Connection?.GetAsync<CharacterData>("/api/Player/zmrdus") ?? throw new NetworkException("No connection"));
             FillData(characterData);
         }
 
@@ -79,7 +79,7 @@ namespace MysticLegendsClient
                 ["sourceItem"] = source.Id.ToString(),
                 ["targetItem"] = target.Id.ToString(),
             };
-            var newInventory1 = await (ApiClient.Connection?.PostAsync<InventoryData>("/api/Player/gogomantv/shishka/inventoryswap", parameters1.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            var newInventory1 = await (ApiClient.Connection?.PostAsync<InventoryData>("/api/Player/kokot/zmrdus/inventoryswap", parameters1.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
             inventoryView.FillData(newInventory1);
         }
 
@@ -90,7 +90,7 @@ namespace MysticLegendsClient
                 ["itemToEquip"] = itemToEquip.Id.ToString(),
                 ["itemToUnequip"] = itemToUnequip.Id.ToString(),
             };
-            var characterData = await (ApiClient.Connection?.PostAsync<CharacterData>("/api/Player/gogomantv/shishka/equipitem", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            var characterData = await (ApiClient.Connection?.PostAsync<CharacterData>("/api/Player/kokot/zmrdus/equipitem", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
             FillData(characterData);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MysticLegendsClasses;
+using MysticLegendsServer.Database;
 using System.Collections.Immutable;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -93,12 +94,10 @@ namespace MysticLegendsServer.Controllers
         };
 
         // GET api/<PlayerController>/5
-        [HttpGet("{username}/{characterName}")]
-        public async Task<CharacterData> Get(string username, string characterName, string accessToken)
+        [HttpGet("{characterName}")]
+        public async Task<CharacterData> Get(string characterName, string accessToken)
         {
-            List<List<string>> data = await DB.Connection!.Query("select * from character");
-            
-            return lolool;
+            return (await Character.GetCharacterData(characterName)).Value;
         }
 
         // POST api/<PlayerController>

@@ -1,5 +1,4 @@
 ﻿using Npgsql;
-using System.Reflection.PortableExecutable;
 
 namespace MysticLegendsServer
 {
@@ -23,15 +22,14 @@ namespace MysticLegendsServer
         public async Task<NpgsqlDataReader> QueryReader(string sql)
         {
             await using var command = new NpgsqlCommand(sql, dbConnection);
-            return  await command.ExecuteReaderAsync();
+            return await command.ExecuteReaderAsync();
         }
 
         public async Task<List<List<string>>> Query(string sql)
         {
-            await using var command = new NpgsqlCommand(sql, dbConnection);
-            await using var reader = await command.ExecuteReaderAsync();
+            await using var reader = await QueryReader(sql);
             var data = new List<List<string>>();
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 var columnCount = reader.FieldCount;
                 data.Add(new List<string>(columnCount));
