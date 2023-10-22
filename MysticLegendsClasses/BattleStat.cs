@@ -4,9 +4,9 @@
     {
         public enum Method : uint
         {
-            Base,
             Add,
             Multiply,
+            Fix,
         }
 
         public enum Type : uint

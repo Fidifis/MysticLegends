@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace MysticLegendsClasses
 {
@@ -49,6 +50,7 @@ namespace MysticLegendsClasses
         {
             MutateStatsByMethod(internalStats, external, BattleStat.Method.Add);
             MutateStatsByMethod(internalStats, external, BattleStat.Method.Multiply);
+            MutateStatsByMethod(internalStats, external, BattleStat.Method.Fix);
         }
 
         private static void MutateStatsByMethod(MutableStatsType internalStats, IEnumerable<BattleStats> external, BattleStat.Method method)
@@ -60,19 +62,27 @@ namespace MysticLegendsClasses
                     if (externalStat.BattleStatMethod != method)
                         continue;
 
-                    BattleStat battleStat = !internalStats.ContainsKey(externalStat.BattleStatType)
-                        ? new BattleStat() { BattleStatType = externalStat.BattleStatType }
-                        : internalStats[externalStat.BattleStatType];
+                    BattleStat battleStat = internalStats.ContainsKey(externalStat.BattleStatType)
+                        ? internalStats[externalStat.BattleStatType]
+                        : new BattleStat() { BattleStatType = externalStat.BattleStatType };
+
+                    Debug.Assert(battleStat.BattleStatMethod == BattleStat.Method.Add, "Internal stats must be of Add method");
 
                     switch (method)
                     {
-                        case BattleStat.Method.Base:
                         case BattleStat.Method.Add:
                             battleStat.Value += externalStat.Value;
                             break;
 
                         case BattleStat.Method.Multiply:
                             battleStat.Value *= externalStat.Value;
+                            break;
+
+                        case BattleStat.Method.Fix:
+                            battleStat.Value =
+                                battleStat.BattleStatMethod == BattleStat.Method.Fix
+                                ? Math.Max(battleStat.Value, externalStat.Value)
+                                : externalStat.Value;
                             break;
                     }
 
