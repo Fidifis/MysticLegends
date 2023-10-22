@@ -2,14 +2,14 @@
 {
     public struct BattleStat
     {
-        public enum Method : uint
+        public enum Method
         {
             Add,
             Multiply,
             Fix,
         }
 
-        public enum Type : uint
+        public enum Type
         {
             Strength = 0,
             Dexterity,

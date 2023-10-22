@@ -25,8 +25,8 @@ namespace MysticLegendsServer.Database
             {
                 CharacterName = characterName,
                 OwnersAccount = record[0],
-                CharacterClass = (CharacterClass)uint.Parse(record[1]),
-                CurrencyGold = uint.Parse(record[2]),
+                CharacterClass = (CharacterClass)int.Parse(record[1]),
+                CurrencyGold = int.Parse(record[2]),
                 Inventory = (await GetCharacterInventory(characterName)).Value,
                 EquipedItems = equipedItems,
             };
@@ -51,7 +51,7 @@ namespace MysticLegendsServer.Database
             var record = data[0];
             var inventoryData = new InventoryData
             {
-                Capacity = uint.Parse(record[0]),
+                Capacity = int.Parse(record[0]),
                 Items = inventoryItems,
             };
 
@@ -77,16 +77,16 @@ namespace MysticLegendsServer.Database
                 if (!itemBattleStats.ContainsKey(invItemId))
                     itemBattleStats[invItemId] = Tuple.Create(new ItemData
                     {
-                        InvItemId = (uint)invItemId,
-                        ItemId = (uint)reader.GetInt32(1),
+                        InvItemId = invItemId,
+                        ItemId = reader.GetInt32(1),
                         Name = reader.GetString(2),
                         Icon = reader.GetString(3),
                         ItemType = (ItemType)reader.GetInt32(4),
-                        Level = (uint)reader.GetInt32(5),
-                        StackCount = (uint)reader.GetInt32(6),
-                        MaxStack = (uint)reader.GetInt32(7),
+                        Level = reader.GetInt32(5),
+                        StackCount = reader.GetInt32(6),
+                        MaxStack = reader.GetInt32(7),
                         StackMeansDurability = reader.GetBoolean(8),
-                        InventoryPosition = (uint)reader.GetInt32(9),
+                        InventoryPosition = reader.GetInt32(9),
                     },
                     new Dictionary<BattleStat.Type, BattleStat>());
 
@@ -99,13 +99,10 @@ namespace MysticLegendsServer.Database
                 };
             }
 
-            //var itemData = new ItemData[itemBattleStats.Count];
-            //int i = 0;
             foreach (var item in itemBattleStats)
             {
                 var newItem = item.Value.Item1;
                 newItem.BattleStats = new(item.Value.Item2);
-                //itemData[i++] = newItem;
                 yield return newItem;
             }
         }

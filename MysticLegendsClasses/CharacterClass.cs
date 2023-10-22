@@ -1,6 +1,6 @@
 ﻿namespace MysticLegendsClasses
 {
-    public enum CharacterClass: uint
+    public enum CharacterClass
     {
         Warrior,
         Assasin,

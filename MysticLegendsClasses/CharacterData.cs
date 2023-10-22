@@ -7,7 +7,7 @@ namespace MysticLegendsClasses
         public string OwnersAccount { get; set; }
         public string CharacterName { get; set; }
         public CharacterClass CharacterClass { get; set; }
-        public uint CurrencyGold { get; set; }
+        public int CurrencyGold { get; set; }
         public InventoryData Inventory { get; set; }
         public ImmutableList<ItemData>? EquipedItems { get; set; }
     }

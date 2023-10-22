@@ -104,8 +104,8 @@ namespace MysticLegendsServer.Controllers
         [HttpPost("{username}/{characterName}/inventoryswap")]
         public ObjectResult InventorySwap(string username, string characterName, [FromBody] Dictionary<string, string> paramters)
         {
-            var sourcePosition = uint.Parse(paramters["sourceItem"]);
-            var targetPosition = uint.Parse(paramters["targetItem"]);
+            var sourcePosition = int.Parse(paramters["sourceItem"]);
+            var targetPosition = int.Parse(paramters["targetItem"]);
             var newItems = lolool.Inventory.Items!.ToList();
 
             var sourceIndex = newItems.FindIndex(item => item.InventoryPosition == sourcePosition);
@@ -184,9 +184,9 @@ namespace MysticLegendsServer.Controllers
                 {
                     var itemToUnequip = equipedItems[itemToUnequipIndex];
 
-                    uint itemNewInventoryPosition = 0;
+                    int itemNewInventoryPosition = 0;
                     if (paramters.ContainsKey("itemToEquip"))
-                        itemNewInventoryPosition = uint.Parse(paramters["itemToEquip"]);
+                        itemNewInventoryPosition = int.Parse(paramters["itemToEquip"]);
                     else
                         itemNewInventoryPosition = itemToUnequip.InventoryPosition;
 
@@ -195,7 +195,7 @@ namespace MysticLegendsServer.Controllers
                         if (inventoryItems.FindIndex(item => item.InventoryPosition == itemNewInventoryPosition) >= 0)
                         {
                             itemNewInventoryPosition++;
-                            itemNewInventoryPosition = itemNewInventoryPosition >= (uint)inventoryItems.Count ? itemNewInventoryPosition - (uint)inventoryItems.Count : itemNewInventoryPosition;
+                            itemNewInventoryPosition = itemNewInventoryPosition >= inventoryItems.Count ? itemNewInventoryPosition - inventoryItems.Count : itemNewInventoryPosition;
                         }
                         else
                             break;

@@ -1,6 +1,6 @@
 ﻿namespace MysticLegendsClasses
 {
-    public enum ItemType: uint
+    public enum ItemType
     {
         RegularItem,
 
