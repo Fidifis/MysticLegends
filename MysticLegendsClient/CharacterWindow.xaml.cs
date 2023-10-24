@@ -62,14 +62,15 @@ namespace MysticLegendsClient
             }
             else if (source.Owner == inventoryView && target.Owner == characterView)
             {
-                EquipServerCall(source,target);
+                EquipServerCall(source, target);
             }
             else if (source.Owner == characterView && target.Owner == inventoryView)
             {
                 EquipServerCall(target, source);
             }
-            else
-                Debug.Assert(false);
+            else {
+                // TODO: Debug.Assert(false);
+            }
         }
 
         private async void SwapServerCall(InventoryItemContext source, InventoryItemContext target)

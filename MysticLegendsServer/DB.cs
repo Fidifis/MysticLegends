@@ -5,23 +5,23 @@ namespace MysticLegendsServer
     public class DB: IDisposable, IAsyncDisposable
     {
         public static DB? Connection { get; private set; } = null;
-        private NpgsqlConnection? dbConnection;
+        private NpgsqlDataSource? dbConnection;
 
-        public static async void OpenConnection(string connectionString)
+        public static void OpenConnection(string connectionString)
         {
             Connection = new DB();
-            await Connection.Connect(connectionString);
+            Connection.Connect(connectionString);
         }
 
-        public async Task Connect(string connectionString)
+        public void Connect(string connectionString)
         {
-            var dataSource = NpgsqlDataSource.Create(connectionString);
-            dbConnection = await dataSource.OpenConnectionAsync();
+            dbConnection = NpgsqlDataSource.Create(connectionString);
+            //dbConnection = await dataSource.OpenConnectionAsync();
         }
 
         public async Task<NpgsqlDataReader> QueryReader(string sql)
         {
-            await using var command = new NpgsqlCommand(sql, dbConnection);
+            await using var command = dbConnection!.CreateCommand(sql);
             return await command.ExecuteReaderAsync();
         }
 
@@ -54,7 +54,7 @@ namespace MysticLegendsServer
 
         public async Task NonQuery(string sql)
         {
-            await using var command = new NpgsqlCommand(sql, dbConnection);
+            await using var command = dbConnection!.CreateCommand(sql);
             await command.ExecuteNonQueryAsync();
         }
 

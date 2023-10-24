@@ -5,7 +5,7 @@ namespace MysticLegendsServer
         public static void Main(string[] args)
         {
 #if DEBUG
-            var connectionString = "Host=db.kii.pef.czu.cz;Username=xdigf001;Password=nbs0e2;Database=xdigf001";
+            var connectionString = "Host=db.kii.pef.czu.cz;Username=xdigf001;Password=nbs0e2;Database=xdigf001;Pooling=true;MaxPoolSize=3;";
 #else
             var connectionString = Environment.GetEnvironmentVariable("CONSTRING") ?? throw new Exception("No CONSTRING env variable defined");
 #endif

@@ -88,7 +88,7 @@ namespace MysticLegendsClient.Controls
         {
             if (inventoryData.Items is null)
             {
-                Debug.Assert(false);
+                // TODO: Debug.Assert(false);
                 return;
             }
 
