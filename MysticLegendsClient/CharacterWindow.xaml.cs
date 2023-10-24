@@ -79,7 +79,7 @@ namespace MysticLegendsClient
                 ["sourceItem"] = source.Id.ToString(),
                 ["targetItem"] = target.Id.ToString(),
             };
-            var newInventory1 = await (ApiClient.Connection?.PostAsync<InventoryData>("/api/Player/kokot/zmrdus/inventoryswap", parameters1.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            var newInventory1 = await (ApiClient.Connection?.PostAsync<InventoryData>("/api/Player/zmrdus/inventoryswap", parameters1.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
             inventoryView.FillData(newInventory1);
         }
 
@@ -90,7 +90,7 @@ namespace MysticLegendsClient
                 ["itemToEquip"] = itemToEquip.Id.ToString(),
                 ["itemToUnequip"] = itemToUnequip.Id.ToString(),
             };
-            var characterData = await (ApiClient.Connection?.PostAsync<CharacterData>("/api/Player/kokot/zmrdus/equipitem", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            var characterData = await (ApiClient.Connection?.PostAsync<CharacterData>("/api/Player/zmrdus/equipitem", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
             FillData(characterData);
         }
     }

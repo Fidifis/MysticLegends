@@ -101,12 +101,13 @@ namespace MysticLegendsServer.Controllers
         }
 
         // POST api/<PlayerController>
-        [HttpPost("{username}/{characterName}/inventoryswap")]
-        public ObjectResult InventorySwap(string username, string characterName, [FromBody] Dictionary<string, string> paramters)
+        [HttpPost("{characterName}/inventoryswap")]
+        public async Task<ObjectResult> InventorySwap(string characterName, [FromBody] Dictionary<string, string> paramters)
         {
             var sourcePosition = int.Parse(paramters["sourceItem"]);
             var targetPosition = int.Parse(paramters["targetItem"]);
-            var newItems = lolool.Inventory.Items!.ToList();
+            var inventory = (await Character.GetCharacterInventory(characterName)).Value;
+            var newItems = inventory.Items!.ToList();
 
             var sourceIndex = newItems.FindIndex(item => item.InventoryPosition == sourcePosition);
             var targetIndex = newItems.FindIndex(item => item.InventoryPosition == targetPosition);
@@ -114,11 +115,13 @@ namespace MysticLegendsServer.Controllers
             if (sourceIndex == targetIndex)
                 return BadRequest("{username}/{characterName}/inventoryswap => swaping empty positions");
 
+            //Task? task1 = null, task2 = null;
             if (sourceIndex >= 0)
             {
                 var sourceItem = newItems[sourceIndex];
                 sourceItem.InventoryPosition = targetPosition;
                 newItems[sourceIndex] = sourceItem;
+                await Character.ChangeItemPosition(sourceItem.InvItemId, targetPosition);
             }
 
             if (targetIndex >= 0)
@@ -126,20 +129,21 @@ namespace MysticLegendsServer.Controllers
                 var targetItem = newItems[targetIndex];
                 targetItem.InventoryPosition = sourcePosition;
                 newItems[targetIndex] = targetItem;
+                await Character.ChangeItemPosition(targetItem.InvItemId, sourcePosition);
             }
 
-            var newInv = lolool.Inventory;
-            newInv.Items = newItems.ToImmutableList();
-            lolool.Inventory = newInv;
+            inventory.Items = newItems.ToImmutableList();
+            //await Task.WhenAll(task1 ?? Task.CompletedTask, task2 ?? Task.CompletedTask);
 
-            return Ok(lolool.Inventory);
+            return Ok(inventory);
         }
 
-        [HttpPost("{username}/{characterName}/equipitem")]
-        public ObjectResult EquipItem(string username, string characterName, [FromBody] Dictionary<string, string> paramters)
+        [HttpPost("{characterName}/equipitem")]
+        public async Task<ObjectResult> EquipItem(string characterName, [FromBody] Dictionary<string, string> paramters)
         {
-            var inventoryItems = lolool.Inventory.Items!.ToList();
-            var equipedItems = lolool.EquipedItems!.ToList();
+            var characterData = (await Character.GetCharacterData(characterName)).Value;
+            var inventoryItems = characterData.Inventory.Items!.ToList();
+            var equipedItems = characterData.EquipedItems!.ToList();
 
             if (paramters.ContainsKey("itemToEquip"))
             {
@@ -154,6 +158,12 @@ namespace MysticLegendsServer.Controllers
                     equipedItems.Add(itemToEquip);
                     inventoryItems.RemoveAt(itemToEquipIndex);
 
+                    var transferTask1 = Character.ItemTransfer(itemToEquip.InvItemId,
+                            Character.InventorySource.CharacterInventory,
+                            Character.InventorySource.CharacterEquiped,
+                            characterName);
+
+                    Task? transferTask2 = null;
                     if (itemToUnequipIndex >= 0)
                     {
                         var itemToUnequip = equipedItems[itemToUnequipIndex];
@@ -161,21 +171,27 @@ namespace MysticLegendsServer.Controllers
 
                         equipedItems.RemoveAt(itemToUnequipIndex);
                         inventoryItems.Add(itemToUnequip);
+
+                        transferTask2 = Character.ItemTransfer(itemToUnequip.InvItemId,
+                            Character.InventorySource.CharacterEquiped,
+                            Character.InventorySource.CharacterInventory,
+                            characterName);
                     }
 
-                    var newInventory = lolool.Inventory;
+                    var newInventory = characterData.Inventory;
                     newInventory.Items = inventoryItems.ToImmutableList();
-                    lolool.Inventory = newInventory;
+                    characterData.Inventory = newInventory;
 
-                    lolool.EquipedItems = equipedItems.ToImmutableList();
+                    characterData.EquipedItems = equipedItems.ToImmutableList();
 
-                    return Ok(lolool);
+                    await Task.WhenAll(transferTask1, transferTask2 ?? Task.CompletedTask);
+                    return Ok(characterData);
                 }
             }
             if (paramters.ContainsKey("itemToUnequip"))
             {
-                if (inventoryItems.Count >= lolool.Inventory.Capacity)
-                    return BadRequest("{username}/{characterName}/equipitem => inventory full");
+                if (inventoryItems.Count >= characterData.Inventory.Capacity)
+                    return BadRequest("{characterName}/equipitem => inventory full");
 
                 var itemToUnequipPosition = uint.Parse(paramters["itemToUnequip"]);
                 var itemToUnequipIndex = equipedItems.FindIndex(item => item.ItemType == (ItemType)itemToUnequipPosition);
@@ -202,17 +218,23 @@ namespace MysticLegendsServer.Controllers
                     }
 
                     itemToUnequip.InventoryPosition = itemNewInventoryPosition;
+                    var task1 = Character.ChangeItemPosition(itemToUnequip.InvItemId, itemNewInventoryPosition);
 
                     equipedItems.RemoveAt(itemToUnequipIndex);
                     inventoryItems.Add(itemToUnequip);
+                    var task2 = Character.ItemTransfer(itemToUnequip.InvItemId,
+                            Character.InventorySource.CharacterEquiped,
+                            Character.InventorySource.CharacterInventory,
+                            characterName);
 
-                    var newInventory = lolool.Inventory;
+                    var newInventory = characterData.Inventory;
                     newInventory.Items = inventoryItems.ToImmutableList();
-                    lolool.Inventory = newInventory;
+                    characterData.Inventory = newInventory;
 
-                    lolool.EquipedItems = equipedItems.ToImmutableList();
+                    characterData.EquipedItems = equipedItems.ToImmutableList();
 
-                    return Ok(lolool);
+                    await Task.WhenAll(task1, task2);
+                    return Ok(characterData);
                 }
             }
 

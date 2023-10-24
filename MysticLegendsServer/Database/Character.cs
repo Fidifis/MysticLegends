@@ -1,10 +1,25 @@
 ﻿using MysticLegendsClasses;
-using System.Collections.Immutable;
 
 namespace MysticLegendsServer.Database
 {
     public static class Character
     {
+        public enum InventorySource
+        {
+            CharacterEquiped,
+            CharacterInventory,
+        }
+
+        private static string GetInventoryOwnerString(InventorySource owner)
+        {
+            return owner switch
+            {
+                InventorySource.CharacterEquiped => "character_name",
+                InventorySource.CharacterInventory => "character_inventory_character_n",
+                _ => throw new Exception()
+            };
+        }
+
         public async static Task<CharacterData?> GetCharacterData(string characterName)
         {
             var data = await DB.Connection!.Query($"SELECT username, character_class, currency_gold FROM CHARACTER WHERE CHARACTER_NAME = '{characterName}'");
@@ -13,12 +28,7 @@ namespace MysticLegendsServer.Database
             if (data.Count > 1)
             { /* TODO: Log warning */ }
 
-            var itemDataBuilder = ImmutableList.CreateBuilder<ItemData>();
-            await foreach (var item in GetInventoryItems("CHARACTER_NAME", characterName))
-            {
-                itemDataBuilder.Add(item);
-            }
-            var equipedItems = itemDataBuilder.ToImmutable();
+            var equipedItems = await GetInventoryItems(InventorySource.CharacterEquiped, characterName).ConstructImmutableList();
 
             var record = data[0];
             var characterData = new CharacterData
@@ -41,12 +51,7 @@ namespace MysticLegendsServer.Database
             if (data.Count > 1)
             { /* TODO: Log warning */ }
 
-            var itemDataBuilder = ImmutableList.CreateBuilder<ItemData>();
-            await foreach (var item in GetInventoryItems("CHARACTER_INVENTORY_CHARACTER_N", characterName))
-            {
-                itemDataBuilder.Add(item);
-            }
-            var inventoryItems = itemDataBuilder.ToImmutable();
+            var inventoryItems = await GetInventoryItems(InventorySource.CharacterInventory, characterName).ConstructImmutableList();
 
             var record = data[0];
             var inventoryData = new InventoryData
@@ -58,8 +63,9 @@ namespace MysticLegendsServer.Database
             return inventoryData;
         }
 
-        public static async IAsyncEnumerable<ItemData> GetInventoryItems(string inventoryAttribute, string characterName)
+        public static async IAsyncEnumerable<ItemData> GetInventoryItems(InventorySource inventorySource, string characterName)
         {
+            var inventoryAttribute = GetInventoryOwnerString(inventorySource);
             string query = $"""
                 SELECT "inventory_item"."invitem_id", "inventory_item"."item_id", "name", "icon", "item_type", "level", "stack_count", "max_stack", "stack_means_durability", "position", "stat_type", "method", "value"
                 FROM INVENTORY_ITEM
@@ -90,13 +96,16 @@ namespace MysticLegendsServer.Database
                     },
                     new Dictionary<BattleStat.Type, BattleStat>());
 
-                var battleStatType = (BattleStat.Type)reader.GetInt32(10);
-                itemBattleStats[invItemId].Item2[battleStatType] = new BattleStat
+                if (!reader.IsDBNull(10))
                 {
-                    BattleStatType = battleStatType,
-                    BattleStatMethod = (BattleStat.Method)reader.GetInt32(11),
-                    Value = reader.GetDouble(12),
-                };
+                    var battleStatType = (BattleStat.Type)reader.GetInt32(10);
+                    itemBattleStats[invItemId].Item2[battleStatType] = new BattleStat
+                    {
+                        BattleStatType = battleStatType,
+                        BattleStatMethod = (BattleStat.Method)reader.GetInt32(11),
+                        Value = reader.GetDouble(12),
+                    };
+                }
             }
 
             foreach (var item in itemBattleStats)
@@ -105,6 +114,29 @@ namespace MysticLegendsServer.Database
                 newItem.BattleStats = new(item.Value.Item2);
                 yield return newItem;
             }
+        }
+
+        public static async Task ChangeItemPosition(int invItemId, int newPosition)
+        {
+            var sql = $"""
+                UPDATE INVENTORY_ITEM
+                SET "position" = {newPosition}
+                WHERE INVITEM_ID = {invItemId}
+                """;
+
+            await DB.Connection!.NonQuery(sql);
+        }
+
+        public static async Task ItemTransfer(int invItemId, InventorySource fromInventorySource, InventorySource targetInventorySource, string key)
+        {
+            var sql = $"""
+                UPDATE INVENTORY_ITEM
+                SET "{GetInventoryOwnerString(fromInventorySource)}" = NULL,
+                "{GetInventoryOwnerString(targetInventorySource)}" = '{key}'
+                WHERE INVITEM_ID = {invItemId}
+                """;
+
+            await DB.Connection!.NonQuery(sql);
         }
     }
 }
