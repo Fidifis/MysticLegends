@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MysticLegendsServer.Models;
 using MysticLegendsShared.Models;
 using MysticLegendsShared.Utilities;
 
@@ -10,6 +12,13 @@ namespace MysticLegendsServer.Controllers
     [ApiController]
     public class PlayerController : ControllerBase
     {
+        private Xdigf001Context context;
+
+        public PlayerController(Xdigf001Context context)
+        {
+            this.context = context;
+        }
+
         public static Character lolool = new Character
         {
             Username = "kokot",
@@ -49,9 +58,20 @@ namespace MysticLegendsServer.Controllers
 
         // GET api/<PlayerController>/5
         [HttpGet("{characterName}")]
-        public Task<Character> Get(string characterName, string accessToken)
+        public async Task<Character> Get(string characterName, string accessToken)
         {
-            return Task.Run(() => { return lolool; });
+            return await context.Characters
+                .Include(character => character.CharacterInventory)
+                    .ThenInclude(inventory => inventory!.InventoryItems)
+                    .ThenInclude(item => item.Item)
+                .Include(character => character.CharacterInventory)
+                    .ThenInclude(inventory => inventory!.InventoryItems)
+                    .ThenInclude(item => item.BattleStats)
+                .Include(character => character.InventoryItems)
+                    .ThenInclude(item => item.BattleStats)
+                .Include(character => character.InventoryItems)
+                    .ThenInclude(item => item.Item)
+                .SingleAsync(character => character.CharacterName == characterName);
         }
 
         //// POST api/<PlayerController>

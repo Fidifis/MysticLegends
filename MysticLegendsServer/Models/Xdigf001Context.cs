@@ -1,7 +1,7 @@
+using MysticLegendsShared.Models;
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using MysticLegendsShared.Models;
 
 namespace MysticLegendsServer.Models;
 
@@ -55,8 +55,7 @@ public partial class Xdigf001Context : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Server=db.kii.pef.czu.cz;Port=5432;Database=xdigf001;User Id=xdigf001;Password=nbs0e2;");
+        => optionsBuilder.UseNpgsql("Name=ConnectionStrings:GameDB");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

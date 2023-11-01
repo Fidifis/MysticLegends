@@ -1,22 +1,31 @@
+using Microsoft.EntityFrameworkCore;
+using MysticLegendsServer.Models;
+using System.Text.Json.Serialization;
+
 namespace MysticLegendsServer
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-#if DEBUG
-            var connectionString = "Host=db.kii.pef.czu.cz;Username=xdigf001;Password=nbs0e2;Database=xdigf001;Pooling=true;MaxPoolSize=3;";
-#else
-            var connectionString = Environment.GetEnvironmentVariable("CONSTRING") ?? throw new Exception("No CONSTRING env variable defined");
-#endif
-
-            DB.OpenConnection(connectionString);
-
             var builder = WebApplication.CreateBuilder(args);
+
+#if DEBUG
+            var connectionString = builder.Configuration.GetConnectionString("GameDB");
+#else
+            var connectionString = Environment.GetEnvironmentVariable("CONNECTIONSTRING") ?? throw new Exception("No CONNECTIONSTRING env variable defined");
+#endif
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddDbContext<Xdigf001Context>(options => options
+                .UseNpgsql(connectionString,
+                o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
 
             // Add logging configuration
             //builder.Logging.AddConsole();
