@@ -1,10 +1,10 @@
-﻿using MysticLegendsClasses;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using MysticLegendsClient.Resources;
 using System.Windows.Input;
+using MysticLegendsShared.Models;
 
 namespace MysticLegendsClient.Controls
 {
@@ -84,21 +84,21 @@ namespace MysticLegendsClient.Controls
             capacityCounter.Content = CapacityCounter;
         }
 
-        public void FillData(InventoryData inventoryData)
+        public void FillData(IInventory inventoryData)
         {
-            if (inventoryData.Items is null)
+            if (inventoryData.InventoryItems is null)
             {
-                // TODO: Debug.Assert(false);
+                Debug.Assert(false);
                 return;
             }
 
-            UpdateSlots((int)inventoryData.Capacity);
+            UpdateSlots(inventoryData.Capacity);
             for (int i = 0; i < ImgSlots.Count; i++)
                 ImgSlots[i].Source = null;
 
-            foreach (var item in inventoryData.Items)
+            foreach (var item in inventoryData.InventoryItems)
             {
-                ImgSlots[(int)item.InventoryPosition].Source = BitmapTools.FromResource(Items.ResourceManager.GetString(item.Icon)!);
+                ImgSlots[item.Position].Source = BitmapTools.FromResource(Items.ResourceManager.GetString(item.Item.Icon)!);
             }
 
             UpdateCapacityCounter();

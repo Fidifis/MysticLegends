@@ -89,7 +89,7 @@ namespace MysticLegendsClient
             if (!response.IsSuccessStatusCode)
                 return default;
 
-            return await response.Content.ReadFromJsonAsync<T>();
+            return await response.Content.ReadFromJsonAsync<T?>();
         }
 
         public async Task<T?> PostAsync<T>(string path, IImmutableDictionary<string, string>? parameters = null)
@@ -100,7 +100,7 @@ namespace MysticLegendsClient
             if (!response.IsSuccessStatusCode)
                 return default;
 
-            return await response.Content.ReadFromJsonAsync<T>();
+            return await response.Content.ReadFromJsonAsync<T?>();
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MysticLegendsClasses;
 
 namespace MysticLegendsServer.Controllers
 {

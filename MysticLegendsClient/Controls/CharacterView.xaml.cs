@@ -1,4 +1,5 @@
-﻿using MysticLegendsClasses;
+﻿using MysticLegendsShared.Utilities;
+using MysticLegendsShared.Models;
 using MysticLegendsClient.Resources;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,14 +26,14 @@ namespace MysticLegendsClient.Controls
             weaponSlot.Tag = new InventoryItemContext(this, (int)ItemType.Weapon);
         }
 
-        public void FillData(CharacterData characterData)
+        public void FillData(Character characterData)
         {
             characterName.Content = characterData.CharacterName;
-            if (characterData.EquipedItems is not null)
+            if (characterData.InventoryItems is not null)
             {
-                var battleStats = ComputeBattleStats(characterData.EquipedItems!);
+                var battleStats = ComputeBattleStats(characterData.InventoryItems);
                 FillBattleStats(battleStats);
-                FillEquipedItems(characterData.EquipedItems!);
+                FillEquipedItems(characterData.InventoryItems!);
                 characterName.Content = characterData.CharacterName;
             }
         }
@@ -44,12 +45,12 @@ namespace MysticLegendsClient.Controls
                 image.Source = null;
         }
 
-        private void FillEquipedItems(IEnumerable<ItemData> equipedItems)
+        private void FillEquipedItems(IEnumerable<InventoryItem> equipedItems)
         {
             ClearEquipedItems();
             foreach (var item in equipedItems)
             {
-                var iconResource = Items.ResourceManager.GetString(item.Icon);
+                var iconResource = Items.ResourceManager.GetString(item.Item.Icon);
                 if (iconResource is null)
                 {
                     // TODO: use Logger
@@ -58,7 +59,7 @@ namespace MysticLegendsClient.Controls
                 }
                 var bitmap = BitmapTools.FromResource(iconResource);
 
-                Image? imageControl = GetImageByItemType(item.ItemType);
+                Image? imageControl = GetImageByItemType((ItemType)item.Item.ItemType);
 
                 if (imageControl is null) continue;
                 imageControl.Source = bitmap;
@@ -75,32 +76,30 @@ namespace MysticLegendsClient.Controls
             _ => null,
         };
 
-        private BattleStats ComputeBattleStats(IEnumerable<ItemData> items)
+        private BattleStats ComputeBattleStats(IEnumerable<InventoryItem> items)
         {
-            var battleStats = from item in items where item.BattleStats is not null select item.BattleStats!.Value;
+            var battleStats = from item in items where item.BattleStats is not null select new BattleStats(item.BattleStats);
 
             return new BattleStats(battleStats);
         }
 
         public void FillBattleStats(BattleStats battleStats)
         {
-            var stats = battleStats.Stats;
+            strength.VarContent = battleStats.Get(CBattleStat.Type.Strength).Value.ToString();
+            dexterity.VarContent = battleStats.Get(CBattleStat.Type.Dexterity).Value.ToString();
+            intelligence.VarContent = battleStats.Get(CBattleStat.Type.Intelligence).Value.ToString();
 
-            strength.VarContent = stats.Get(BattleStat.Type.Strength).Value.ToString();
-            dexterity.VarContent = stats.Get(BattleStat.Type.Dexterity).Value.ToString();
-            intelligence.VarContent = stats.Get(BattleStat.Type.Intelligence).Value.ToString();
+            physicalDamage.VarContent = battleStats.Get(CBattleStat.Type.PhysicalDamage).Value.ToString();
+            swiftness.VarContent = battleStats.Get(CBattleStat.Type.Swiftness).Value.ToString();
+            magicStrength.VarContent = battleStats.Get(CBattleStat.Type.MagicStrength).Value.ToString();
 
-            physicalDamage.VarContent = stats.Get(BattleStat.Type.PhysicalDamage).Value.ToString();
-            swiftness.VarContent = stats.Get(BattleStat.Type.Swiftness).Value.ToString();
-            magicStrength.VarContent = stats.Get(BattleStat.Type.MagicStrength).Value.ToString();
+            resilience.VarContent = battleStats.Get(CBattleStat.Type.Resilience).Value.ToString();
+            evade.VarContent = battleStats.Get(CBattleStat.Type.Evade).Value.ToString();
+            magicProtection.VarContent = battleStats.Get(CBattleStat.Type.MagicProtection).Value.ToString();
 
-            resilience.VarContent = stats.Get(BattleStat.Type.Resilience).Value.ToString();
-            evade.VarContent = stats.Get(BattleStat.Type.Evade).Value.ToString();
-            magicProtection.VarContent = stats.Get(BattleStat.Type.MagicProtection).Value.ToString();
-
-            fireResistance.VarContent = stats.Get(BattleStat.Type.FireResistance).Value.ToString();
-            poisonResistance.VarContent = stats.Get(BattleStat.Type.PoisonResistance).Value.ToString();
-            arcaneResistance.VarContent = stats.Get(BattleStat.Type.ArcaneResistance).Value.ToString();
+            fireResistance.VarContent = battleStats.Get(CBattleStat.Type.FireResistance).Value.ToString();
+            poisonResistance.VarContent = battleStats.Get(CBattleStat.Type.PoisonResistance).Value.ToString();
+            arcaneResistance.VarContent = battleStats.Get(CBattleStat.Type.ArcaneResistance).Value.ToString();
         }
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)

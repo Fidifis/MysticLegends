@@ -1,6 +1,5 @@
-﻿using MysticLegendsClasses;
+﻿using MysticLegendsShared.Models;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -43,14 +42,15 @@ namespace MysticLegendsClient
 
         private async Task Refresh()
         {
-            var characterData = await(ApiClient.Connection?.GetAsync<CharacterData>("/api/Player/zmrdus") ?? throw new NetworkException("No connection"));
+            Character characterData = await(ApiClient.Connection?.GetAsync<Character>("/api/Player/zmrdus") ?? throw new NetworkException("No connection")) ?? throw new NetworkException("Data parsing error");
             FillData(characterData);
         }
 
-        private void FillData(CharacterData characterData)
+        private void FillData(Character characterData)
         {
             characterView.FillData(characterData);
-            inventoryView.FillData(characterData.Inventory);
+            if (characterData.CharacterInventory is not null)
+                inventoryView.FillData(characterData.CharacterInventory);
         }
 
         private void InventoryDrop(InventoryItemContext source, InventoryItemContext target)
@@ -80,7 +80,7 @@ namespace MysticLegendsClient
                 ["sourceItem"] = source.Id.ToString(),
                 ["targetItem"] = target.Id.ToString(),
             };
-            var newInventory1 = await (ApiClient.Connection?.PostAsync<InventoryData>("/api/Player/zmrdus/inventoryswap", parameters1.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            var newInventory1 = await (ApiClient.Connection?.PostAsync<CharacterInventory>("/api/Player/zmrdus/inventoryswap", parameters1.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
             inventoryView.FillData(newInventory1);
         }
 
@@ -91,7 +91,7 @@ namespace MysticLegendsClient
                 ["itemToEquip"] = itemToEquip.Id.ToString(),
                 ["itemToUnequip"] = itemToUnequip.Id.ToString(),
             };
-            var characterData = await (ApiClient.Connection?.PostAsync<CharacterData>("/api/Player/zmrdus/equipitem", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            var characterData = await (ApiClient.Connection?.PostAsync<Character>("/api/Player/zmrdus/equipitem", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
             FillData(characterData);
         }
     }

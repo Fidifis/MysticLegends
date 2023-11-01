@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MysticLegendsClasses\MysticLegendsClasses.csproj" />
+    <ProjectReference Include="..\MysticLegendsShared\MysticLegendsShared.csproj" />
   </ItemGroup>
 
 </Project>
