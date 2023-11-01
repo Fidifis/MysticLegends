@@ -1,11 +1,18 @@
-﻿namespace MysticLegendsShared.Models;
+﻿using MysticLegendsShared.Utilities;
+using MysticLegendsShared.Models;
 
-public interface IInventory
+namespace MysticLegendsShared.Utilities
 {
-    public int Capacity { get; set; }
-    public ICollection<InventoryItem> InventoryItems { get; set; }
+    public interface IInventory
+    {
+        public int Capacity { get; set; }
+        public ICollection<InventoryItem> InventoryItems { get; set; }
+    }
 }
 
-public partial class CharacterInventory: IInventory { }
-public partial class CityInventory : IInventory { }
-public partial class NpcInventory : IInventory { }
+namespace MysticLegendsShared.Models
+{
+    public partial class CharacterInventory : IInventory { }
+    public partial class CityInventory : IInventory { }
+    public partial class NpcInventory : IInventory { }
+}

@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using MysticLegendsClient.Resources;
 using System.Windows.Input;
-using MysticLegendsShared.Models;
+using MysticLegendsShared.Utilities;
 
 namespace MysticLegendsClient.Controls
 {
