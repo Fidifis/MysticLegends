@@ -1,6 +1,5 @@
 ﻿using MysticLegendsClient.CityWindows;
 using System.Windows;
-using System.Windows.Media.Imaging;
 
 namespace MysticLegendsClient
 {
@@ -30,14 +29,14 @@ namespace MysticLegendsClient
 
         private async void Login_Click(object sender, RoutedEventArgs e)
         {
-            if (!await ConnectToServer())
+            if (!await GameState.Current.Connection.HealthCheckAsync())
             {
                 MessageBox.Show("Can't connect to server", "Connection failed", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (remember.IsChecked == true)
-                TokenStore.SaveRefreshToken("random");
+                GameState.Current.TokenStore.SaveRefreshToken("random");
 
             new AyreimCity().Show();
             Close();
@@ -49,19 +48,6 @@ namespace MysticLegendsClient
             customServerControls.Visibility =
                 serverSelect.SelectedIndex == serverSelect.Items.Count - 1 ?
                 Visibility.Visible : Visibility.Collapsed;
-        }
-
-        private async Task<bool> ConnectToServer()
-        {
-            try
-            {
-                await ApiClient.Connect("http://localhost:5281");
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
         }
     }
 }

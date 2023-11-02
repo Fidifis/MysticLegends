@@ -10,31 +10,49 @@ namespace MysticLegendsClient.Controls
     /// <summary>
     /// Interakční logika pro CharacterView.xaml
     /// </summary>
-    public partial class CharacterView : UserControl
+    public partial class CharacterView : UserControl, IDataViewWithDrop<Character, InventoryItem>
     {
-        public delegate void ItemDrop(InventoryItemContext source, InventoryItemContext target);
-        public ItemDrop? ItemDropCallback { get; set; }
+        public IItemDrop.ItemDrop? ItemDropCallback { get; set; }
+
+        private Character? data;
+        public Character? Data
+        {
+            get => data;
+            set
+            {
+                data = value;
+                FillData(data);
+            }
+        }
+
+        public void Update() => FillData(data);
+
+        public InventoryItem? GetByContextId(int id) => Data?.InventoryItems?.Where(item => item.Item.ItemType == id).FirstOrDefault();
 
         public CharacterView()
         {
             InitializeComponent();
 
-            bodyArmorSlot.Tag = new InventoryItemContext(this, (int)ItemType.BodyArmor);
-            helmetSlot.Tag = new InventoryItemContext(this, (int)ItemType.Helmet);
-            glovesSlot.Tag = new InventoryItemContext(this, (int)ItemType.Gloves);
-            bootsSlot.Tag = new InventoryItemContext(this, (int)ItemType.Boots);
-            weaponSlot.Tag = new InventoryItemContext(this, (int)ItemType.Weapon);
+            bodyArmorSlot.Tag = new ItemDropContext(this, (int)ItemType.BodyArmor);
+            helmetSlot.Tag = new ItemDropContext(this, (int)ItemType.Helmet);
+            glovesSlot.Tag = new ItemDropContext(this, (int)ItemType.Gloves);
+            bootsSlot.Tag = new ItemDropContext(this, (int)ItemType.Boots);
+            weaponSlot.Tag = new ItemDropContext(this, (int)ItemType.Weapon);
         }
 
-        public void FillData(Character characterData)
+        private void FillData(Character? characterData)
         {
-            characterName.Content = characterData.CharacterName;
-            if (characterData.InventoryItems is not null)
+            characterName.Content = characterData?.CharacterName ?? "";
+            if (characterData?.InventoryItems is not null)
             {
                 var battleStats = ComputeBattleStats(characterData.InventoryItems);
                 FillBattleStats(battleStats);
                 FillEquipedItems(characterData.InventoryItems!);
-                characterName.Content = characterData.CharacterName;
+            }
+            else
+            {
+                ClearEquipedItems();
+                FillBattleStats(new BattleStats());
             }
         }
 
@@ -104,7 +122,7 @@ namespace MysticLegendsClient.Controls
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (((FrameworkElement)sender).Tag is InventoryItemContext context && GetImageByItemType((ItemType)context.Id)?.Source is not null)
+            if (((FrameworkElement)sender).Tag is ItemDropContext context && GetImageByItemType((ItemType)context.Id)?.Source is not null)
             {
                 var data = new DataObject(typeof(FrameworkElement), sender);
                 DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Move);
@@ -118,7 +136,7 @@ namespace MysticLegendsClient.Controls
             if (e.Data.GetDataPresent(typeof(FrameworkElement)))
             {
                 var source = (FrameworkElement)e.Data.GetData(typeof(FrameworkElement));
-                ItemDropCallback?.Invoke((InventoryItemContext)source.Tag, (InventoryItemContext)target.Tag);
+                ItemDropCallback?.Invoke((ItemDropContext)source.Tag, (ItemDropContext)target.Tag);
             }
         }
     }

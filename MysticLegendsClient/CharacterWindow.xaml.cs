@@ -42,56 +42,88 @@ namespace MysticLegendsClient
 
         private async Task Refresh()
         {
-            Character characterData = await(ApiClient.Connection?.GetAsync<Character>("/api/Player/zmrdus") ?? throw new NetworkException("No connection")) ?? throw new NetworkException("Data parsing error");
+            Character characterData = await(GameState.Current.Connection.GetAsync<Character>("/api/Player/zmrdus") ?? throw new NetworkException("No connection")) ?? throw new NetworkException("Data parsing error");
             FillData(characterData);
         }
 
         private void FillData(Character characterData)
         {
-            characterView.FillData(characterData);
+            characterView.Data = characterData;
             if (characterData.CharacterInventory is not null)
-                inventoryView.FillData(characterData.CharacterInventory);
+                inventoryView.Data = characterData.CharacterInventory;
         }
 
-        private void InventoryDrop(InventoryItemContext source, InventoryItemContext target)
+        private void InventoryDrop(ItemDropContext source, ItemDropContext target)
         {
             if (source.Owner == inventoryView && target.Owner == inventoryView)
             {
-                SwapServerCall(source, target);
-                return;
+                var inventoryItem = inventoryView.GetByContextId(source.Id);
+                SwapServerCall(inventoryItem!.InvitemId, target.Id);
             }
+
             else if (source.Owner == inventoryView && target.Owner == characterView)
             {
-                EquipServerCall(source, target);
+                var inventoryItem = inventoryView.GetByContextId(source.Id);
+                var equipedItem = characterView.GetByContextId(target.Id);
+
+                if (inventoryItem is not null && equipedItem is not null)
+                    EquipSwapServerCall(inventoryItem.InvitemId);
+
+                else if (inventoryItem is not null)
+                    EquipServerCall(inventoryItem.InvitemId);
             }
             else if (source.Owner == characterView && target.Owner == inventoryView)
             {
-                EquipServerCall(target, source);
-            }
-            else {
-                // TODO: Debug.Assert(false);
+                var inventoryItem = inventoryView.GetByContextId(target.Id);
+                var equipedItem = characterView.GetByContextId(source.Id);
+                if (inventoryItem is not null && equipedItem is not null)
+                    EquipSwapServerCall(inventoryItem.InvitemId);
+
+                else if (equipedItem is not null)
+                    UnequipServerCall(equipedItem.InvitemId, target.Id);
             }
         }
 
-        private async void SwapServerCall(InventoryItemContext source, InventoryItemContext target)
+        private async void SwapServerCall(int itemId, int position)
         {
             var parameters1 = new Dictionary<string, string>
             {
-                ["sourceItem"] = source.Id.ToString(),
-                ["targetItem"] = target.Id.ToString(),
+                ["itemId"] = itemId.ToString(),
+                ["position"] = position.ToString(),
             };
-            var newInventory1 = await (ApiClient.Connection?.PostAsync<CharacterInventory>("/api/Player/zmrdus/inventoryswap", parameters1.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
-            inventoryView.FillData(newInventory1);
+            var newInventory1 = await (GameState.Current.Connection.PostAsync<CharacterInventory>("/api/Player/zmrdus/inventory-swap", parameters1.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            inventoryView.Data = newInventory1;
         }
 
-        private async void EquipServerCall(InventoryItemContext itemToEquip, InventoryItemContext itemToUnequip)
+        private async void EquipServerCall(int itemToEquip)
         {
             var parameters = new Dictionary<string, string>
             {
-                ["itemToEquip"] = itemToEquip.Id.ToString(),
-                ["itemToUnequip"] = itemToUnequip.Id.ToString(),
+                ["equipItemId"] = itemToEquip.ToString(),
             };
-            var characterData = await (ApiClient.Connection?.PostAsync<Character>("/api/Player/zmrdus/equipitem", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            var characterData = await (GameState.Current.Connection.PostAsync<Character>("/api/Player/zmrdus/equip-item", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            FillData(characterData);
+        }
+
+        private async void UnequipServerCall(int itemToUnequip, int? position)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                ["unequipItemId"] = itemToUnequip.ToString(),
+            };
+            if (position is not null)
+                parameters["position"] = position.ToString()!;
+            var characterData = await (GameState.Current.Connection.PostAsync<Character>("/api/Player/zmrdus/unequip-item", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            FillData(characterData);
+        }
+
+        private async void EquipSwapServerCall(int itemToSwapEquip)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                ["equipItemId"] = itemToSwapEquip.ToString(),
+            };
+            var characterData = await (GameState.Current.Connection.PostAsync<Character>("/api/Player/zmrdus/swap-equip-item", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
             FillData(characterData);
         }
     }

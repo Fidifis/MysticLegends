@@ -2,34 +2,19 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
 
 namespace MysticLegendsClient
 {
     internal class NetworkException : Exception
     {
-        public NetworkException(string message): base(message) { }
+        public NetworkException(string message) : base(message) { }
     }
 
     internal class ApiClient: IDisposable
     {
-        public static ApiClient? Connection = null;
         private readonly HttpClient client = new();
 
-        public static async Task Connect(string address)
-        {
-            if (Connection is not null)
-                throw new InvalidOperationException("Connection already established");
-
-            var newClient = new ApiClient(address);
-            if (!await newClient.CheckServerStatusAsync())
-                throw new HttpRequestException("Connection failed");
-
-            Connection = newClient;
-        }
-
-        private async Task<bool> CheckServerStatusAsync()
+        public async Task<bool> HealthCheckAsync()
         {
             var status = await GetAsync<Dictionary<string, string>>("api/Health");
             try
@@ -48,15 +33,6 @@ namespace MysticLegendsClient
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
-        }
-
-        public static void Disconnect()
-        {
-            if (Connection is null)
-                return;
-
-            Connection.Dispose();
-            Connection = null;
         }
 
         public void Dispose()

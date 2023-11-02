@@ -4,15 +4,22 @@ using System.Text.Json;
 
 namespace MysticLegendsClient
 {
-    internal static class TokenStore
+    internal class TokenStore
     {
-        public static string? AccessToken { get; set; }
+        public string? AccessToken { get; set; }
 
-        public static readonly string StorePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Mystic Legends\tokens.json";
-        private static readonly Encoding encoding = Encoding.UTF8;
+        public readonly string StorePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Mystic Legends\tokens.json";
+        private readonly Encoding encoding = Encoding.UTF8;
         private const string refreshTokenString = "refreshToken";
 
-        public static string? GetRefreshToken()
+        public TokenStore() { }
+
+        public TokenStore(string storePath)
+        {
+            StorePath = storePath;
+        }
+
+        public string? GetRefreshToken()
         {
             var data = ReadJsonFile(StorePath);
             if (data?.ContainsKey(refreshTokenString) == true)
@@ -23,7 +30,7 @@ namespace MysticLegendsClient
             return null;
         }
 
-        public static void SaveRefreshToken(string token)
+        public void SaveRefreshToken(string token)
         {
             var dir = Path.GetDirectoryName(StorePath);
 
@@ -41,7 +48,7 @@ namespace MysticLegendsClient
             File.WriteAllText(StorePath, json);
         }
 
-        private static Dictionary<string,string>? ReadJsonFile(string path)
+        private Dictionary<string,string>? ReadJsonFile(string path)
         {
             if (!File.Exists(path))
                 return null;

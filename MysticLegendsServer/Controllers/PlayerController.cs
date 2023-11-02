@@ -56,9 +56,7 @@ namespace MysticLegendsServer.Controllers
             },
         };
 
-        // GET api/<PlayerController>/5
-        [HttpGet("{characterName}")]
-        public async Task<Character> Get(string characterName, string accessToken)
+        private async Task<Character> RequestCharacterItems(string characterName)
         {
             return await context.Characters
                 .Include(character => character.CharacterInventory)
@@ -74,145 +72,152 @@ namespace MysticLegendsServer.Controllers
                 .SingleAsync(character => character.CharacterName == characterName);
         }
 
-        //// POST api/<PlayerController>
-        //[HttpPost("{characterName}/inventoryswap")]
-        //public async Task<ObjectResult> InventorySwap(string characterName, [FromBody] Dictionary<string, string> paramters)
-        //{
-        //    var sourcePosition = int.Parse(paramters["sourceItem"]);
-        //    var targetPosition = int.Parse(paramters["targetItem"]);
-        //    var inventory = (await Character.GetCharacterInventory(characterName)).Value;
-        //    var newItems = inventory.Items!.ToList();
+        // GET api/<PlayerController>/5
+        [HttpGet("{characterName}")]
+        public async Task<Character> Get(string characterName, string accessToken)
+        {
+            return await RequestCharacterItems(characterName);
+        }
 
-        //    var sourceIndex = newItems.FindIndex(item => item.InventoryPosition == sourcePosition);
-        //    var targetIndex = newItems.FindIndex(item => item.InventoryPosition == targetPosition);
+        // POST api/<PlayerController>
+        [HttpPost("{characterName}/inventory-swap")]
+        public async Task<ObjectResult> InventorySwap(string characterName, [FromBody] Dictionary<string, string> paramters)
+        {
+            var itemToMove = int.Parse(paramters["itemId"]);
+            var targetPosition = int.Parse(paramters["position"]);
+            var accessToken = paramters["accessToken"];
+            var inventory = await context.CharacterInventories
+                .Include(inventory => inventory.InventoryItems)
+                    .ThenInclude(item => item.Item)
+                .Include(inventory => inventory.InventoryItems)
+                    .ThenInclude(item => item.BattleStats)
+                .SingleAsync(inv => inv.CharacterName == characterName);
 
-        //    if (sourceIndex == targetIndex)
-        //        return BadRequest("{username}/{characterName}/inventoryswap => swaping empty positions");
 
-        //    //Task? task1 = null, task2 = null;
-        //    if (sourceIndex >= 0)
-        //    {
-        //        var sourceItem = newItems[sourceIndex];
-        //        sourceItem.InventoryPosition = targetPosition;
-        //        newItems[sourceIndex] = sourceItem;
-        //        await Character.ChangeItemPosition(sourceItem.InvItemId, targetPosition);
-        //    }
+            var itemList = (List<InventoryItem>)inventory.InventoryItems;
 
-        //    if (targetIndex >= 0)
-        //    {
-        //        var targetItem = newItems[targetIndex];
-        //        targetItem.InventoryPosition = sourcePosition;
-        //        newItems[targetIndex] = targetItem;
-        //        await Character.ChangeItemPosition(targetItem.InvItemId, sourcePosition);
-        //    }
+            var sourceIndex = itemList.FindIndex(item => item.InvitemId == itemToMove);
+            var targetIndex = itemList.FindIndex(item => item.Position == targetPosition);
 
-        //    inventory.Items = newItems.ToImmutableList();
-        //    //await Task.WhenAll(task1 ?? Task.CompletedTask, task2 ?? Task.CompletedTask);
+            if (sourceIndex < 0)
+                return BadRequest("{username}/{characterName}/inventoryswap => swaping empty positions");
 
-        //    return Ok(inventory);
-        //}
+            var sourceItem = inventory.InventoryItems.ElementAt(sourceIndex);
+            var sourcePosition = sourceItem.Position;
+            sourceItem.Position = targetPosition;
 
-        //[HttpPost("{characterName}/equipitem")]
-        //public async Task<ObjectResult> EquipItem(string characterName, [FromBody] Dictionary<string, string> paramters)
-        //{
-        //    var characterData = (await Character.GetCharacterData(characterName)).Value;
-        //    var inventoryItems = characterData.Inventory.Items!.ToList();
-        //    var equipedItems = characterData.EquipedItems!.ToList();
 
-        //    if (paramters.ContainsKey("itemToEquip"))
-        //    {
-        //        var itemToEquipPosition = uint.Parse(paramters["itemToEquip"]);
-        //        var itemToEquipIndex = inventoryItems.FindIndex(item => item.InventoryPosition == itemToEquipPosition);
+            if (targetIndex >= 0)
+            {
+                var targetItem = inventory.InventoryItems.ElementAt(targetIndex);
+                targetItem.Position = sourcePosition;
+            }
 
-        //        if (itemToEquipIndex >= 0)
-        //        {
-        //            var itemToEquip = inventoryItems[itemToEquipIndex];
-        //            var itemToUnequipIndex = equipedItems.FindIndex(item => item.ItemType == itemToEquip.ItemType);
+            await context.SaveChangesAsync();
 
-        //            equipedItems.Add(itemToEquip);
-        //            inventoryItems.RemoveAt(itemToEquipIndex);
+            return Ok(inventory);
+        }
 
-        //            var transferTask1 = Character.ItemTransfer(itemToEquip.InvItemId,
-        //                    Character.InventorySource.CharacterInventory,
-        //                    Character.InventorySource.CharacterEquiped,
-        //                    characterName);
+        [HttpPost("{characterName}/equip-item")]
+        public async Task<ObjectResult> EquipItem(string characterName, [FromBody] Dictionary<string, string> paramters)
+        {
+            var character = await RequestCharacterItems(characterName);
+            var inventoryItems = (List<InventoryItem>)character.CharacterInventory!.InventoryItems;
+            var equipedItems = (List<InventoryItem>)character.InventoryItems;
 
-        //            Task? transferTask2 = null;
-        //            if (itemToUnequipIndex >= 0)
-        //            {
-        //                var itemToUnequip = equipedItems[itemToUnequipIndex];
-        //                itemToUnequip.InventoryPosition = itemToEquip.InventoryPosition;
+            var itemToEquipId = int.Parse(paramters["equipItemId"]);
+            var itemToEquipIndex = inventoryItems.FindIndex(item => item.InvitemId == itemToEquipId);
 
-        //                equipedItems.RemoveAt(itemToUnequipIndex);
-        //                inventoryItems.Add(itemToUnequip);
+            if (itemToEquipIndex < 0)
+                return BadRequest("didn't find the requested item");
 
-        //                transferTask2 = Character.ItemTransfer(itemToUnequip.InvItemId,
-        //                    Character.InventorySource.CharacterEquiped,
-        //                    Character.InventorySource.CharacterInventory,
-        //                    characterName);
-        //            }
+            var itemToEquip = inventoryItems[itemToEquipIndex];
 
-        //            var newInventory = characterData.Inventory;
-        //            newInventory.Items = inventoryItems.ToImmutableList();
-        //            characterData.Inventory = newInventory;
+            if (equipedItems.Find(item => item.Item.ItemType == itemToEquip.Item.ItemType) is not null)
+                return BadRequest("{characterName}/equip-item => You are trying to equip already equiped item type.");
 
-        //            characterData.EquipedItems = equipedItems.ToImmutableList();
+            equipedItems.Add(itemToEquip);
+            inventoryItems.RemoveAt(itemToEquipIndex);
 
-        //            await Task.WhenAll(transferTask1, transferTask2 ?? Task.CompletedTask);
-        //            return Ok(characterData);
-        //        }
-        //    }
-        //    if (paramters.ContainsKey("itemToUnequip"))
-        //    {
-        //        if (inventoryItems.Count >= characterData.Inventory.Capacity)
-        //            return BadRequest("{characterName}/equipitem => inventory full");
+            await context.SaveChangesAsync();
+            return Ok(character);
+        }
 
-        //        var itemToUnequipPosition = uint.Parse(paramters["itemToUnequip"]);
-        //        var itemToUnequipIndex = equipedItems.FindIndex(item => item.ItemType == (ItemType)itemToUnequipPosition);
+        [HttpPost("{characterName}/unequip-item")]
+        public async Task<ObjectResult> UnequipItem(string characterName, [FromBody] Dictionary<string, string> paramters)
+        {
+            var character = await RequestCharacterItems(characterName);
+            var inventoryItems = (List<InventoryItem>)character.CharacterInventory!.InventoryItems;
+            var equipedItems = (List<InventoryItem>)character.InventoryItems;
 
-        //        if (itemToUnequipIndex >= 0)
-        //        {
-        //            var itemToUnequip = equipedItems[itemToUnequipIndex];
+            var itemToUnequipId = int.Parse(paramters["unequipItemId"]);
+            var itemToUnequipIndex = equipedItems.FindIndex(item => item.InvitemId == itemToUnequipId);
 
-        //            int itemNewInventoryPosition = 0;
-        //            if (paramters.ContainsKey("itemToEquip"))
-        //                itemNewInventoryPosition = int.Parse(paramters["itemToEquip"]);
-        //            else
-        //                itemNewInventoryPosition = itemToUnequip.InventoryPosition;
+            var strposition = paramters.Get("position");
 
-        //            for (int i = 0; i < inventoryItems.Count; i++)
-        //            {
-        //                if (inventoryItems.FindIndex(item => item.InventoryPosition == itemNewInventoryPosition) >= 0)
-        //                {
-        //                    itemNewInventoryPosition++;
-        //                    itemNewInventoryPosition = itemNewInventoryPosition >= inventoryItems.Count ? itemNewInventoryPosition - inventoryItems.Count : itemNewInventoryPosition;
-        //                }
-        //                else
-        //                    break;
-        //            }
+            if (itemToUnequipIndex < 0)
+                return BadRequest("didn't find the requested item");
 
-        //            itemToUnequip.InventoryPosition = itemNewInventoryPosition;
-        //            var task1 = Character.ChangeItemPosition(itemToUnequip.InvItemId, itemNewInventoryPosition);
+            var itemToUnequip = equipedItems[itemToUnequipIndex];
+            var itemNewInventoryPosition = strposition is not null ? int.Parse(strposition) : itemToUnequip.Position;
+            bool positionFound = false;
 
-        //            equipedItems.RemoveAt(itemToUnequipIndex);
-        //            inventoryItems.Add(itemToUnequip);
-        //            var task2 = Character.ItemTransfer(itemToUnequip.InvItemId,
-        //                    Character.InventorySource.CharacterEquiped,
-        //                    Character.InventorySource.CharacterInventory,
-        //                    characterName);
+            var capacity = character.CharacterInventory!.Capacity;
+            for (int i = 0; i < capacity; i++)
+            {
+                if (inventoryItems.Find(item => item.Position == itemNewInventoryPosition) is not null)
+                {
+                    if (++itemNewInventoryPosition >= capacity)
+                        itemNewInventoryPosition -= capacity;
+                }
+                else
+                {
+                    positionFound = true;
+                    break;
+                }
+            }
 
-        //            var newInventory = characterData.Inventory;
-        //            newInventory.Items = inventoryItems.ToImmutableList();
-        //            characterData.Inventory = newInventory;
+            if (!positionFound)
+                return BadRequest("No space in inventory");
 
-        //            characterData.EquipedItems = equipedItems.ToImmutableList();
+            itemToUnequip.Position = itemNewInventoryPosition;
 
-        //            await Task.WhenAll(task1, task2);
-        //            return Ok(characterData);
-        //        }
-        //    }
+            inventoryItems.Add(itemToUnequip);
+            equipedItems.RemoveAt(itemToUnequipIndex);
 
-        //    return BadRequest("something went wrong try again :)");
-        //}
+            await context.SaveChangesAsync();
+            return Ok(character);
+        }
+
+        [HttpPost("{characterName}/swap-equip-item")]
+        public async Task<ObjectResult> SwapEquipItem(string characterName, [FromBody] Dictionary<string, string> paramters)
+        {
+            var character = await RequestCharacterItems(characterName);
+            var inventoryItems = (List<InventoryItem>)character.CharacterInventory!.InventoryItems;
+            var equipedItems = (List<InventoryItem>)character.InventoryItems;
+
+            var itemToEquipId = int.Parse(paramters["equipItemId"]);
+            var itemToEquipIndex = inventoryItems.FindIndex(item => item.InvitemId == itemToEquipId);
+
+            if (itemToEquipIndex < 0)
+                return BadRequest("didn't find the requested item");
+
+            var itemToUnequipIndex = equipedItems.FindIndex(item => item.Item.ItemType == inventoryItems[itemToEquipIndex].Item.ItemType);
+
+            if (itemToUnequipIndex < 0)
+                return BadRequest("didn't find the right item to be unequiped");
+
+
+            var itemToEquip = inventoryItems[itemToEquipIndex];
+            var itemToUnequip = equipedItems[itemToUnequipIndex];
+
+            equipedItems.Add(itemToEquip);
+            inventoryItems.RemoveAt(itemToEquipIndex);
+            inventoryItems.Add(itemToUnequip);
+            equipedItems.RemoveAt(itemToUnequipIndex);
+
+            await context.SaveChangesAsync();
+            return Ok(character);
+        }
     }
 }
