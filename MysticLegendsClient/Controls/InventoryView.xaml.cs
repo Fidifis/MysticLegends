@@ -111,7 +111,7 @@ namespace MysticLegendsClient.Controls
 
             foreach (var item in inventoryItems)
             {
-                ImgSlots[item.Position].Source = BitmapTools.FromResource(Items.ResourceManager.GetString(item.Item.Icon)!);
+                ImgSlots[item.Position].Source = BitmapTools.FromResource(ItemIcons.ResourceManager.GetString(item.Item.Icon)!);
             }
 
             UpdateCapacityCounter();

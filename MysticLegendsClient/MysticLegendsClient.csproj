@@ -43,10 +43,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Icons.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\Items.Designer.cs">
+    <Compile Update="Resources\ItemIcons.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Items.resx</DependentUpon>
+      <DependentUpon>ItemIcons.resx</DependentUpon>
     </Compile>
   </ItemGroup>
  
@@ -55,9 +55,9 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Icons.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Items.resx">
+    <EmbeddedResource Update="Resources\ItemIcons.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Items.Designer.cs</LastGenOutput>
+      <LastGenOutput>ItemIcons.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

@@ -68,7 +68,7 @@ namespace MysticLegendsClient.Controls
             ClearEquipedItems();
             foreach (var item in equipedItems)
             {
-                var iconResource = Items.ResourceManager.GetString(item.Item.Icon);
+                var iconResource = ItemIcons.ResourceManager.GetString(item.Item.Icon);
                 if (iconResource is null)
                 {
                     // TODO: use Logger
