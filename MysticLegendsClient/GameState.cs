@@ -1,4 +1,6 @@
-﻿namespace MysticLegendsClient;
+﻿using System.Windows;
+
+namespace MysticLegendsClient;
 
 internal class GameState : IDisposable
 {
@@ -6,11 +8,10 @@ internal class GameState : IDisposable
     public ApiClient Connection { get; private init; }
     public TokenStore TokenStore { get; private init; } = new();
 
-    public event EventHandler<CityWindowClosedEventArgs>? CityWindowClosedEvent;
     public event EventHandler<CurrencyUpdateEventArgs>? CurrencyUpdateEvent;
-
-    public void CityWindowClosed(object? sender, CityWindowClosedEventArgs e) => CityWindowClosedEvent?.Invoke(sender, e);
     public void CurrencyUpdate(object? sender, CurrencyUpdateEventArgs e) => CurrencyUpdateEvent?.Invoke(sender, e);
+
+    private bool cityTravel = false;
 
     public static void MakeGameStateCurrent(GameState gs)
     {
@@ -40,6 +41,14 @@ internal class GameState : IDisposable
     ~GameState()
     {
         Dispose();
+    }
+
+    public void CityWindowClosed()
+    {
+        if (!cityTravel)
+        {
+            Application.Current.Shutdown();
+        }
     }
 }
 

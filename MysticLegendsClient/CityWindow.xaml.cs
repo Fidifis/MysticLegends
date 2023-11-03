@@ -20,6 +20,8 @@ namespace MysticLegendsClient
             RebelsHideout,
         }
 
+        private readonly SingleInstanceWindow<CharacterWindow> characterWindow = new();
+
         public CityWindow()
         {
             InitializeComponent();
@@ -71,7 +73,7 @@ namespace MysticLegendsClient
 
         private void CharacterButton_Click(object sender, RoutedEventArgs e)
         {
-            CharacterWindow.ShowWindow();
+            characterWindow.Instance.ShowWindow();
         }
 
         private void CurrencyChanged(object? sender, CurrencyUpdateEventArgs e)
@@ -87,7 +89,7 @@ namespace MysticLegendsClient
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            GameState.Current.CityWindowClosed(sender, new CityWindowClosedEventArgs(this));
+            GameState.Current.CityWindowClosed();
         }
     }
 }

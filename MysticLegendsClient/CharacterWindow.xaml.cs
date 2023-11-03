@@ -7,33 +7,20 @@ namespace MysticLegendsClient
     /// <summary>
     /// Interakční logika pro CharacterWindow.xaml
     /// </summary>
-    public partial class CharacterWindow : Window
+    public partial class CharacterWindow : Window, ISingleInstanceWindow
     {
-        private static CharacterWindow? WindowInstance { get; set; } = null;
-        public static void ShowWindow(Window? owner)
+        public void ShowWindow()
         {
-            WindowInstance ??= new CharacterWindow() { Owner = owner };
-            WindowInstance.Show();
-            if (WindowInstance.WindowState == WindowState.Minimized) WindowInstance.WindowState = WindowState.Normal;
-            WindowInstance.Activate();
-        }
-
-        public static void ShowWindow()
-        {
-            ShowWindow(null);
+            Show();
+            if (WindowState == WindowState.Minimized) WindowState = WindowState.Normal;
+            Activate();
         }
 
         public CharacterWindow()
         {
             InitializeComponent();
-            GameState.Current.CityWindowClosedEvent += CityWindowClosed;
             inventoryView.ItemDropCallback = InventoryDrop;
             characterView.ItemDropCallback = InventoryDrop;
-        }
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            WindowInstance = null;
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -52,12 +39,6 @@ namespace MysticLegendsClient
             characterView.Data = characterData;
             if (characterData.CharacterInventory is not null)
                 inventoryView.Data = characterData.CharacterInventory;
-        }
-
-
-        private void CityWindowClosed(object? sender, CityWindowClosedEventArgs e)
-        {
-            Close();
         }
 
         private void EquipSwapCheckExec(InventoryItem inventoryItem, InventoryItem equipedItem)
