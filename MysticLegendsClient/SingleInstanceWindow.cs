@@ -1,15 +1,13 @@
-﻿using System.Windows;
-
-namespace MysticLegendsClient;
+﻿namespace MysticLegendsClient;
 
 public interface ISingleInstanceWindow
 {
     public void ShowWindow();
-    public event RoutedEventHandler Loaded;
+    public void Close();
     public event EventHandler Closed;
 }
 
-public class SingleInstanceWindow<T> where T : ISingleInstanceWindow, new()
+public sealed class SingleInstanceWindow<T> : IDisposable where T : ISingleInstanceWindow, new()
 {
     private ISingleInstanceWindow? instance;
     public ISingleInstanceWindow Instance
@@ -20,5 +18,10 @@ public class SingleInstanceWindow<T> where T : ISingleInstanceWindow, new()
             instance.Closed += (object? s, EventArgs e) => { instance = null; };
             return instance;
         }
+    }
+
+    public void Dispose()
+    {
+        instance?.Close();
     }
 }

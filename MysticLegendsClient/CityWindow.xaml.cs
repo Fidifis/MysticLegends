@@ -89,7 +89,7 @@ namespace MysticLegendsClient
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            GameState.Current.CityWindowClosed();
+            characterWindow.Dispose();
         }
     }
 }

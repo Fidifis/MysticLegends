@@ -42,13 +42,5 @@ internal class GameState : IDisposable
     {
         Dispose();
     }
-
-    public void CityWindowClosed()
-    {
-        if (!cityTravel)
-        {
-            Application.Current.Shutdown();
-        }
-    }
 }
 
