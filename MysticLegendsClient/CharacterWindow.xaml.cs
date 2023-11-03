@@ -42,7 +42,7 @@ namespace MysticLegendsClient
 
         private async Task Refresh()
         {
-            Character characterData = await(GameState.Current.Connection.GetAsync<Character>("/api/Player/zmrdus") ?? throw new NetworkException("No connection")) ?? throw new NetworkException("Data parsing error");
+            Character characterData = await GameState.Current.Connection.GetAsync<Character>("/api/Character/zmrdus");
             FillData(characterData);
         }
 
@@ -96,7 +96,7 @@ namespace MysticLegendsClient
                 ["itemId"] = itemId.ToString(),
                 ["position"] = position.ToString(),
             };
-            var newInventory1 = await (GameState.Current.Connection.PostAsync<CharacterInventory>("/api/Player/zmrdus/inventory-swap", parameters1.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            var newInventory1 = await GameState.Current.Connection.PostAsync<CharacterInventory>("/api/Character/zmrdus/inventory-swap", parameters1.ToImmutableDictionary());
             inventoryView.Data = newInventory1;
         }
 
@@ -106,7 +106,7 @@ namespace MysticLegendsClient
             {
                 ["equipItemId"] = itemToEquip.ToString(),
             };
-            var characterData = await (GameState.Current.Connection.PostAsync<Character>("/api/Player/zmrdus/equip-item", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            var characterData = await GameState.Current.Connection.PostAsync<Character>("/api/Character/zmrdus/equip-item", parameters.ToImmutableDictionary());
             FillData(characterData);
         }
 
@@ -118,7 +118,7 @@ namespace MysticLegendsClient
             };
             if (position is not null)
                 parameters["position"] = position.ToString()!;
-            var characterData = await (GameState.Current.Connection.PostAsync<Character>("/api/Player/zmrdus/unequip-item", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            var characterData = await GameState.Current.Connection.PostAsync<Character>("/api/Character/zmrdus/unequip-item", parameters.ToImmutableDictionary());
             FillData(characterData);
         }
 
@@ -128,7 +128,7 @@ namespace MysticLegendsClient
             {
                 ["equipItemId"] = itemToSwapEquip.ToString(),
             };
-            var characterData = await (GameState.Current.Connection.PostAsync<Character>("/api/Player/zmrdus/swap-equip-item", parameters.ToImmutableDictionary()) ?? throw new NetworkException("No connection"));
+            var characterData = await GameState.Current.Connection.PostAsync<Character>("/api/Character/zmrdus/swap-equip-item", parameters.ToImmutableDictionary());
             FillData(characterData);
         }
     }

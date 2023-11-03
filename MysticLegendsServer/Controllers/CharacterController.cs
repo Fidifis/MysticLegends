@@ -10,12 +10,12 @@ namespace MysticLegendsServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlayerController : ControllerBase
+    public class CharacterController : ControllerBase
     {
         private Xdigf001Context dbContext;
-        ILogger<PlayerController> logger;
+        ILogger<CharacterController> logger;
 
-        public PlayerController(Xdigf001Context context, ILogger<PlayerController> logger)
+        public CharacterController(Xdigf001Context context, ILogger<CharacterController> logger)
         {
             dbContext = context;
             this.logger = logger;
@@ -41,7 +41,6 @@ namespace MysticLegendsServer.Controllers
         [HttpGet("{characterName}")]
         public async Task<Character> Get(string characterName, string accessToken)
         {
-            logger.LogInformation("get character");
             return await RequestCharacterItems(characterName);
         }
 
@@ -66,7 +65,11 @@ namespace MysticLegendsServer.Controllers
             var targetIndex = itemList.FindIndex(item => item.Position == targetPosition);
 
             if (sourceIndex < 0)
-                return BadRequest("{username}/{characterName}/inventoryswap => swaping empty positions");
+            {
+                var msg = "swaping empty positions";
+                logger.LogWarning(msg);
+                return BadRequest(msg);
+            }
 
             var sourceItem = inventory.InventoryItems.ElementAt(sourceIndex);
             var sourcePosition = sourceItem.Position;
@@ -100,7 +103,11 @@ namespace MysticLegendsServer.Controllers
             var itemToEquip = inventoryItems[itemToEquipIndex];
 
             if (equipedItems.Find(item => item.Item.ItemType == itemToEquip.Item.ItemType) is not null)
-                return BadRequest("{characterName}/equip-item => You are trying to equip already equiped item type.");
+            {
+                var msg = "You are trying to equip already equiped item type";
+                logger.LogWarning(msg);
+                return BadRequest(msg);
+            }
 
             equipedItems.Add(itemToEquip);
             inventoryItems.RemoveAt(itemToEquipIndex);
@@ -122,7 +129,11 @@ namespace MysticLegendsServer.Controllers
             var strposition = paramters.Get("position");
 
             if (itemToUnequipIndex < 0)
-                return BadRequest("didn't find the requested item");
+            {
+                var msg = "didn't find the requested item";
+                logger.LogWarning(msg);
+                return BadRequest(msg);
+            }
 
             var itemToUnequip = equipedItems[itemToUnequipIndex];
             var itemNewInventoryPosition = strposition is not null ? int.Parse(strposition) : itemToUnequip.Position;
@@ -144,7 +155,11 @@ namespace MysticLegendsServer.Controllers
             }
 
             if (!positionFound)
-                return BadRequest("No space in inventory");
+            {
+                var msg = "No space in inventory";
+                logger.LogWarning(msg);
+                return BadRequest(msg);
+            }
 
             itemToUnequip.Position = itemNewInventoryPosition;
 
@@ -166,13 +181,20 @@ namespace MysticLegendsServer.Controllers
             var itemToEquipIndex = inventoryItems.FindIndex(item => item.InvitemId == itemToEquipId);
 
             if (itemToEquipIndex < 0)
-                return BadRequest("didn't find the requested item");
+            {
+                var msg = "didn't find the requested item";
+                logger.LogWarning(msg);
+                return BadRequest(msg);
+            }
 
             var itemToUnequipIndex = equipedItems.FindIndex(item => item.Item.ItemType == inventoryItems[itemToEquipIndex].Item.ItemType);
 
             if (itemToUnequipIndex < 0)
-                return BadRequest("didn't find the right item to be unequiped");
-
+            {
+                var msg = "didn't find the right item to be unequiped";
+                logger.LogWarning(msg);
+                return BadRequest(msg);
+            }
 
             var itemToEquip = inventoryItems[itemToEquipIndex];
             var itemToUnequip = equipedItems[itemToUnequipIndex];

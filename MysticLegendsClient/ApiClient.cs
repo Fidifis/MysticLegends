@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
@@ -40,15 +39,14 @@ namespace MysticLegendsClient
             client.Dispose();
         }
 
-        private static IImmutableDictionary<string, string> AppendToken(IImmutableDictionary<string, string>? paramters)
+        private static Dictionary<string, string> AppendToken(IReadOnlyDictionary<string, string>? paramters)
         {
-            var builder = ImmutableDictionary.CreateBuilder<string, string>();
-            if (paramters is not null) builder.AddRange(paramters);
-            builder["accessToken"] = "lol";
-            return builder.ToImmutable();
+            Dictionary<string, string> dict = paramters is not null ? new(paramters) : new();
+            dict["accessToken"] = "lol";
+            return dict;
         }
 
-        public async Task<T?> GetAsync<T>(string path, IImmutableDictionary<string,string>? parameters = null)
+        public async Task<T> GetAsync<T>(string path, IReadOnlyDictionary<string,string>? parameters = null)
         {
             parameters = AppendToken(parameters);
             path = path.TrimEnd('/');
@@ -63,20 +61,20 @@ namespace MysticLegendsClient
 
             using var response = await client.GetAsync(combined);
             if (!response.IsSuccessStatusCode)
-                return default;
+                throw new NetworkException(await response.Content.ReadFromJsonAsync<string>() ?? "No parsable data in HTTP response");
 
-            return await response.Content.ReadFromJsonAsync<T?>();
+            return await response.Content.ReadFromJsonAsync<T?>() ?? throw new NullReferenceException();
         }
 
-        public async Task<T?> PostAsync<T>(string path, IImmutableDictionary<string, string>? parameters = null)
+        public async Task<T> PostAsync<T>(string path, IReadOnlyDictionary<string, string>? parameters = null)
         {
             parameters = AppendToken(parameters);
 
             using var response = await client.PostAsJsonAsync(path, parameters);
             if (!response.IsSuccessStatusCode)
-                return default;
+                throw new NetworkException(await response.Content.ReadFromJsonAsync<string>() ?? "No parsable data in HTTP response");
 
-            return await response.Content.ReadFromJsonAsync<T?>();
+            return await response.Content.ReadFromJsonAsync<T?>() ?? throw new NullReferenceException();
         }
     }
 }
