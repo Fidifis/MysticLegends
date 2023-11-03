@@ -20,7 +20,7 @@ namespace MysticLegendsClient.Controls
             DataContext = this;
         }
 
-        public IItemDrop.ItemDrop? ItemDropCallback { get; set; }
+        public IItemDrop.ItemDropEventHandler? ItemDropCallback { get; set; }
 
         private int ItemCount { get => ImgSlots.Count(item => item.Source is not null); }
         private int Capacity { get => ImgSlots.Count; }
@@ -82,7 +82,7 @@ namespace MysticLegendsClient.Controls
         {
             inventoryPanel.Children.Add(element);
             ImgSlots.Add(image);
-            element.Tag = new ItemDropEventArgs(this, ImgSlots.Count - 1);
+            element.Tag = new ItemDropContext(this, ImgSlots.Count - 1);
         }
 
         private void UpdateSlots(int count)
@@ -119,7 +119,7 @@ namespace MysticLegendsClient.Controls
 
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (((FrameworkElement)sender).Tag is ItemDropEventArgs context && ImgSlots[context.ContextId].Source is not null)
+            if (((FrameworkElement)sender).Tag is ItemDropContext context && ImgSlots[context.ContextId].Source is not null)
             {
                 var data = new DataObject(typeof(FrameworkElement), sender);
                 DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Move);
@@ -133,7 +133,7 @@ namespace MysticLegendsClient.Controls
             if (e.Data.GetDataPresent(typeof(FrameworkElement)))
             {
                 var source = (FrameworkElement)e.Data.GetData(typeof(FrameworkElement));
-                ItemDropCallback?.Invoke((ItemDropEventArgs)source.Tag, (ItemDropEventArgs)target.Tag);
+                ItemDropCallback?.Invoke((ItemDropContext)source.Tag, (ItemDropContext)target.Tag);
             }
         }
     }

@@ -1,11 +1,11 @@
 ﻿namespace MysticLegendsClient;
 
-public class ItemDropEventArgs: EventArgs
+public class ItemDropContext
 {
     public IItemDrop Owner { get; set; }
     public int ContextId { get; set; }
 
-    public ItemDropEventArgs(IItemDrop owner, int id)
+    public ItemDropContext(IItemDrop owner, int id)
     {
         Owner = owner;
         ContextId = id;

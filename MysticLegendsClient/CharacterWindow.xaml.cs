@@ -46,7 +46,7 @@ namespace MysticLegendsClient
             if (inventoryItem.Item.ItemType == equipedItem.Item.ItemType)
                 EquipSwapServerCall(inventoryItem.InvitemId);
         }
-        private void InventoryDrop(ItemDropEventArgs source, ItemDropEventArgs target)
+        private void InventoryDrop(ItemDropContext source, ItemDropContext target)
         {
             if (source.Owner == inventoryView && target.Owner == inventoryView)
             {

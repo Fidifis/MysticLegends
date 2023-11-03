@@ -12,7 +12,7 @@ namespace MysticLegendsClient.Controls
     /// </summary>
     public partial class CharacterView : UserControl, IDataViewWithDrop<Character, InventoryItem>
     {
-        public IItemDrop.ItemDrop? ItemDropCallback { get; set; }
+        public IItemDrop.ItemDropEventHandler? ItemDropCallback { get; set; }
 
         private Character? data;
         public Character? Data
@@ -33,11 +33,11 @@ namespace MysticLegendsClient.Controls
         {
             InitializeComponent();
 
-            bodyArmorSlot.Tag = new ItemDropEventArgs(this, (int)ItemType.BodyArmor);
-            helmetSlot.Tag = new ItemDropEventArgs(this, (int)ItemType.Helmet);
-            glovesSlot.Tag = new ItemDropEventArgs(this, (int)ItemType.Gloves);
-            bootsSlot.Tag = new ItemDropEventArgs(this, (int)ItemType.Boots);
-            weaponSlot.Tag = new ItemDropEventArgs(this, (int)ItemType.Weapon);
+            bodyArmorSlot.Tag = new ItemDropContext(this, (int)ItemType.BodyArmor);
+            helmetSlot.Tag = new ItemDropContext(this, (int)ItemType.Helmet);
+            glovesSlot.Tag = new ItemDropContext(this, (int)ItemType.Gloves);
+            bootsSlot.Tag = new ItemDropContext(this, (int)ItemType.Boots);
+            weaponSlot.Tag = new ItemDropContext(this, (int)ItemType.Weapon);
         }
 
         private void FillData(Character? characterData)
@@ -122,7 +122,7 @@ namespace MysticLegendsClient.Controls
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (((FrameworkElement)sender).Tag is ItemDropEventArgs context && GetImageByItemType((ItemType)context.ContextId)?.Source is not null)
+            if (((FrameworkElement)sender).Tag is ItemDropContext context && GetImageByItemType((ItemType)context.ContextId)?.Source is not null)
             {
                 var data = new DataObject(typeof(FrameworkElement), sender);
                 DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Move);
@@ -136,7 +136,7 @@ namespace MysticLegendsClient.Controls
             if (e.Data.GetDataPresent(typeof(FrameworkElement)))
             {
                 var source = (FrameworkElement)e.Data.GetData(typeof(FrameworkElement));
-                ItemDropCallback?.Invoke((ItemDropEventArgs)source.Tag, (ItemDropEventArgs)target.Tag);
+                ItemDropCallback?.Invoke((ItemDropContext)source.Tag, (ItemDropContext)target.Tag);
             }
         }
     }
