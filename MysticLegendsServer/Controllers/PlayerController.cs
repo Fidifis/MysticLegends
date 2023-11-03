@@ -12,53 +12,18 @@ namespace MysticLegendsServer.Controllers
     [ApiController]
     public class PlayerController : ControllerBase
     {
-        private Xdigf001Context context;
+        private Xdigf001Context dbContext;
+        ILogger<PlayerController> logger;
 
-        public PlayerController(Xdigf001Context context)
+        public PlayerController(Xdigf001Context context, ILogger<PlayerController> logger)
         {
-            this.context = context;
+            dbContext = context;
+            this.logger = logger;
         }
-
-        public static Character lolool = new Character
-        {
-            Username = "kokot",
-            CharacterName = "zmrdus",
-            CharacterClass = (int)CharacterClass.Warrior,
-            CurrencyGold = 100,
-            CharacterInventory = new CharacterInventory
-            {
-                Capacity = 10,
-                InventoryItems = new List<InventoryItem>() {
-                    new InventoryItem
-                    {
-                        Position = 1,
-                        Item = new Item() {
-                            Icon = "bodyArmor/ayreimWarrior",
-                            ItemType = (int)ItemType.BodyArmor,
-                        },
-                    },
-                    new InventoryItem
-                    {
-                        Position = 4,
-                        Item = new Item() {
-                            Icon = "helmet/ayreimWarrior",
-                            ItemType = (int)ItemType.Helmet,
-                        }
-                    },
-                    new InventoryItem
-                    {
-                        Position = 3,
-                        Item = new Item() {
-                            Icon = "bodyArmor/ayreimWarrior",
-                            ItemType = (int)ItemType.BodyArmor,
-                        }
-                    } },
-            },
-        };
 
         private async Task<Character> RequestCharacterItems(string characterName)
         {
-            return await context.Characters
+            return await dbContext.Characters
                 .Include(character => character.CharacterInventory)
                     .ThenInclude(inventory => inventory!.InventoryItems)
                     .ThenInclude(item => item.Item)
@@ -76,6 +41,7 @@ namespace MysticLegendsServer.Controllers
         [HttpGet("{characterName}")]
         public async Task<Character> Get(string characterName, string accessToken)
         {
+            logger.LogInformation("get character");
             return await RequestCharacterItems(characterName);
         }
 
@@ -86,7 +52,7 @@ namespace MysticLegendsServer.Controllers
             var itemToMove = int.Parse(paramters["itemId"]);
             var targetPosition = int.Parse(paramters["position"]);
             var accessToken = paramters["accessToken"];
-            var inventory = await context.CharacterInventories
+            var inventory = await dbContext.CharacterInventories
                 .Include(inventory => inventory.InventoryItems)
                     .ThenInclude(item => item.Item)
                 .Include(inventory => inventory.InventoryItems)
@@ -113,7 +79,7 @@ namespace MysticLegendsServer.Controllers
                 targetItem.Position = sourcePosition;
             }
 
-            await context.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
 
             return Ok(inventory);
         }
@@ -139,7 +105,7 @@ namespace MysticLegendsServer.Controllers
             equipedItems.Add(itemToEquip);
             inventoryItems.RemoveAt(itemToEquipIndex);
 
-            await context.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
             return Ok(character);
         }
 
@@ -185,7 +151,7 @@ namespace MysticLegendsServer.Controllers
             inventoryItems.Add(itemToUnequip);
             equipedItems.RemoveAt(itemToUnequipIndex);
 
-            await context.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
             return Ok(character);
         }
 
@@ -211,12 +177,14 @@ namespace MysticLegendsServer.Controllers
             var itemToEquip = inventoryItems[itemToEquipIndex];
             var itemToUnequip = equipedItems[itemToUnequipIndex];
 
+            itemToUnequip.Position = itemToEquip.Position;
+
             equipedItems.Add(itemToEquip);
             inventoryItems.RemoveAt(itemToEquipIndex);
             inventoryItems.Add(itemToUnequip);
             equipedItems.RemoveAt(itemToUnequipIndex);
 
-            await context.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
             return Ok(character);
         }
     }

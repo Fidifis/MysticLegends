@@ -53,6 +53,11 @@ namespace MysticLegendsClient
                 inventoryView.Data = characterData.CharacterInventory;
         }
 
+        private void EquipSwapCheckExec(InventoryItem inventoryItem, InventoryItem equipedItem)
+        {
+            if (inventoryItem.Item.ItemType == equipedItem.Item.ItemType)
+                EquipSwapServerCall(inventoryItem.InvitemId);
+        }
         private void InventoryDrop(ItemDropContext source, ItemDropContext target)
         {
             if (source.Owner == inventoryView && target.Owner == inventoryView)
@@ -67,7 +72,7 @@ namespace MysticLegendsClient
                 var equipedItem = characterView.GetByContextId(target.Id);
 
                 if (inventoryItem is not null && equipedItem is not null)
-                    EquipSwapServerCall(inventoryItem.InvitemId);
+                    EquipSwapCheckExec(inventoryItem, equipedItem);
 
                 else if (inventoryItem is not null)
                     EquipServerCall(inventoryItem.InvitemId);
@@ -77,7 +82,7 @@ namespace MysticLegendsClient
                 var inventoryItem = inventoryView.GetByContextId(target.Id);
                 var equipedItem = characterView.GetByContextId(source.Id);
                 if (inventoryItem is not null && equipedItem is not null)
-                    EquipSwapServerCall(inventoryItem.InvitemId);
+                    EquipSwapCheckExec(inventoryItem, equipedItem);
 
                 else if (equipedItem is not null)
                     UnequipServerCall(equipedItem.InvitemId, target.Id);

@@ -28,7 +28,8 @@ namespace MysticLegendsServer
             });
 
             // Add logging configuration
-            //builder.Logging.AddConsole();
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
