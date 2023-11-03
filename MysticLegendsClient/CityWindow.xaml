@@ -45,9 +45,6 @@
                 <Grid Background="Gray">
                     <Label x:Name="cityNameLabel" Content="a city" FontSize="40" VerticalAlignment="Top" HorizontalAlignment="Center" />
                     <StackPanel x:Name="cityModulesPanel" Grid.Column="0" Margin="20,100,20,20">
-                        <controls:CityModuleButton InnerPadding="20 10 20 10" Margin="0 0 0 10" TextGap="50" FontSize="20" UniformSvgSize="50" SvgSource="{x:Static resources:Icons.city_blacksmith}" LabelText="Blacksmith"/>
-                        <controls:CityModuleButton InnerPadding="20 10 20 10" Margin="0 0 0 10" TextGap="50" FontSize="20" UniformSvgSize="50" SvgSource="{x:Static resources:Icons.city_potions}" LabelText="Potions"/>
-                        <controls:CityModuleButton InnerPadding="20 10 20 10" Margin="0 0 0 10" TextGap="50" FontSize="20" UniformSvgSize="50" SvgSource="{x:Static resources:Icons.city_tradeMarket}" LabelText="Trade Market"/>
                     </StackPanel>
                 </Grid>
             </ScrollViewer>

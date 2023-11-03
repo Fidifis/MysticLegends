@@ -1,6 +1,4 @@
-﻿using MysticLegendsClient.Controls;
-using MysticLegendsClient.Resources;
-using System.Windows;
+﻿using MysticLegendsClient.Resources;
 
 namespace MysticLegendsClient.CityWindows
 {
@@ -8,8 +6,14 @@ namespace MysticLegendsClient.CityWindows
     {
         public AyreimCity(): base("Ayreim")
         {
-            AddButton("Scout", Icons.city_scout);
-            AddButton("Dark Alley", Icons.city_darkAlley);
+            ShowButtons(new ButtonType[] { 
+                ButtonType.Blacksmith,
+                ButtonType.Potions,
+                ButtonType.TradeMarket,
+                ButtonType.Scout,
+                ButtonType.DarkAlley,
+            });
+            AddButton("Ayreim Market", Icons.bar_gold);
         }
     }
 }

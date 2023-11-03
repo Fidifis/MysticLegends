@@ -1,4 +1,5 @@
 ﻿using MysticLegendsClient.Controls;
+using MysticLegendsClient.Resources;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -8,6 +9,16 @@ namespace MysticLegendsClient
     /// </summary>
     public abstract partial class CityWindow : Window
     {
+        protected enum ButtonType
+        {
+            Blacksmith,
+            Potions,
+            TradeMarket,
+            Scout,
+            DarkAlley,
+            RebelsHideout,
+        }
+
         public CityWindow()
         {
             InitializeComponent();
@@ -17,6 +28,34 @@ namespace MysticLegendsClient
         {
             Title = $"Mystic Legends - {title} (City)";
             cityNameLabel.Content = title;
+        }
+
+        protected void ShowButtons(IEnumerable<ButtonType> buttons)
+        {
+            foreach (var button in buttons)
+            {
+                switch (button)
+                {
+                    case ButtonType.Blacksmith:
+                        AddButton("Blacksmith", Icons.city_blacksmith);
+                        break;
+                    case ButtonType.Potions:
+                        AddButton("Potions", Icons.city_potions);
+                        break;
+                    case ButtonType.TradeMarket:
+                        AddButton("Trade Market", Icons.city_tradeMarket);
+                        break;
+                    case ButtonType.Scout:
+                        AddButton("Scout", Icons.city_scout);
+                        break;
+                    case ButtonType.DarkAlley:
+                        AddButton("Dark Alley", Icons.city_darkAlley);
+                        break;
+                    case ButtonType.RebelsHideout:
+                        AddButton("Rebels Hideout", Icons.city_hideout);
+                        break;
+                }
+            }
         }
 
         protected void AddButton(string title, string icon)
