@@ -2,6 +2,6 @@
 
 public interface IItemDrop
 {
-    public delegate void ItemDrop(ItemDropContext source, ItemDropContext target);
+    public delegate void ItemDrop(ItemDropEventArgs source, ItemDropEventArgs target);
     public ItemDrop? ItemDropCallback { get; set; }
 }

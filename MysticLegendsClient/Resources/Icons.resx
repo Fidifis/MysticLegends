@@ -129,6 +129,9 @@
   <data name="city/blacksmith" xml:space="preserve">
     <value>/icons/anvil.svg</value>
   </data>
+  <data name="city/coins" xml:space="preserve">
+    <value>/icons/coins-solid.svg</value>
+  </data>
   <data name="city/darkAlley" xml:space="preserve">
     <value>/icons/rebel.svg</value>
   </data>
@@ -140,6 +143,9 @@
   </data>
   <data name="city/scout" xml:space="preserve">
     <value>/icons/dragon-solid.svg</value>
+  </data>
+  <data name="city/storage" xml:space="preserve">
+    <value>/icons/anvil.svg</value>
   </data>
   <data name="city/tradeMarket" xml:space="preserve">
     <value>/icons/scale-balanced-solid.svg</value>

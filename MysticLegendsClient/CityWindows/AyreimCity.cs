@@ -6,14 +6,14 @@ namespace MysticLegendsClient.CityWindows
     {
         public AyreimCity(): base("Ayreim")
         {
-            ShowButtons(new ButtonType[] { 
+            ShowButtons(new ButtonType[] {
                 ButtonType.Blacksmith,
                 ButtonType.Potions,
                 ButtonType.TradeMarket,
                 ButtonType.Scout,
                 ButtonType.DarkAlley,
             });
-            AddButton("Ayreim Market", Icons.bar_gold);
+            AddButton("Ayreim Market", Icons.city_coins);
         }
     }
 }

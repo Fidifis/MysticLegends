@@ -39,9 +39,17 @@ namespace MysticLegendsServer.Controllers
 
         // GET api/<PlayerController>/5
         [HttpGet("{characterName}")]
-        public async Task<Character> Get(string characterName, string accessToken)
+        public async Task<Character> GetCharacter(string characterName, string accessToken)
         {
             return await RequestCharacterItems(characterName);
+        }
+
+        [HttpGet("{characterName}/currency")]
+        public async Task<int> GetCharacterCurrency(string characterName, string accessToken)
+        {
+            return await dbContext.Characters
+                .Where(character => character.CharacterName == characterName)
+                .Select(character => character.CurrencyGold).FirstAsync();
         }
 
         // POST api/<PlayerController>

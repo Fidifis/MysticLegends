@@ -97,6 +97,15 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
+        ///   Vyhledá lokalizovaný řetězec podobný /icons/coins-solid.svg.
+        /// </summary>
+        public static string city_coins {
+            get {
+                return ResourceManager.GetString("city/coins", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Vyhledá lokalizovaný řetězec podobný /icons/rebel.svg.
         /// </summary>
         public static string city_darkAlley {
@@ -129,6 +138,15 @@ namespace MysticLegendsClient.Resources {
         public static string city_scout {
             get {
                 return ResourceManager.GetString("city/scout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledá lokalizovaný řetězec podobný /icons/anvil.svg.
+        /// </summary>
+        public static string city_storage {
+            get {
+                return ResourceManager.GetString("city/storage", resourceCulture);
             }
         }
         

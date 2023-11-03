@@ -14,6 +14,7 @@ namespace MysticLegendsClient
             Blacksmith,
             Potions,
             TradeMarket,
+            Storage,
             Scout,
             DarkAlley,
             RebelsHideout,
@@ -22,6 +23,8 @@ namespace MysticLegendsClient
         public CityWindow()
         {
             InitializeComponent();
+            _=RefreshCurrencyAsync();
+            GameState.Current.CurrencyUpdateEvent += CurrencyChanged;
         }
 
         public CityWindow(string title): this()
@@ -45,6 +48,9 @@ namespace MysticLegendsClient
                     case ButtonType.TradeMarket:
                         AddButton("Trade Market", Icons.city_tradeMarket);
                         break;
+                    case ButtonType.Storage:
+                        AddButton("Storage", Icons.city_storage);
+                        break;
                     case ButtonType.Scout:
                         AddButton("Scout", Icons.city_scout);
                         break;
@@ -66,6 +72,22 @@ namespace MysticLegendsClient
         private void CharacterButton_Click(object sender, RoutedEventArgs e)
         {
             CharacterWindow.ShowWindow();
+        }
+
+        private void CurrencyChanged(object? sender, CurrencyUpdateEventArgs e)
+        {
+            currencyLabel.Content = e.Value;
+        }
+
+        private async Task RefreshCurrencyAsync()
+        {
+            var currency = await GameState.Current.Connection.GetAsync<int>("/api/Character/zmrdus/currency");
+            CurrencyChanged(this, new CurrencyUpdateEventArgs(currency));
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            GameState.Current.CityWindowClosed(sender, new CityWindowClosedEventArgs(this));
         }
     }
 }

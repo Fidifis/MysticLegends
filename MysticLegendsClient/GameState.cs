@@ -6,6 +6,12 @@ internal class GameState : IDisposable
     public ApiClient Connection { get; private init; }
     public TokenStore TokenStore { get; private init; } = new();
 
+    public event EventHandler<CityWindowClosedEventArgs>? CityWindowClosedEvent;
+    public event EventHandler<CurrencyUpdateEventArgs>? CurrencyUpdateEvent;
+
+    public void CityWindowClosed(object? sender, CityWindowClosedEventArgs e) => CityWindowClosedEvent?.Invoke(sender, e);
+    public void CurrencyUpdate(object? sender, CurrencyUpdateEventArgs e) => CurrencyUpdateEvent?.Invoke(sender, e);
+
     public static void MakeGameStateCurrent(GameState gs)
     {
         if (gs is null)
