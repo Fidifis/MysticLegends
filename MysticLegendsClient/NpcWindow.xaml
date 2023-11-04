@@ -7,7 +7,7 @@
         xmlns:controls="clr-namespace:MysticLegendsClient.Controls"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
-        Title="NpcWindow" Height="450" Width="800">
+        Title="NpcWindow" Height="600" Width="1000">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" MinWidth="300"/>
@@ -20,20 +20,20 @@
                 <Button x:Name="questsButton"  Content="Quests" Margin="5 0" Width="60" Click="QuestsButton_Click"/>
             </StackPanel>
             <controls:InventoryView x:Name="buyView" CounterVisibility="Collapsed" Margin="0,40,0,0"/>
-            <Grid x:Name="sellView" Visibility="Collapsed">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" MinWidth="200"/>
-                    <ColumnDefinition Width="2*" MinWidth="150"/>
-                </Grid.ColumnDefinitions>
+            <Grid x:Name="sellView" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="150"/>
+                </Grid.RowDefinitions>
 
-                <controls:InventoryView x:Name="sellViewInventory" Grid.Column="0" CounterVisibility="Collapsed" Margin="0,40,0,0"/>
-                <Grid Grid.Column="1" VerticalAlignment="Center" Height="150">
+                <controls:InventoryView x:Name="sellViewInventory" Grid.Row="0" CounterVisibility="Collapsed" Margin="0,40,0,0"/>
+                <Grid Grid.Row="1" VerticalAlignment="Center" Height="150">
                     <Label Content="Price" FontSize="15" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0"/>
                     <TextBox Text="0" FontSize="20" VerticalAlignment="Top" Margin="30" TextAlignment="Center" IsReadOnly="True"/>
                     <Button Content="SELL" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="100" Height="25" Margin="0,0,0,20"/>
                 </Grid>
             </Grid>
-            <Grid x:Name="questsView">
+            <Grid x:Name="questsView" Visibility="Hidden">
                 
             </Grid>
         </Grid>
