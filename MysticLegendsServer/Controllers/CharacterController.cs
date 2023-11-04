@@ -112,7 +112,7 @@ namespace MysticLegendsServer.Controllers
 
             if (equipedItems.Find(item => item.Item.ItemType == itemToEquip.Item.ItemType) is not null)
             {
-                var msg = "You are trying to equip already equiped item type";
+                var msg = "trying to equip already equiped item type";
                 logger.LogWarning(msg);
                 return BadRequest(msg);
             }

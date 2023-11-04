@@ -49,6 +49,7 @@ namespace MysticLegendsClient
 
         private void ChangeToView(FrameworkElement toShow)
         {
+            inventoryRelation?.ReleaseLock(this);
             foreach (var element in views)
             {
                 if (element == toShow)
@@ -122,7 +123,7 @@ namespace MysticLegendsClient
         {
             ChangeToView(sellView);
 
-            sellViewInventory.Data = new ArtifficialInventory { Capacity = 50 };
+            sellViewInventory.Data = new ArtifficialInventory { Capacity = 20 };
         }
 
         private void QuestsButton_Click(object sender, RoutedEventArgs e)

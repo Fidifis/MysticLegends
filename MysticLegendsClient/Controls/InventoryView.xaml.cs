@@ -197,6 +197,9 @@ namespace MysticLegendsClient.Controls
                 var sourceObject = (ItemDropContext)source.Tag;
                 var targetObject = (ItemDropContext)target.Tag;
 
+                if (LockedItems.FindIndex(item => item.Item2 == targetObject.ContextId) != -1)
+                    return;
+
                 sourceObject.Owner.ItemDropSourceCallback?.Invoke(sourceObject, targetObject);
                 targetObject.Owner.ItemDropTargetCallback?.Invoke(sourceObject, targetObject);
             }
