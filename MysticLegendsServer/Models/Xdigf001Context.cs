@@ -7,10 +7,6 @@ namespace MysticLegendsServer.Models;
 
 public partial class Xdigf001Context : DbContext
 {
-    public Xdigf001Context()
-    {
-    }
-
     public Xdigf001Context(DbContextOptions<Xdigf001Context> options)
         : base(options)
     {
@@ -57,9 +53,6 @@ public partial class Xdigf001Context : DbContext
     public virtual DbSet<TradeMarket> TradeMarkets { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Name=ConnectionStrings:GameDB");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

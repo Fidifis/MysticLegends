@@ -6,7 +6,7 @@ CONTEXT_FILE_NAME="Xdigf001Context.cs"
 MODELS_SHARED="MysticLegendsShared/Models"
 MODELS_SERVER="MysticLegendsServer/Models"
 
-(cd MysticLegendsServer && dotnet ef dbcontext scaffold "Name=ConnectionStrings:GameDB" Npgsql.EntityFrameworkCore.PostgreSQL -o Models --force)
+(cd MysticLegendsServer && dotnet ef dbcontext scaffold "Name=ConnectionStrings:GameDB" Npgsql.EntityFrameworkCore.PostgreSQL -o Models --no-onconfiguring --force)
 
 find "$MODELS_SHARED/" -type f -delete
 
