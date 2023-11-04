@@ -6,6 +6,7 @@ using MysticLegendsClient.Resources;
 using System.Windows.Input;
 using MysticLegendsShared.Utilities;
 using MysticLegendsShared.Models;
+using System.Windows.Media.Imaging;
 
 namespace MysticLegendsClient.Controls
 {
@@ -19,6 +20,15 @@ namespace MysticLegendsClient.Controls
             InitializeComponent();
             DataContext = this;
         }
+
+        public InventoryView(FrameworkElement owner)
+        {
+            InitializeComponent();
+            DataContext = this;
+            Owner = owner;
+        }
+
+        public FrameworkElement? Owner { get; set; }
 
         private static readonly DependencyProperty counterVisibility = DependencyProperty.Register("ShowCounter", typeof(Visibility), typeof(InventoryView));
 
@@ -36,6 +46,7 @@ namespace MysticLegendsClient.Controls
         private string CapacityCounter { get => $"{ItemCount}/{Capacity}"; }
 
         private readonly List<Image> ImgSlots = new();
+        private readonly List<Tuple<object, int>> LockedItems = new();
 
         private IInventory? data;
         public IInventory? Data
@@ -134,9 +145,42 @@ namespace MysticLegendsClient.Controls
             UpdateCapacityCounter();
         }
 
+        public void LockItem(object owner, int itemId)
+        {
+            var item = (Data?.InventoryItems.Where(item => item.InvitemId == itemId).FirstOrDefault()) ?? throw new Exception("Item not found");
+            var img = ImgSlots[item.Position];
+            LockedItems.Add(new (owner, item.Position));
+            img.Opacity = 0.2;
+        }
+
+        public void ReleaseLock(object owner)
+        {
+            foreach (var item in LockedItems)
+            {
+                if (item.Item1 == owner)
+                    UnlockItem(item.Item2);
+            }
+            LockedItems.Clear();
+        }
+
+        public void ReleaseLock(object owner, int itemId)
+        {
+            var position = (Data?.InventoryItems.Where(item => item.InvitemId == itemId).FirstOrDefault()?.Position) ?? throw new Exception("Item not found");
+            var lockListIndex = LockedItems.FindIndex(item => item.Item2 == position && owner == item.Item1);
+            if (lockListIndex < 0) throw new Exception("Item not found");
+
+            LockedItems.RemoveAt(lockListIndex);
+            UnlockItem(position);
+        }
+
+        private void UnlockItem(int position)
+        {
+            ImgSlots[position].Opacity = 1;
+        }
+
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (((FrameworkElement)sender).Tag is ItemDropContext context && ImgSlots[context.ContextId].Source is not null)
+            if (((FrameworkElement)sender).Tag is ItemDropContext context && ImgSlots[context.ContextId].Source is not null && LockedItems.FindIndex(item => item.Item2 == context.ContextId) == -1)
             {
                 var data = new DataObject(typeof(FrameworkElement), sender);
                 DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Move);

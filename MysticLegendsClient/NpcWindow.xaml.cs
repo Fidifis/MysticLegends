@@ -1,5 +1,7 @@
-﻿using MysticLegendsShared.Models;
+﻿using MysticLegendsClient.Controls;
+using MysticLegendsShared.Models;
 using MysticLegendsShared.Utilities;
+using System.Diagnostics;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -11,6 +13,8 @@ namespace MysticLegendsClient
     {
         private readonly FrameworkElement[] views;
 
+        private InventoryView? inventoryRelation;
+
         public NpcWindow(NpcType npcType)
         {
             InitializeComponent();
@@ -18,7 +22,7 @@ namespace MysticLegendsClient
 
             SetSplashImage(npcType);
 
-            buyView.ItemDropTargetCallback = ItemDrop;
+            buyView.ItemDropSourceCallback = ItemDrop;
             sellViewInventory.ItemDropTargetCallback = ItemDrop;
         }
 
@@ -56,10 +60,29 @@ namespace MysticLegendsClient
 
         private void ItemDrop(ItemDropContext source, ItemDropContext target)
         {
+            InventoryView? inventoryView;
             if (source.Owner == buyView && target.Owner == buyView &&
                 source.ContextId == target.ContextId)
             {
                 var response = MessageBox.Show("Do you want to buy this item?", "buy", MessageBoxButton.YesNo);
+            }
+
+            else if (source.Owner == buyView && (target.Owner as InventoryView)?.Owner as CharacterWindow is not null)
+            {
+                // TODO: server call buy
+            }
+
+            else if (source.Owner == sellViewInventory && (target.Owner as InventoryView)?.Owner as CharacterWindow is not null)
+            {
+                // TODO: server call inventory swap (item leaves sell grid and new position in inventory is set)
+            }
+
+            else if (target.Owner == sellViewInventory && (inventoryView = source.Owner as InventoryView)?.Owner as CharacterWindow is not null)
+            {
+                // TODO: tmp remove from inventory view, add to sell grid
+                inventoryView.LockItem(this, inventoryView.GetByContextId(source.ContextId)!.InvitemId);
+                Debug.Assert(inventoryRelation is null || inventoryRelation == inventoryView);
+                inventoryRelation = inventoryView;
             }
         }
 
@@ -88,6 +111,11 @@ namespace MysticLegendsClient
         private void QuestsButton_Click(object sender, RoutedEventArgs e)
         {
             ChangeToView(questsView);
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            inventoryRelation?.ReleaseLock(this);
         }
     }
 }
