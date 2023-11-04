@@ -41,11 +41,11 @@ namespace MysticLegendsClient.Controls
         public IItemDrop.ItemDropEventHandler? ItemDropTargetCallback { get; set; }
         public IItemDrop.ItemDropEventHandler? ItemDropSourceCallback { get; set; }
 
-        private int ItemCount { get => ImgSlots.Count(item => item.Source is not null); }
-        private int Capacity { get => ImgSlots.Count; }
+        private int ItemCount { get => ItemSlots.Count(item => item.Item1.Source is not null); }
+        private int Capacity { get => ItemSlots.Count; }
         private string CapacityCounter { get => $"{ItemCount}/{Capacity}"; }
 
-        private readonly List<Image> ImgSlots = new();
+        private readonly List<Tuple<Image, Label>> ItemSlots = new();
         private readonly List<Tuple<object, int>> LockedItems = new();
 
         private IInventory? data;
@@ -64,8 +64,15 @@ namespace MysticLegendsClient.Controls
         public InventoryItem? GetByContextId(int id) => Data?.InventoryItems?.Where(item => item.Position == id).FirstOrDefault();
 
 
-        private FrameworkElement CreateSlot(out Image image)
+        private FrameworkElement CreateSlot(out Image image, out Label label)
         {
+            label = new Label
+            {
+                FontSize = 20,
+                HorizontalContentAlignment = HorizontalAlignment.Right,
+                VerticalContentAlignment = VerticalAlignment.Bottom,
+                Margin = new Thickness(3),
+            };
             image = new Image
             {
                 Width = 75,
@@ -86,7 +93,7 @@ namespace MysticLegendsClient.Controls
             grid.Drop += Image_Drop;
             grid.MouseLeftButtonDown += Image_MouseLeftButtonDown;
 
-            grid.Children.Add(new Label());
+            grid.Children.Add(label);
             grid.Children.Add(border);
 
             return grid;
@@ -95,24 +102,24 @@ namespace MysticLegendsClient.Controls
         private void RemoveSlotRange(int index, int count)
         {
             inventoryPanel.Children.RemoveRange(index, count);
-            ImgSlots.RemoveRange(index, count);
+            ItemSlots.RemoveRange(index, count);
         }
 
-        private void AddToSlot(FrameworkElement element, Image image)
+        private void AddToSlot(FrameworkElement element, Image image, Label label)
         {
             inventoryPanel.Children.Add(element);
-            ImgSlots.Add(image);
-            element.Tag = new ItemDropContext(this, ImgSlots.Count - 1);
+            ItemSlots.Add(new (image, label));
+            element.Tag = new ItemDropContext(this, ItemSlots.Count - 1);
         }
 
         private void UpdateSlots(int count)
         {
-            Debug.Assert(ImgSlots.Count == inventoryPanel.Children.Count, "list counts differ");
-            if (count > ImgSlots.Count)
-                for (int i = ImgSlots.Count; i < count; i++)
-                    AddToSlot(CreateSlot(out Image image), image);
-            else if (count < ImgSlots.Count)
-                RemoveSlotRange(count, ImgSlots.Count - count);
+            Debug.Assert(ItemSlots.Count == inventoryPanel.Children.Count, "list counts differ");
+            if (count > ItemSlots.Count)
+                for (int i = ItemSlots.Count; i < count; i++)
+                    AddToSlot(CreateSlot(out Image image, out Label label), image, label);
+            else if (count < ItemSlots.Count)
+                RemoveSlotRange(count, ItemSlots.Count - count);
         }
 
         private void UpdateCapacityCounter()
@@ -129,28 +136,38 @@ namespace MysticLegendsClient.Controls
             var capacity = infiniteMode ? inventoryItems.Count : inventoryCapacity;
 
             UpdateSlots(capacity);
-            for (int i = 0; i < ImgSlots.Count; i++)
-                ImgSlots[i].Source = null;
+            for (int i = 0; i < ItemSlots.Count; i++)
+            {
+                ItemSlots[i].Item1.Source = null;
+                ItemSlots[i].Item2.Content = "";
+            }
 
             int fi = 0;
             foreach (var item in inventoryItems)
             {
+                var stackCountStr = item.StackCount == 1 ? "" : item.StackCount.ToString();
                 if (infiniteMode)
-                    ImgSlots[fi++].Source = BitmapTools.FromResource(ItemIcons.ResourceManager.GetString(item.Item.Icon)!);
+                    SetSlot(fi++, item.Item.Icon, stackCountStr);
                 else
-                    if (item.Position < ImgSlots.Count)
-                        ImgSlots[item.Position].Source = BitmapTools.FromResource(ItemIcons.ResourceManager.GetString(item.Item.Icon)!);
+                    if (item.Position < ItemSlots.Count)
+                        SetSlot(item.Position, item.Item.Icon, stackCountStr);
             }
 
             UpdateCapacityCounter();
         }
 
+        private void SetSlot(int index, string icon, string labelString)
+        {
+            ItemSlots[index].Item1.Source = BitmapTools.FromResource(ItemIcons.ResourceManager.GetString(icon)!);
+            ItemSlots[index].Item2.Content = labelString;
+        }
+
         public void LockItem(object owner, int itemId)
         {
             var item = (Data?.InventoryItems.Where(item => item.InvitemId == itemId).FirstOrDefault()) ?? throw new Exception("Item not found");
-            var img = ImgSlots[item.Position];
+            var img = ItemSlots[item.Position];
             LockedItems.Add(new (owner, item.Position));
-            img.Opacity = 0.2;
+            img.Item1.Opacity = 0.2;
         }
 
         public void ReleaseLock(object owner)
@@ -175,12 +192,12 @@ namespace MysticLegendsClient.Controls
 
         private void UnlockItem(int position)
         {
-            ImgSlots[position].Opacity = 1;
+            ItemSlots[position].Item1.Opacity = 1;
         }
 
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (((FrameworkElement)sender).Tag is ItemDropContext context && ImgSlots[context.ContextId].Source is not null && LockedItems.FindIndex(item => item.Item2 == context.ContextId) == -1)
+            if (((FrameworkElement)sender).Tag is ItemDropContext context && ItemSlots[context.ContextId].Item1.Source is not null && LockedItems.FindIndex(item => item.Item2 == context.ContextId) == -1)
             {
                 var data = new DataObject(typeof(FrameworkElement), sender);
                 DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Move);
