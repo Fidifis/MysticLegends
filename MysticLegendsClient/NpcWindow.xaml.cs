@@ -80,10 +80,27 @@ namespace MysticLegendsClient
             else if (target.Owner == sellViewInventory && (inventoryView = source.Owner as InventoryView)?.Owner as CharacterWindow is not null)
             {
                 // TODO: tmp remove from inventory view, add to sell grid
-                inventoryView.LockItem(this, inventoryView.GetByContextId(source.ContextId)!.InvitemId);
+                var movingItem = inventoryView.GetByContextId(source.ContextId)!;
+                inventoryView.LockItem(this, movingItem.InvitemId);
                 Debug.Assert(inventoryRelation is null || inventoryRelation == inventoryView);
                 inventoryRelation = inventoryView;
+
+                var itemCopy = PartialItemCopy(movingItem);
+                itemCopy.Position = target.ContextId;
+                sellViewInventory.Data!.InventoryItems.Add(PartialItemCopy(itemCopy));
+                sellViewInventory.Update();
             }
+            else if (source.Owner == sellViewInventory && target.Owner == sellViewInventory)
+            {
+                var item = sellViewInventory.GetByContextId(source.ContextId);
+                item!.Position = target.ContextId;
+                sellViewInventory.Update();
+            }
+        }
+
+        private static InventoryItem PartialItemCopy(InventoryItem item)
+        {
+            return new InventoryItem() { InvitemId = item.InvitemId, Item = item.Item, StackCount = item.StackCount, Position = item.Position };
         }
 
         private void BuyButton_Click(object? sender, RoutedEventArgs? e)
