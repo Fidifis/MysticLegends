@@ -20,40 +20,38 @@
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
     </Window.Resources>
-    
+
     <Grid>
-        <Grid Margin="0,0,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" MinWidth="200" MaxWidth="400"/>
-                <ColumnDefinition Width="3*"/>
-            </Grid.ColumnDefinitions>
-            
-            <StackPanel Grid.Column="0" Margin="20" VerticalAlignment="Center">
-                <StackPanel Margin="0 0 0 20">
-                    <ComboBox x:Name="serverSelect" SelectedIndex="0" SelectionChanged="ServerSelect_SelectionChanged">
-                        <ComboBoxItem Content="Official server"/>
-                        <ComboBoxItem Content="localhost:3000"/>
-                        <ComboBoxItem Content="Custom"/>
-                    </ComboBox>
-                    <StackPanel x:Name="customServerControls" Visibility="Collapsed">
-                        <Label Content="IP or DNS"/>
-                        <TextBox x:Name="customServerTxt" Height="25"/>
-                    </StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" MinWidth="200" MaxWidth="400"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" Margin="20" VerticalAlignment="Center">
+            <StackPanel Margin="0 0 0 20">
+                <ComboBox x:Name="serverSelect" SelectedIndex="0" SelectionChanged="ServerSelect_SelectionChanged">
+                    <ComboBoxItem Content="Official server"/>
+                    <ComboBoxItem Content="localhost:3000"/>
+                    <ComboBoxItem Content="Custom"/>
+                </ComboBox>
+                <StackPanel x:Name="customServerControls" Visibility="Collapsed">
+                    <Label Content="IP or DNS"/>
+                    <TextBox x:Name="customServerTxt" Height="25"/>
                 </StackPanel>
-
-                <Label Content="Username"/>
-                <TextBox x:Name="username" Height="25" IsUndoEnabled="False"/>
-                
-                <Label Content="Password"/>
-                <PasswordBox x:Name="password" Height="25"/>
-                <CheckBox x:Name="remember" Content="Remeber password" Style="{StaticResource MarginBot}"/>
-
-                <Button Content="Log in" Margin="0 20 0 10" Click="Login_Click" Height="25"/>
-                <Button Content="Register" Height="25"/>
             </StackPanel>
-            <Grid Grid.Column="1">
-                <Image x:Name="splashImage" Stretch="UniformToFill" Source="/images/Graphics/LoginScreen.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            </Grid>
+
+            <Label Content="Username"/>
+            <TextBox x:Name="username" Height="25" IsUndoEnabled="False"/>
+
+            <Label Content="Password"/>
+            <PasswordBox x:Name="password" Height="25"/>
+            <CheckBox x:Name="remember" Content="Remeber password" Style="{StaticResource MarginBot}"/>
+
+            <Button Content="Log in" Margin="0 20 0 10" Click="Login_Click" Height="25"/>
+            <Button Content="Register" Height="25"/>
+        </StackPanel>
+        <Grid Grid.Column="1">
+            <Image x:Name="splashImage" Stretch="UniformToFill" Source="/images/Graphics/LoginScreen.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
     </Grid>
 </Window>

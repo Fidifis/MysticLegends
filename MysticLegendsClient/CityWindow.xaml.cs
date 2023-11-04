@@ -1,5 +1,6 @@
 ﻿using MysticLegendsClient.Controls;
 using MysticLegendsClient.Resources;
+using MysticLegendsShared.Utilities;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -21,6 +22,7 @@ namespace MysticLegendsClient
         }
 
         private readonly SingleInstanceWindow<CharacterWindow> characterWindow = new();
+        private readonly SingleInstanceWindow potionsWindow = new(typeof (NpcWindow), NpcType.PotionsCrafter);
 
         public CityWindow()
         {
@@ -42,33 +44,35 @@ namespace MysticLegendsClient
                 switch (button)
                 {
                     case ButtonType.Blacksmith:
-                        AddButton("Blacksmith", Icons.city_blacksmith);
+                        AddButton("Blacksmith", Icons.city_blacksmith, (object? s, RoutedEventArgs e) => { });
                         break;
                     case ButtonType.Potions:
-                        AddButton("Potions", Icons.city_potions);
+                        AddButton("Potions", Icons.city_potions, (object? s, RoutedEventArgs e) => { potionsWindow.Instance.ShowWindow(); });
                         break;
                     case ButtonType.TradeMarket:
-                        AddButton("Trade Market", Icons.city_tradeMarket);
+                        AddButton("Trade Market", Icons.city_tradeMarket, (object? s, RoutedEventArgs e) => { });
                         break;
                     case ButtonType.Storage:
-                        AddButton("Storage", Icons.city_storage);
+                        AddButton("Storage", Icons.city_storage, (object? s, RoutedEventArgs e) => { });
                         break;
                     case ButtonType.Scout:
-                        AddButton("Scout", Icons.city_scout);
+                        AddButton("Scout", Icons.city_scout, (object? s, RoutedEventArgs e) => { });
                         break;
                     case ButtonType.DarkAlley:
-                        AddButton("Dark Alley", Icons.city_darkAlley);
+                        AddButton("Dark Alley", Icons.city_darkAlley, (object? s, RoutedEventArgs e) => { });
                         break;
                     case ButtonType.RebelsHideout:
-                        AddButton("Rebels Hideout", Icons.city_hideout);
+                        AddButton("Rebels Hideout", Icons.city_hideout, (object? s, RoutedEventArgs e) => { });
                         break;
                 }
             }
         }
 
-        protected void AddButton(string title, string icon)
+        protected void AddButton(string title, string icon, RoutedEventHandler onClick)
         {
-            cityModulesPanel.Children.Add(new CityModuleButton { InnerPadding="20 10 20 10", Margin=new Thickness(0, 0, 0, 10), TextGap=50, FontSize=20, UniformSvgSize="50", SvgSource=icon, LabelText=title });
+            var btn = new CityModuleButton { InnerPadding="20 10 20 10", Margin=new Thickness(0, 0, 0, 10), TextGap=50, FontSize=20, UniformSvgSize="50", SvgSource=icon, LabelText=title };
+            btn.Click += onClick;
+            cityModulesPanel.Children.Add(btn);
         }
 
         private void CharacterButton_Click(object sender, RoutedEventArgs e)
@@ -87,9 +91,10 @@ namespace MysticLegendsClient
             CurrencyChanged(this, new CurrencyUpdateEventArgs(currency));
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        protected virtual void Window_Closed(object sender, EventArgs e)
         {
             characterWindow.Dispose();
+            potionsWindow.Dispose();
         }
     }
 }

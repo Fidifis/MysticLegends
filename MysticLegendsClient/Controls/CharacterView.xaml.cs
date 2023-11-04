@@ -12,7 +12,8 @@ namespace MysticLegendsClient.Controls
     /// </summary>
     public partial class CharacterView : UserControl, IDataViewWithDrop<Character, InventoryItem>
     {
-        public IItemDrop.ItemDropEventHandler? ItemDropCallback { get; set; }
+        public IItemDrop.ItemDropEventHandler? ItemDropSourceCallback { get; set; }
+        public IItemDrop.ItemDropEventHandler? ItemDropTargetCallback { get; set; }
 
         private Character? data;
         public Character? Data
@@ -136,7 +137,7 @@ namespace MysticLegendsClient.Controls
             if (e.Data.GetDataPresent(typeof(FrameworkElement)))
             {
                 var source = (FrameworkElement)e.Data.GetData(typeof(FrameworkElement));
-                ItemDropCallback?.Invoke((ItemDropContext)source.Tag, (ItemDropContext)target.Tag);
+                ItemDropTargetCallback?.Invoke((ItemDropContext)source.Tag, (ItemDropContext)target.Tag);
             }
         }
     }

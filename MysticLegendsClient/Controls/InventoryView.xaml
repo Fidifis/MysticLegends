@@ -8,7 +8,7 @@
              x:Name="inventoryView"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Label x:Name="capacityCounter" Content="n/a" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="15"/>
+        <Label x:Name="capacityCounter" Content="n/a" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="15" Visibility="{Binding ShowCounter}"/>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <WrapPanel x:Name="inventoryPanel" Margin="0 30 0 0"/>
         </ScrollViewer>

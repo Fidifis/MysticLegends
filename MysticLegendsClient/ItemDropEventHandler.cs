@@ -3,5 +3,6 @@
 public interface IItemDrop
 {
     public delegate void ItemDropEventHandler(ItemDropContext source, ItemDropContext target);
-    public ItemDropEventHandler? ItemDropCallback { get; set; }
+    public ItemDropEventHandler? ItemDropTargetCallback { get; set; }
+    public ItemDropEventHandler? ItemDropSourceCallback { get; set; }
 }

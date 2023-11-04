@@ -20,7 +20,16 @@ namespace MysticLegendsClient.Controls
             DataContext = this;
         }
 
-        public IItemDrop.ItemDropEventHandler? ItemDropCallback { get; set; }
+        private static readonly DependencyProperty counterVisibility = DependencyProperty.Register("ShowCounter", typeof(Visibility), typeof(InventoryView));
+
+        public Visibility CounterVisibility
+        {
+            get { return (Visibility)GetValue(counterVisibility); }
+            set { SetValue(counterVisibility, value); }
+        }
+
+        public IItemDrop.ItemDropEventHandler? ItemDropTargetCallback { get; set; }
+        public IItemDrop.ItemDropEventHandler? ItemDropSourceCallback { get; set; }
 
         private int ItemCount { get => ImgSlots.Count(item => item.Source is not null); }
         private int Capacity { get => ImgSlots.Count; }
@@ -103,15 +112,23 @@ namespace MysticLegendsClient.Controls
         private void FillData(IInventory? inventoryData)
         {
             var inventoryItems = inventoryData?.InventoryItems ?? new List<InventoryItem>();
-            var capacity = inventoryData?.Capacity ?? 0;
+            var inventoryCapacity = inventoryData?.Capacity ?? 0;
+
+            var infiniteMode = inventoryCapacity == -1;
+            var capacity = infiniteMode ? inventoryItems.Count : inventoryCapacity;
 
             UpdateSlots(capacity);
             for (int i = 0; i < ImgSlots.Count; i++)
                 ImgSlots[i].Source = null;
 
+            int fi = 0;
             foreach (var item in inventoryItems)
             {
-                ImgSlots[item.Position].Source = BitmapTools.FromResource(ItemIcons.ResourceManager.GetString(item.Item.Icon)!);
+                if (infiniteMode)
+                    ImgSlots[fi++].Source = BitmapTools.FromResource(ItemIcons.ResourceManager.GetString(item.Item.Icon)!);
+                else
+                    if (item.Position < ImgSlots.Count)
+                        ImgSlots[item.Position].Source = BitmapTools.FromResource(ItemIcons.ResourceManager.GetString(item.Item.Icon)!);
             }
 
             UpdateCapacityCounter();
@@ -133,7 +150,11 @@ namespace MysticLegendsClient.Controls
             if (e.Data.GetDataPresent(typeof(FrameworkElement)))
             {
                 var source = (FrameworkElement)e.Data.GetData(typeof(FrameworkElement));
-                ItemDropCallback?.Invoke((ItemDropContext)source.Tag, (ItemDropContext)target.Tag);
+                var sourceObject = (ItemDropContext)source.Tag;
+                var targetObject = (ItemDropContext)target.Tag;
+
+                sourceObject.Owner.ItemDropSourceCallback?.Invoke(sourceObject, targetObject);
+                targetObject.Owner.ItemDropTargetCallback?.Invoke(sourceObject, targetObject);
             }
         }
     }

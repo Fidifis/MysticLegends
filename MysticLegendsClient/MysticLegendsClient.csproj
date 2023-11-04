@@ -31,6 +31,7 @@
     <Resource Include="images\Graphics\LoginScreen.png" />
     <Resource Include="images\Graphics\LoginScreen2.png" />
     <Resource Include="images\Graphics\LoginScreen3.png" />
+    <Resource Include="images\NPCs\potion_crafter.png" />
     <Resource Include="items\armor\Full_Chainmail_inventory_icon.png" />
     <Resource Include="items\boots\Vaal_Greaves_inventory_icon.png" />
     <Resource Include="items\gloves\Antique_Gauntlets_inventory_icon.png" />

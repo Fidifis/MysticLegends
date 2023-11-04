@@ -19,8 +19,8 @@ namespace MysticLegendsClient
         public CharacterWindow()
         {
             InitializeComponent();
-            inventoryView.ItemDropCallback = InventoryDrop;
-            characterView.ItemDropCallback = InventoryDrop;
+            inventoryView.ItemDropTargetCallback = InventoryDrop;
+            characterView.ItemDropTargetCallback = InventoryDrop;
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
