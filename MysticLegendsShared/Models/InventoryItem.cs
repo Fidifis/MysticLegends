@@ -17,15 +17,13 @@ public partial class InventoryItem
 
     public int ItemId { get; set; }
 
-    public string? NpcName { get; set; }
-
-    public string? NpcInventoryCityName { get; set; }
-
     public int Level { get; set; }
 
     public int StackCount { get; set; }
 
     public int Position { get; set; }
+
+    public int? Durability { get; set; }
 
     public virtual ICollection<BattleStat> BattleStats { get; set; } = new List<BattleStat>();
 
@@ -37,7 +35,7 @@ public partial class InventoryItem
 
     public virtual Item Item { get; set; } = null!;
 
-    public virtual NpcInventory? Npc { get; set; }
+    public virtual NpcItem? NpcItem { get; set; }
 
     public virtual TradeMarket? TradeMarket { get; set; }
 }

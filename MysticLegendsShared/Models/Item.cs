@@ -15,7 +15,7 @@ public partial class Item
 
     public int MaxStack { get; set; }
 
-    public bool StackMeansDurability { get; set; }
+    public int? MaxDurability { get; set; }
 
     public virtual ICollection<InventoryItem> InventoryItems { get; set; } = new List<InventoryItem>();
 

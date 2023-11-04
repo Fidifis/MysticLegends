@@ -7,11 +7,17 @@ public partial class Mob
 {
     public int MobId { get; set; }
 
-    public string Name { get; set; } = null!;
+    public string AreaName { get; set; } = null!;
+
+    public string MobName { get; set; } = null!;
+
+    public int Type { get; set; }
 
     public int Level { get; set; }
 
-    public virtual ICollection<MobItemDrop> MobItemDrops { get; set; } = new List<MobItemDrop>();
+    public int GroupSize { get; set; }
 
-    public virtual ICollection<QuestRequirement> QuestRequirements { get; set; } = new List<QuestRequirement>();
+    public virtual Area AreaNameNavigation { get; set; } = null!;
+
+    public virtual ICollection<MobItemDrop> MobItemDrops { get; set; } = new List<MobItemDrop>();
 }

@@ -20,6 +20,8 @@ public partial class Xdigf001Context : DbContext
 
     public virtual DbSet<AccessToken> AccessTokens { get; set; }
 
+    public virtual DbSet<Area> Areas { get; set; }
+
     public virtual DbSet<BattleStat> BattleStats { get; set; }
 
     public virtual DbSet<Character> Characters { get; set; }
@@ -41,6 +43,8 @@ public partial class Xdigf001Context : DbContext
     public virtual DbSet<Npc> Npcs { get; set; }
 
     public virtual DbSet<NpcInventory> NpcInventories { get; set; }
+
+    public virtual DbSet<NpcItem> NpcItems { get; set; }
 
     public virtual DbSet<Quest> Quests { get; set; }
 
@@ -101,6 +105,17 @@ public partial class Xdigf001Context : DbContext
             entity.HasOne(d => d.UsernameNavigation).WithOne(p => p.AccessToken)
                 .HasForeignKey<AccessToken>(d => d.Username)
                 .HasConstraintName("fk_access_token_user");
+        });
+
+        modelBuilder.Entity<Area>(entity =>
+        {
+            entity.HasKey(e => e.AreaName).HasName("pk_area");
+
+            entity.ToTable("area");
+
+            entity.Property(e => e.AreaName)
+                .HasMaxLength(32)
+                .HasColumnName("area_name");
         });
 
         modelBuilder.Entity<BattleStat>(entity =>
@@ -209,14 +224,9 @@ public partial class Xdigf001Context : DbContext
             entity.Property(e => e.CityName)
                 .HasMaxLength(32)
                 .HasColumnName("city_name");
+            entity.Property(e => e.Durability).HasColumnName("durability");
             entity.Property(e => e.ItemId).HasColumnName("item_id");
             entity.Property(e => e.Level).HasColumnName("level");
-            entity.Property(e => e.NpcInventoryCityName)
-                .HasMaxLength(32)
-                .HasColumnName("npc_inventory_city_name");
-            entity.Property(e => e.NpcName)
-                .HasMaxLength(32)
-                .HasColumnName("npc_name");
             entity.Property(e => e.Position).HasColumnName("position");
             entity.Property(e => e.StackCount).HasColumnName("stack_count");
 
@@ -238,11 +248,6 @@ public partial class Xdigf001Context : DbContext
                 .HasForeignKey(d => new { d.CityName, d.CityInventoryCharacterName })
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_inventory_item_city_inventor");
-
-            entity.HasOne(d => d.Npc).WithMany(p => p.InventoryItems)
-                .HasForeignKey(d => new { d.NpcName, d.NpcInventoryCityName })
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("fk_inventory_item_npc_inventory");
         });
 
         modelBuilder.Entity<Item>(entity =>
@@ -256,11 +261,11 @@ public partial class Xdigf001Context : DbContext
                 .HasMaxLength(64)
                 .HasColumnName("icon");
             entity.Property(e => e.ItemType).HasColumnName("item_type");
+            entity.Property(e => e.MaxDurability).HasColumnName("max_durability");
             entity.Property(e => e.MaxStack).HasColumnName("max_stack");
             entity.Property(e => e.Name)
                 .HasMaxLength(32)
                 .HasColumnName("name");
-            entity.Property(e => e.StackMeansDurability).HasColumnName("stack_means_durability");
         });
 
         modelBuilder.Entity<Mob>(entity =>
@@ -270,10 +275,19 @@ public partial class Xdigf001Context : DbContext
             entity.ToTable("mob");
 
             entity.Property(e => e.MobId).HasColumnName("mob_id");
-            entity.Property(e => e.Level).HasColumnName("level");
-            entity.Property(e => e.Name)
+            entity.Property(e => e.AreaName)
                 .HasMaxLength(32)
-                .HasColumnName("name");
+                .HasColumnName("area_name");
+            entity.Property(e => e.GroupSize).HasColumnName("group_size");
+            entity.Property(e => e.Level).HasColumnName("level");
+            entity.Property(e => e.MobName)
+                .HasMaxLength(32)
+                .HasColumnName("mob_name");
+            entity.Property(e => e.Type).HasColumnName("type");
+
+            entity.HasOne(d => d.AreaNameNavigation).WithMany(p => p.Mobs)
+                .HasForeignKey(d => d.AreaName)
+                .HasConstraintName("fk_mob_area");
         });
 
         modelBuilder.Entity<MobItemDrop>(entity =>
@@ -297,7 +311,7 @@ public partial class Xdigf001Context : DbContext
 
         modelBuilder.Entity<Npc>(entity =>
         {
-            entity.HasKey(e => new { e.NpcName, e.CityName }).HasName("pk_npc");
+            entity.HasKey(e => e.NpcName).HasName("pk_npc");
 
             entity.ToTable("npc");
 
@@ -307,6 +321,7 @@ public partial class Xdigf001Context : DbContext
             entity.Property(e => e.CityName)
                 .HasMaxLength(32)
                 .HasColumnName("city_name");
+            entity.Property(e => e.CurrencyGold).HasColumnName("currency_gold");
             entity.Property(e => e.NpcType).HasColumnName("npc_type");
 
             entity.HasOne(d => d.CityNameNavigation).WithMany(p => p.Npcs)
@@ -329,10 +344,29 @@ public partial class Xdigf001Context : DbContext
                 .HasMaxLength(32)
                 .HasColumnName("city_name");
             entity.Property(e => e.Capacity).HasColumnName("capacity");
+        });
 
-            entity.HasOne(d => d.Npc).WithOne(p => p.NpcInventory)
-                .HasForeignKey<NpcInventory>(d => new { d.NpcName, d.CityName })
-                .HasConstraintName("fk_npc_inventory_npc");
+        modelBuilder.Entity<NpcItem>(entity =>
+        {
+            entity.HasKey(e => new { e.NpcName, e.InvitemId }).HasName("pk_npc_item");
+
+            entity.ToTable("npc_item");
+
+            entity.HasIndex(e => e.InvitemId, "u_fk_npc_item_inventory_item").IsUnique();
+
+            entity.Property(e => e.NpcName)
+                .HasMaxLength(32)
+                .HasColumnName("npc_name");
+            entity.Property(e => e.InvitemId).HasColumnName("invitem_id");
+            entity.Property(e => e.PriceGold).HasColumnName("price_gold");
+
+            entity.HasOne(d => d.Invitem).WithOne(p => p.NpcItem)
+                .HasForeignKey<NpcItem>(d => d.InvitemId)
+                .HasConstraintName("fk_npc_item_inventory_item");
+
+            entity.HasOne(d => d.NpcNameNavigation).WithMany(p => p.NpcItems)
+                .HasForeignKey(d => d.NpcName)
+                .HasConstraintName("fk_npc_item_npc");
         });
 
         modelBuilder.Entity<Quest>(entity =>
@@ -342,13 +376,11 @@ public partial class Xdigf001Context : DbContext
             entity.ToTable("quest");
 
             entity.Property(e => e.QuestId).HasColumnName("quest_id");
-            entity.Property(e => e.CityName)
-                .HasMaxLength(32)
-                .HasColumnName("city_name");
             entity.Property(e => e.Description)
                 .HasMaxLength(256)
                 .HasColumnName("description");
             entity.Property(e => e.IsOffered).HasColumnName("is_offered");
+            entity.Property(e => e.IsRepeable).HasColumnName("is_repeable");
             entity.Property(e => e.Name)
                 .HasMaxLength(64)
                 .HasColumnName("name");
@@ -356,8 +388,8 @@ public partial class Xdigf001Context : DbContext
                 .HasMaxLength(32)
                 .HasColumnName("npc_name");
 
-            entity.HasOne(d => d.Npc).WithMany(p => p.Quests)
-                .HasForeignKey(d => new { d.NpcName, d.CityName })
+            entity.HasOne(d => d.NpcNameNavigation).WithMany(p => p.Quests)
+                .HasForeignKey(d => d.NpcName)
                 .HasConstraintName("fk_quest_npc");
         });
 
@@ -372,17 +404,12 @@ public partial class Xdigf001Context : DbContext
                 .HasColumnName("quest_id");
             entity.Property(e => e.Amount).HasColumnName("amount");
             entity.Property(e => e.ItemId).HasColumnName("item_id");
-            entity.Property(e => e.MobId).HasColumnName("mob_id");
+            entity.Property(e => e.MobType).HasColumnName("mob_type");
 
             entity.HasOne(d => d.Item).WithMany(p => p.QuestRequirements)
                 .HasForeignKey(d => d.ItemId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_quest_requirement_item");
-
-            entity.HasOne(d => d.Mob).WithMany(p => p.QuestRequirements)
-                .HasForeignKey(d => d.MobId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("fk_quest_requirement_mob");
 
             entity.HasOne(d => d.Quest).WithOne(p => p.QuestRequirement)
                 .HasForeignKey<QuestRequirement>(d => d.QuestId)

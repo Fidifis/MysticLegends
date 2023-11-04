@@ -9,17 +9,17 @@ public partial class Quest
 
     public string NpcName { get; set; } = null!;
 
-    public string CityName { get; set; } = null!;
-
     public string Name { get; set; } = null!;
 
     public string Description { get; set; } = null!;
+
+    public bool IsRepeable { get; set; }
 
     public bool IsOffered { get; set; }
 
     public virtual ICollection<AcceptedQuest> AcceptedQuests { get; set; } = new List<AcceptedQuest>();
 
-    public virtual Npc Npc { get; set; } = null!;
+    public virtual Npc NpcNameNavigation { get; set; } = null!;
 
     public virtual QuestRequirement? QuestRequirement { get; set; }
 

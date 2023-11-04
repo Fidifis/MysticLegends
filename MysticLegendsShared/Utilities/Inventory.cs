@@ -24,5 +24,4 @@ namespace MysticLegendsShared.Models
 {
     public partial class CharacterInventory : IInventory { }
     public partial class CityInventory : IInventory { }
-    public partial class NpcInventory : IInventory { } // TODO: delete
 }

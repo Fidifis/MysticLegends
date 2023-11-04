@@ -1,0 +1,1795 @@
+{
+  "entities": [
+    {
+      "name": "Accepted_quest",
+      "parent": null,
+      "attr": [
+        {
+          "name": "quest_state",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        }
+      ],
+      "transform": {
+        "x": -220.14286041259766,
+        "y": 994.8571319580078,
+        "width": 148,
+        "height": 86
+      }
+    },
+    {
+      "name": "Access_token",
+      "parent": null,
+      "attr": [
+        {
+          "name": "access_token",
+          "primary": false,
+          "unique": true,
+          "nullable": false,
+          "type": null
+        },
+        {
+          "name": "expiration",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "timestamp"
+        }
+      ],
+      "transform": {
+        "x": 976.4285707473755,
+        "y": 69.49998474121094,
+        "width": 189.99999904632568,
+        "height": 100.00001525878906
+      }
+    },
+    {
+      "name": "Area",
+      "parent": null,
+      "attr": [
+        {
+          "name": "area_name",
+          "primary": true,
+          "unique": false,
+          "nullable": false,
+          "type": "varchar(32)"
+        }
+      ],
+      "transform": {
+        "x": 1153.2857093811035,
+        "y": 1127.999984741211,
+        "width": 164,
+        "height": 76
+      }
+    },
+    {
+      "name": "Battle_stats",
+      "parent": null,
+      "attr": [
+        {
+          "name": "stat_type",
+          "primary": true,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        },
+        {
+          "name": "method",
+          "primary": true,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        },
+        {
+          "name": "value",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "double"
+        }
+      ],
+      "transform": {
+        "x": 885.4285697937012,
+        "y": 679.5,
+        "width": 184,
+        "height": 93
+      }
+    },
+    {
+      "name": "City",
+      "parent": null,
+      "attr": [
+        {
+          "name": "city_name",
+          "primary": true,
+          "unique": false,
+          "nullable": false,
+          "type": "varchar(32)"
+        }
+      ],
+      "transform": {
+        "x": 46.42856979370117,
+        "y": 445.5,
+        "width": 168,
+        "height": 90
+      }
+    },
+    {
+      "name": "City_inventory",
+      "parent": null,
+      "attr": [
+        {
+          "name": "capacity",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        }
+      ],
+      "transform": {
+        "x": 308.4285697937012,
+        "y": 445.99998474121094,
+        "width": 156.42856979370117,
+        "height": 86
+      }
+    },
+    {
+      "name": "Character",
+      "parent": null,
+      "attr": [
+        {
+          "name": "character_name",
+          "primary": true,
+          "unique": false,
+          "nullable": false,
+          "type": "varchar(32)"
+        },
+        {
+          "name": "character_class",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        },
+        {
+          "name": "level",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        },
+        {
+          "name": "currency_gold",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        }
+      ],
+      "transform": {
+        "x": 553.4285707473755,
+        "y": 435.49998474121094,
+        "width": 192.99999904632568,
+        "height": 108.00001525878906
+      }
+    },
+    {
+      "name": "Character_inventory",
+      "parent": null,
+      "attr": [
+        {
+          "name": "capacity",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        }
+      ],
+      "transform": {
+        "x": 819.4285697937012,
+        "y": 444.5,
+        "width": 190,
+        "height": 88
+      }
+    },
+    {
+      "name": "Inventory_item",
+      "parent": null,
+      "attr": [
+        {
+          "name": "invitem_id",
+          "primary": true,
+          "unique": false,
+          "nullable": false,
+          "type": "serial"
+        },
+        {
+          "name": "level",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        },
+        {
+          "name": "stack_count",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        },
+        {
+          "name": "position",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        },
+        {
+          "name": "durability",
+          "primary": false,
+          "unique": false,
+          "nullable": true,
+          "type": "integer"
+        }
+      ],
+      "transform": {
+        "x": 558.4285697937012,
+        "y": 758.5,
+        "width": 196,
+        "height": 106
+      }
+    },
+    {
+      "name": "Item",
+      "parent": null,
+      "attr": [
+        {
+          "name": "item_id",
+          "primary": true,
+          "unique": false,
+          "nullable": false,
+          "type": "serial"
+        },
+        {
+          "name": "name",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "varchar(32)"
+        },
+        {
+          "name": "icon",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "varchar(64)"
+        },
+        {
+          "name": "item_type",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        },
+        {
+          "name": "max_stack",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        },
+        {
+          "name": "max_durability",
+          "primary": false,
+          "unique": false,
+          "nullable": true,
+          "type": "integer"
+        }
+      ],
+      "transform": {
+        "x": 566.4285697937012,
+        "y": 942.5,
+        "width": 225,
+        "height": 127
+      }
+    },
+    {
+      "name": "Mob",
+      "parent": null,
+      "attr": [
+        {
+          "name": "mob_id",
+          "primary": true,
+          "unique": false,
+          "nullable": false,
+          "type": null
+        },
+        {
+          "name": "mob_name",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "varchar(32)"
+        },
+        {
+          "name": "type",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        },
+        {
+          "name": "level",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        },
+        {
+          "name": "group_size",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        }
+      ],
+      "transform": {
+        "x": 831.4285697937012,
+        "y": 1115.2856903076172,
+        "width": 209.85713958740234,
+        "height": 120.71429443359375
+      }
+    },
+    {
+      "name": "Mob_item_drop",
+      "parent": null,
+      "attr": [
+        {
+          "name": "drop_rate",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "double"
+        }
+      ],
+      "transform": {
+        "x": 853.4285697937012,
+        "y": 963.2856903076172,
+        "width": 169,
+        "height": 84
+      }
+    },
+    {
+      "name": "Npc",
+      "parent": null,
+      "attr": [
+        {
+          "name": "npc_name",
+          "primary": true,
+          "unique": false,
+          "nullable": false,
+          "type": "varchar(32)"
+        },
+        {
+          "name": "npc_type",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        },
+        {
+          "name": "currency_gold",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        }
+      ],
+      "transform": {
+        "x": 44.42856979370117,
+        "y": 773.2856903076172,
+        "width": 174,
+        "height": 99
+      }
+    },
+    {
+      "name": "Npc_item",
+      "parent": null,
+      "attr": [
+        {
+          "name": "price_gold",
+          "primary": false,
+          "unique": false,
+          "nullable": true,
+          "type": "integer"
+        }
+      ],
+      "transform": {
+        "x": 313.4285697937012,
+        "y": 768.2856903076172,
+        "width": 157,
+        "height": 89
+      }
+    },
+    {
+      "name": "Quest",
+      "parent": null,
+      "attr": [
+        {
+          "name": "quest_id",
+          "primary": true,
+          "unique": false,
+          "nullable": false,
+          "type": null
+        },
+        {
+          "name": "name",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "varchar(64)"
+        },
+        {
+          "name": "description",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": null
+        },
+        {
+          "name": "is_repeable",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "boolean"
+        },
+        {
+          "name": "is_offered",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "boolean"
+        }
+      ],
+      "transform": {
+        "x": 36.42856979370117,
+        "y": 989.2856903076172,
+        "width": 190,
+        "height": 118.71429443359375
+      }
+    },
+    {
+      "name": "Quest_requirement",
+      "parent": null,
+      "attr": [
+        {
+          "name": "amount",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        },
+        {
+          "name": "mob_type",
+          "primary": false,
+          "unique": false,
+          "nullable": true,
+          "type": "integer"
+        }
+      ],
+      "transform": {
+        "x": 341.4285697937012,
+        "y": 1094.2856903076172,
+        "width": 156.42856979370117,
+        "height": 89.71429443359375
+      }
+    },
+    {
+      "name": "Quest_reward",
+      "parent": null,
+      "attr": [
+        {
+          "name": "currency_gold",
+          "primary": false,
+          "unique": false,
+          "nullable": true,
+          "type": "integer"
+        },
+        {
+          "name": "item_count",
+          "primary": false,
+          "unique": false,
+          "nullable": true,
+          "type": "integer"
+        }
+      ],
+      "transform": {
+        "x": 341.85714054107666,
+        "y": 960.9999694824219,
+        "width": 155.99999904632568,
+        "height": 91
+      }
+    },
+    {
+      "name": "Refresh_token",
+      "parent": null,
+      "attr": [
+        {
+          "name": "record_id",
+          "primary": true,
+          "unique": false,
+          "nullable": false,
+          "type": null
+        },
+        {
+          "name": "refresh_token",
+          "primary": false,
+          "unique": true,
+          "nullable": false,
+          "type": null
+        },
+        {
+          "name": "expiration",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "timestamp"
+        }
+      ],
+      "transform": {
+        "x": 979,
+        "y": 217.21875,
+        "width": 177,
+        "height": 111
+      }
+    },
+    {
+      "name": "Trade_market",
+      "parent": null,
+      "attr": [
+        {
+          "name": "price_gold",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
+        }
+      ],
+      "transform": {
+        "x": 913.8571395874023,
+        "y": 824.9999847412109,
+        "width": 145,
+        "height": 84
+      }
+    },
+    {
+      "name": "User",
+      "parent": null,
+      "attr": [
+        {
+          "name": "username",
+          "primary": true,
+          "unique": false,
+          "nullable": false,
+          "type": "varchar(32)"
+        },
+        {
+          "name": "password_hash",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "varchar(32)"
+        }
+      ],
+      "transform": {
+        "x": 548,
+        "y": 158.21875,
+        "width": 203,
+        "height": 80.28125
+      }
+    }
+  ],
+  "relations": [
+    [
+      {
+        "entity": "City_inventory",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 308.4285697937012,
+            "y": 489.4960936307907,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 261.4285697937012,
+              "y": 489.99804681539536
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "City",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 214.42856979370117,
+            "y": 490.5,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 261.4285697937012,
+              "y": 489.99804681539536
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Character_inventory",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 819.4285697937012,
+            "y": 488.5,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 782.9285697937012,
+              "y": 488.50565008819103
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Character",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 746.4285697937012,
+            "y": 488.51130017638206,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 782.9285697937012,
+              "y": 488.50565008819103
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Character",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 553.4285707473755,
+            "y": 488.4967753188586,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 509.1428551673889,
+              "y": 488.49829243781596
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "City_inventory",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 464.85713958740234,
+            "y": 488.49980955677324,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 509.1428551673889,
+              "y": 488.49829243781596
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Character",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 605.8571395874023,
+            "y": 435.49998474121094,
+            "edge": 0
+          },
+          "points": [
+            {
+              "x": 605.8571395874023,
+              "y": 385.8571319580078
+            },
+            {
+              "x": -145.14286041259766,
+              "y": 385.8571319580078
+            }
+          ],
+          "manual": true
+        }
+      },
+      {
+        "entity": "Accepted_quest",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": -145.14286041259766,
+            "y": 994.8571319580078,
+            "edge": 0
+          },
+          "points": [
+            {
+              "x": -145.14286041259766,
+              "y": 385.8571319580078
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Inventory_item",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 0,
+        "xor": "13a82928ab5a9a6631368d1ab5a9c5ab5a9a6e5babb95ab5a9a6edd66c98",
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 599.4285697937012,
+            "y": 758.5,
+            "edge": 0
+          },
+          "points": [
+            {
+              "x": 599.4285697937012,
+              "y": 644.9999847412109
+            },
+            {
+              "x": 494.14285469055176,
+              "y": 644.9999847412109
+            }
+          ],
+          "manual": true
+        }
+      },
+      {
+        "entity": "City_inventory",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 388.85713958740234,
+            "y": 531.9999847412109,
+            "edge": 2
+          },
+          "points": [
+            {
+              "x": 388.85713958740234,
+              "y": 644.9999847412109
+            },
+            {
+              "x": 494.14285469055176,
+              "y": 644.9999847412109
+            }
+          ],
+          "manual": true
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Inventory_item",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 0,
+        "xor": "13a82928ab5a9a6631368d1ab5a9c5ab5a9a6e5babb95ab5a9a6edd66c98",
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 653.4285697937012,
+            "y": 758.5,
+            "edge": 0
+          },
+          "points": [
+            {
+              "x": 653.4285697937012,
+              "y": 648
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Character",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 653.4285697937012,
+            "y": 543.5,
+            "edge": 2
+          },
+          "points": [
+            {
+              "x": 653.4285697937012,
+              "y": 648
+            }
+          ],
+          "manual": true
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Inventory_item",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 0,
+        "xor": "13a82928ab5a9a6631368d1ab5a9c5ab5a9a6e5babb95ab5a9a6edd66c98",
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 707.4285697937012,
+            "y": 758.5,
+            "edge": 0
+          },
+          "points": [
+            {
+              "x": 707.4285697937012,
+              "y": 638.9999847412109
+            },
+            {
+              "x": 809.4285697937012,
+              "y": 638.9999847412109
+            }
+          ],
+          "manual": true
+        }
+      },
+      {
+        "entity": "Character_inventory",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 911.4285697937012,
+            "y": 532.5,
+            "edge": 2
+          },
+          "points": [
+            {
+              "x": 911.4285697937012,
+              "y": 638.9999847412109
+            },
+            {
+              "x": 809.4285697937012,
+              "y": 638.9999847412109
+            }
+          ],
+          "manual": true
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Inventory_item",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 754.4285697937012,
+            "y": 794.9999847412109,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 806.8571395874023,
+              "y": 794.9999847412109
+            },
+            {
+              "x": 806.8571395874023,
+              "y": 726
+            }
+          ],
+          "manual": true
+        }
+      },
+      {
+        "entity": "Battle_stats",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 885.4285697937012,
+            "y": 726,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 806.8571395874023,
+              "y": 726
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Item",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 665.8962020874023,
+            "y": 942.5,
+            "edge": 0
+          },
+          "points": [
+            {
+              "x": 665.8766708374023,
+              "y": 903.5
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Inventory_item",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 665.8571395874023,
+            "y": 864.5,
+            "edge": 2
+          },
+          "points": [
+            {
+              "x": 665.8766708374023,
+              "y": 903.5
+            }
+          ],
+          "manual": true
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Mob_item_drop",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 853.4285697937012,
+            "y": 1005.2856903076172,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 822.4285697937012,
+              "y": 1005.6428451538086
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Item",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 791.4285697937012,
+            "y": 1006,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 822.4285697937012,
+              "y": 1005.6428451538086
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Mob_item_drop",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 937.3694179952145,
+            "y": 1047.2856903076172,
+            "edge": 2
+          },
+          "points": [
+            {
+              "x": 937.3062640216667,
+              "y": 1081.2856903076172
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Mob",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 937.243110048119,
+            "y": 1115.2856903076172,
+            "edge": 0
+          },
+          "points": [
+            {
+              "x": 937.3062640216667,
+              "y": 1081.2856903076172
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Mob",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 1041.2857093811035,
+            "y": 1166.2856903076172,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 1097.2857093811035,
+              "y": 1166.142837524414
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Area",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 1153.2857093811035,
+            "y": 1165.999984741211,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 1097.2857093811035,
+              "y": 1166.142837524414
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Npc_item",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 313.4285697937012,
+            "y": 812.7856903076172,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 265.9285697937012,
+              "y": 812.7856903076172
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Npc",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 218.42856979370117,
+            "y": 812.7856903076172,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 265.9285697937012,
+              "y": 812.7856903076172
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Npc_item",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 470.4285697937012,
+            "y": 812.7856903076172,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 511.4285697937012,
+              "y": 813.0356903076172
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Inventory_item",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 1,
+        "xor": "13a82928ab5a9a6631368d1ab5a9c5ab5a9a6e5babb95ab5a9a6edd66c98",
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 558.4285697937012,
+            "y": 813.2856903076172,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 511.4285697937012,
+              "y": 813.0356903076172
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Npc",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 128.85713958740234,
+            "y": 773.2856903076172,
+            "edge": 0
+          },
+          "points": [
+            {
+              "x": 128.85713958740234,
+              "y": 654.3928451538086
+            }
+          ],
+          "manual": true
+        }
+      },
+      {
+        "entity": "City",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 128.85713958740234,
+            "y": 535.5,
+            "edge": 2
+          },
+          "points": [
+            {
+              "x": 128.85713958740234,
+              "y": 654.3928451538086
+            }
+          ],
+          "manual": true
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Quest_requirement",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 497.85713958740234,
+            "y": 1128.2856903076172,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 540.8571395874023,
+              "y": 1128.2856903076172
+            },
+            {
+              "x": 540.8571395874023,
+              "y": 1090.999984741211
+            }
+          ],
+          "manual": true
+        }
+      },
+      {
+        "entity": "Item",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 566.4285697937012,
+            "y": 1032.999984741211,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 540.8571395874023,
+              "y": 1032.999984741211
+            },
+            {
+              "x": 540.8571395874023,
+              "y": 1090.999984741211
+            }
+          ],
+          "manual": true
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Quest_requirement",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 341.4285697937012,
+            "y": 1143.7856903076172,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 284.85713958740234,
+              "y": 1143.7856903076172
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Quest",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 226.42856979370117,
+            "y": 1056.999984741211,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 284.85713958740234,
+              "y": 1056.999984741211
+            },
+            {
+              "x": 284.85713958740234,
+              "y": 1143.7856903076172
+            }
+          ],
+          "manual": true
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Quest_reward",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 497.85713958740234,
+            "y": 1006.4999694824219,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 538.8571395874023,
+              "y": 1006.4999694824219
+            }
+          ],
+          "manual": true
+        }
+      },
+      {
+        "entity": "Item",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 566.4285697937012,
+            "y": 1006.4999694824219,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 538.8571395874023,
+              "y": 1006.4999694824219
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Quest_reward",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 341.85714054107666,
+            "y": 1006.4999694824219,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 284.1428551673889,
+              "y": 1006.4999694824219
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Quest",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 226.42856979370117,
+            "y": 1006.4999694824219,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 284.1428551673889,
+              "y": 1006.4999694824219
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Quest",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 131.42856979370117,
+            "y": 989.2856903076172,
+            "edge": 0
+          },
+          "points": [
+            {
+              "x": 131.42856979370117,
+              "y": 930.7856903076172
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Npc",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 131.42856979370117,
+            "y": 872.2856903076172,
+            "edge": 2
+          },
+          "points": [
+            {
+              "x": 131.42856979370117,
+              "y": 930.7856903076172
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Quest",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 36.42856979370117,
+            "y": 1039.2856903076172,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": -17.857145309448242,
+              "y": 1039.315266251564
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Accepted_quest",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": -72.14286041259766,
+            "y": 1039.3448421955109,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": -17.857145309448242,
+              "y": 1039.315266251564
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Trade_market",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 913.8571395874023,
+            "y": 866.9999847412109,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 806.8571395874023,
+              "y": 866.9999847412109
+            }
+          ],
+          "manual": true
+        }
+      },
+      {
+        "entity": "Inventory_item",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 754.4285697937012,
+            "y": 827.9999847412109,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 806.8571395874023,
+              "y": 827.9999847412109
+            },
+            {
+              "x": 806.8571395874023,
+              "y": 866.9999847412109
+            }
+          ],
+          "manual": true
+        }
+      }
+    ],
+    [
+      {
+        "entity": "User",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 649.9285864830008,
+            "y": 238.5,
+            "edge": 2
+          },
+          "points": [
+            {
+              "x": 649.9285783767696,
+              "y": 336.99999237060547
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Character",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 649.9285702705383,
+            "y": 435.49998474121094,
+            "edge": 0
+          },
+          "points": [
+            {
+              "x": 649.9285783767696,
+              "y": 336.99999237060547
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "User",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 751,
+            "y": 193.46875,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 857.4285697937012,
+              "y": 193.46875
+            },
+            {
+              "x": 857.4285697937012,
+              "y": 119.49999237060547
+            }
+          ],
+          "manual": true
+        }
+      },
+      {
+        "entity": "Access_token",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 976.4285707473755,
+            "y": 119.49999237060547,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 857.4285697937012,
+              "y": 119.49999237060547
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "User",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 751,
+            "y": 210.984375,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 856.4285697937012,
+              "y": 210.984375
+            },
+            {
+              "x": 856.4285697937012,
+              "y": 272.71875
+            }
+          ],
+          "manual": true
+        }
+      },
+      {
+        "entity": "Refresh_token",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 979,
+            "y": 272.71875,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 856.4285697937012,
+              "y": 272.71875
+            }
+          ],
+          "manual": false
+        }
+      }
+    ]
+  ],
+  "notes": []
+}

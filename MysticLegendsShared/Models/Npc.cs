@@ -11,9 +11,11 @@ public partial class Npc
 
     public int NpcType { get; set; }
 
+    public int CurrencyGold { get; set; }
+
     public virtual City CityNameNavigation { get; set; } = null!;
 
-    public virtual NpcInventory? NpcInventory { get; set; }
+    public virtual ICollection<NpcItem> NpcItems { get; set; } = new List<NpcItem>();
 
     public virtual ICollection<Quest> Quests { get; set; } = new List<Quest>();
 }
