@@ -9,18 +9,17 @@ namespace MysticLegendsClient
     /// <summary>
     /// Interakční logika pro NpcWindow.xaml
     /// </summary>
-    public abstract partial class NpcWindow : Window, ISingleInstanceWindow
+    public abstract partial class NpcShopWindow : NpcWindow
     {
-        protected readonly int NpcId;
+        
         protected readonly FrameworkElement[] views;
 
         protected InventoryView? inventoryRelation;
         protected CharacterWindow? characterWindowRelation;
 
-        public NpcWindow(int npcId)
+        public NpcShopWindow(int npcId): base (npcId)
         {
             InitializeComponent();
-            NpcId = npcId;
             views = new FrameworkElement[] { buyView, sellView, questsView };
 
             buyView.ItemDropSourceCallback = ItemDropSource;
@@ -28,14 +27,7 @@ namespace MysticLegendsClient
             sellViewInventory.ItemDropTargetCallback = ItemDropTarget;
         }
 
-        public void ShowWindow()
-        {
-            Show();
-            if (WindowState == WindowState.Minimized) WindowState = WindowState.Normal;
-            Activate();
-        }
-
-        protected void SetSplashImage(string image)
+        protected override void SetSplashImage(string image)
         {
             splashImage.Source = BitmapTools.FromResource(image);
         }
