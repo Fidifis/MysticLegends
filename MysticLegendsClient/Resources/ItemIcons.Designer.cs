@@ -79,6 +79,15 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
+        ///   Vyhledá lokalizovaný řetězec podobný /items/potions/Large_Life_Flask_inventory_icon.png.
+        /// </summary>
+        internal static string potion_smallHealth {
+            get {
+                return ResourceManager.GetString("potion/smallHealth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Vyhledá lokalizovaný řetězec podobný .
         /// </summary>
         internal static string weapon_aresBlade {

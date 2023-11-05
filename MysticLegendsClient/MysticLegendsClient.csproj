@@ -36,6 +36,7 @@
     <Resource Include="items\boots\Vaal_Greaves_inventory_icon.png" />
     <Resource Include="items\gloves\Antique_Gauntlets_inventory_icon.png" />
     <Resource Include="items\helmet\Close_Helmet_inventory_icon.png" />
+	<Resource Include="items\potions\Large_Life_Flask_inventory_icon.png" />
   </ItemGroup>
 
   <ItemGroup>

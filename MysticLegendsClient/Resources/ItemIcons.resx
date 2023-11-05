@@ -123,6 +123,9 @@
   <data name="helmet/ayreimWarrior" xml:space="preserve">
     <value>/items/helmet/Close_Helmet_inventory_icon.png</value>
   </data>
+  <data name="potion/smallHealth" xml:space="preserve">
+    <value>/items/potions/Large_Life_Flask_inventory_icon.png</value>
+  </data>
   <data name="weapon/aresBlade" xml:space="preserve">
     <value />
   </data>
