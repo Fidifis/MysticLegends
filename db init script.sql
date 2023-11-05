@@ -28,17 +28,21 @@ VALUES (1, 'Item1', 'bodyArmor/ayreimWarrior', 10, 1, 100),
 INSERT INTO character_inventory (character_name, capacity)
 VALUES ('zmrdus', 10);
 
--- Insert data into the "inventory_item" table
-INSERT INTO inventory_item (invitem_id, character_inventory_character_n, character_name, item_id, level, stack_count, position)
-VALUES (1, 'zmrdus', NULL, 1, 1, 1, 0),
-       (2, 'zmrdus', NULL, 2, 1, 1, 1),
-       (3, 'zmrdus', NULL, 1, 1, 1, 2),
-       (4, NULL, NULL, 1, 1, 1, 3),
-       (5, NULL, NULL, 2, 1, 1, 4);
-
 -- Insert data into the "npc" table
 INSERT INTO npc (npc_name, city_name, npc_type, currency_gold)
 VALUES ('Npc1', 'City1', 1, 500);
+
+INSERT INTO npc_item (npc_item_id, npc_name, price_gold)
+VALUES (1, 'Npc1', 100),
+       (2, 'Npc1', 200);
+
+-- Insert data into the "inventory_item" table
+INSERT INTO inventory_item (invitem_id, character_inventory_character_n, character_name, npc_item_id, npc_name, item_id, level, stack_count, position)
+VALUES (1, 'zmrdus', NULL, NULL, NULL, 1, 1, 1, 0),
+       (2, 'zmrdus', NULL, NULL, NULL, 2, 1, 1, 1),
+       (3, 'zmrdus', NULL, NULL, NULL, 1, 1, 1, 2),
+       (4, NULL, NULL, 1, 'Npc1', 1, 1, 1, 3),
+       (5, NULL, NULL, 2, 'Npc1', 2, 1, 1, 4);
 
 -- Insert data into the "quest" table
 INSERT INTO quest (quest_id, npc_name, name, description, is_repeable, is_offered)
@@ -56,7 +60,3 @@ INSERT INTO battle_stats (stat_type, method, invitem_id, value)
 VALUES (1, 0, 1, 50),  -- Example stat 1
        (1, 1, 2, 3),  -- Example stat 2
        (1, 0, 3, 60);  -- Example stat 3
-
-INSERT INTO npc_item (npc_name, invitem_id, price_gold)
-VALUES ('Npc1', 4, 100),
-       ('Npc1', 5, 200);
