@@ -1,5 +1,6 @@
 ﻿namespace MysticLegendsClient;
 
+[Obsolete]
 public class ItemDropContext
 {
     public IItemDrop Owner { get; set; }

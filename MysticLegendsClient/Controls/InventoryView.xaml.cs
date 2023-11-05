@@ -7,13 +7,14 @@ using System.Windows.Input;
 using MysticLegendsShared.Utilities;
 using MysticLegendsShared.Models;
 using System.Windows.Media.Imaging;
+using System.Collections;
 
 namespace MysticLegendsClient.Controls
 {
     /// <summary>
     /// Interakční logika pro InventoryView.xaml
     /// </summary>
-    public partial class InventoryView : UserControl, IDataViewWithDrop<IInventory, InventoryItem>
+    public partial class InventoryView : UserControl, IItemView
     {
         public InventoryView()
         {
@@ -25,10 +26,16 @@ namespace MysticLegendsClient.Controls
         {
             InitializeComponent();
             DataContext = this;
-            Owner = owner;
+            //Owner = owner;
         }
 
-        public FrameworkElement? Owner { get; set; }
+        public event IItemView.ItemDropEventHandler? ItemDropEvent;
+
+        public ICollection<IViewableItem> Items { get; set; } = new List<IViewableItem>();
+
+        public void Update() => FillData(Items);
+
+        //public FrameworkElement? Owner { get; set; }
 
         private static readonly DependencyProperty counterVisibility = DependencyProperty.Register("ShowCounter", typeof(Visibility), typeof(InventoryView));
 
@@ -38,31 +45,13 @@ namespace MysticLegendsClient.Controls
             set { SetValue(counterVisibility, value); }
         }
 
-        public IItemDrop.ItemDropEventHandler? ItemDropTargetCallback { get; set; }
-        public IItemDrop.ItemDropEventHandler? ItemDropSourceCallback { get; set; }
-
         private int ItemCount { get => ItemSlots.Count(item => item.Item1.Source is not null); }
         private int Capacity { get => ItemSlots.Count; }
         private string CapacityCounter { get => $"{ItemCount}/{Capacity}"; }
 
         private readonly List<Tuple<Image, Label>> ItemSlots = new();
+        [Obsolete]
         private readonly List<Tuple<object, int>> LockedItems = new();
-
-        private IInventory? data;
-        public IInventory? Data
-        {
-            get => data;
-            set
-            {
-                data = value;
-                FillData(data);
-            }
-        }
-
-        public void Update() => FillData(data);
-
-        public InventoryItem? GetByContextId(int id) => Data?.InventoryItems?.Where(item => item.Position == id).FirstOrDefault();
-
 
         private FrameworkElement CreateSlot(out Image image, out Label label)
         {
@@ -109,7 +98,7 @@ namespace MysticLegendsClient.Controls
         {
             inventoryPanel.Children.Add(element);
             ItemSlots.Add(new (image, label));
-            element.Tag = new ItemDropContext(this, ItemSlots.Count - 1);
+            element.Tag = new ItemSlot(this, ItemSlots.Count - 1);
         }
 
         private void UpdateSlots(int count)
@@ -127,10 +116,10 @@ namespace MysticLegendsClient.Controls
             capacityCounter.Content = CapacityCounter;
         }
 
-        private void FillData(IInventory? inventoryData)
+        private void FillData(ICollection<IViewableItem> inventoryData)
         {
-            var inventoryItems = inventoryData?.InventoryItems ?? new List<InventoryItem>();
-            var inventoryCapacity = inventoryData?.Capacity ?? 0;
+            var inventoryItems = inventoryData;
+            var inventoryCapacity = inventoryData.Count;
 
             var infiniteMode = inventoryCapacity == -1;
             var capacity = infiniteMode ? inventoryItems.Count : inventoryCapacity;
@@ -145,12 +134,12 @@ namespace MysticLegendsClient.Controls
             int fi = 0;
             foreach (var item in inventoryItems)
             {
-                var stackCountStr = item.StackCount == 1 ? "" : item.StackCount.ToString();
+                var stackCountStr = item.StackNumber == 1 ? "" : item.StackNumber.ToString();
                 if (infiniteMode)
-                    SetSlot(fi++, item.Item.Icon, stackCountStr);
+                    SetSlot(fi++, item.Icon, stackCountStr);
                 else
                     if (item.Position < ItemSlots.Count)
-                        SetSlot(item.Position, item.Item.Icon, stackCountStr);
+                        SetSlot(item.Position, item.Icon, stackCountStr);
             }
 
             UpdateCapacityCounter();
@@ -197,9 +186,9 @@ namespace MysticLegendsClient.Controls
 
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (((FrameworkElement)sender).Tag is ItemDropContext context && ItemSlots[context.ContextId].Item1.Source is not null && LockedItems.FindIndex(item => item.Item2 == context.ContextId) == -1)
+            if (((FrameworkElement)sender).Tag is ItemSlot slot && ItemSlots[slot.GridPosition].Item1.Source is not null)
             {
-                var data = new DataObject(typeof(FrameworkElement), sender);
+                var data = new DataObject(typeof(ItemSlot), slot);
                 DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Move);
             }
         }
@@ -208,17 +197,12 @@ namespace MysticLegendsClient.Controls
         {
             var target = (FrameworkElement)sender;
 
-            if (e.Data.GetDataPresent(typeof(FrameworkElement)))
+            if (e.Data.GetDataPresent(typeof(ItemSlot)))
             {
-                var source = (FrameworkElement)e.Data.GetData(typeof(FrameworkElement));
-                var sourceObject = (ItemDropContext)source.Tag;
-                var targetObject = (ItemDropContext)target.Tag;
+                var sourceSlot = (ItemSlot)e.Data.GetData(typeof(ItemSlot));
+                var targetSlot = (ItemSlot)target.Tag;
 
-                if (LockedItems.FindIndex(item => item.Item2 == targetObject.ContextId) != -1)
-                    return;
-
-                sourceObject.Owner.ItemDropSourceCallback?.Invoke(sourceObject, targetObject);
-                targetObject.Owner.ItemDropTargetCallback?.Invoke(sourceObject, targetObject);
+                ItemDropEvent?.Invoke(sourceSlot.Owner, new ItemDropEventArgs(sourceSlot, targetSlot));
             }
         }
     }

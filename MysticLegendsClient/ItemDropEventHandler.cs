@@ -1,5 +1,6 @@
 ﻿namespace MysticLegendsClient;
 
+[Obsolete]
 public interface IItemDrop
 {
     public delegate void ItemDropEventHandler(ItemDropContext source, ItemDropContext target);

@@ -3,6 +3,7 @@ using MysticLegendsShared.Models;
 
 namespace MysticLegendsShared.Utilities
 {
+    [Obsolete]
     public interface IInventory
     {
         public int Capacity { get; set; }
@@ -13,6 +14,7 @@ namespace MysticLegendsShared.Utilities
     /// The class is used for the need to create an "artificial" inventory that does not match any inventory type from Database Models.
     /// For example, for the need to insert a custom item list into controls that require the <see cref="IInventory"/> interface.
     /// </summary>
+    [Obsolete]
     public class ArtifficialInventory: IInventory
     {
         public int Capacity { get; set; } = -1;
