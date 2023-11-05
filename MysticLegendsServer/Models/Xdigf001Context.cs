@@ -38,8 +38,6 @@ public partial class Xdigf001Context : DbContext
 
     public virtual DbSet<Npc> Npcs { get; set; }
 
-    public virtual DbSet<NpcInventory> NpcInventories { get; set; }
-
     public virtual DbSet<NpcItem> NpcItems { get; set; }
 
     public virtual DbSet<Quest> Quests { get; set; }
@@ -204,6 +202,8 @@ public partial class Xdigf001Context : DbContext
 
             entity.ToTable("inventory_item");
 
+            entity.HasIndex(e => new { e.NpcItemId, e.NpcName }, "u_fk_inventory_item_npc_item").IsUnique();
+
             entity.Property(e => e.InvitemId).HasColumnName("invitem_id");
             entity.Property(e => e.CharacterInventoryCharacterN)
                 .HasMaxLength(32)
@@ -220,6 +220,10 @@ public partial class Xdigf001Context : DbContext
             entity.Property(e => e.Durability).HasColumnName("durability");
             entity.Property(e => e.ItemId).HasColumnName("item_id");
             entity.Property(e => e.Level).HasColumnName("level");
+            entity.Property(e => e.NpcItemId).HasColumnName("npc_item_id");
+            entity.Property(e => e.NpcName)
+                .HasMaxLength(32)
+                .HasColumnName("npc_name");
             entity.Property(e => e.Position).HasColumnName("position");
             entity.Property(e => e.StackCount).HasColumnName("stack_count");
 
@@ -241,6 +245,11 @@ public partial class Xdigf001Context : DbContext
                 .HasForeignKey(d => new { d.CityName, d.CityInventoryCharacterName })
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_inventory_item_city_inventor");
+
+            entity.HasOne(d => d.Npc).WithOne(p => p.InventoryItem)
+                .HasForeignKey<InventoryItem>(d => new { d.NpcItemId, d.NpcName })
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_inventory_item_npc_item");
         });
 
         modelBuilder.Entity<Item>(entity =>
@@ -322,40 +331,19 @@ public partial class Xdigf001Context : DbContext
                 .HasConstraintName("fk_npc_city");
         });
 
-        modelBuilder.Entity<NpcInventory>(entity =>
-        {
-            entity.HasKey(e => new { e.NpcName, e.CityName }).HasName("pk_npc_inventory");
-
-            entity.ToTable("npc_inventory");
-
-            entity.HasIndex(e => new { e.NpcName, e.CityName }, "u_fk_npc_inventory_npc").IsUnique();
-
-            entity.Property(e => e.NpcName)
-                .HasMaxLength(32)
-                .HasColumnName("npc_name");
-            entity.Property(e => e.CityName)
-                .HasMaxLength(32)
-                .HasColumnName("city_name");
-            entity.Property(e => e.Capacity).HasColumnName("capacity");
-        });
-
         modelBuilder.Entity<NpcItem>(entity =>
         {
-            entity.HasKey(e => new { e.NpcName, e.InvitemId }).HasName("pk_npc_item");
+            entity.HasKey(e => new { e.NpcItemId, e.NpcName }).HasName("pk_npc_item");
 
             entity.ToTable("npc_item");
 
-            entity.HasIndex(e => e.InvitemId, "u_fk_npc_item_inventory_item").IsUnique();
-
+            entity.Property(e => e.NpcItemId)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("npc_item_id");
             entity.Property(e => e.NpcName)
                 .HasMaxLength(32)
                 .HasColumnName("npc_name");
-            entity.Property(e => e.InvitemId).HasColumnName("invitem_id");
             entity.Property(e => e.PriceGold).HasColumnName("price_gold");
-
-            entity.HasOne(d => d.Invitem).WithOne(p => p.NpcItem)
-                .HasForeignKey<NpcItem>(d => d.InvitemId)
-                .HasConstraintName("fk_npc_item_inventory_item");
 
             entity.HasOne(d => d.NpcNameNavigation).WithMany(p => p.NpcItems)
                 .HasForeignKey(d => d.NpcName)

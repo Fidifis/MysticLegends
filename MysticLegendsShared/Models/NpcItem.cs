@@ -5,13 +5,13 @@ namespace MysticLegendsShared.Models;
 
 public partial class NpcItem
 {
-    public string NpcName { get; set; } = null!;
+    public int NpcItemId { get; set; }
 
-    public int InvitemId { get; set; }
+    public string NpcName { get; set; } = null!;
 
     public int? PriceGold { get; set; }
 
-    public virtual InventoryItem Invitem { get; set; } = null!;
+    public virtual InventoryItem? InventoryItem { get; set; }
 
     public virtual Npc NpcNameNavigation { get; set; } = null!;
 }
