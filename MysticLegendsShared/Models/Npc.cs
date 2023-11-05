@@ -5,7 +5,7 @@ namespace MysticLegendsShared.Models;
 
 public partial class Npc
 {
-    public string NpcName { get; set; } = null!;
+    public int NpcId { get; set; }
 
     public string CityName { get; set; } = null!;
 

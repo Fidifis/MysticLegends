@@ -202,7 +202,7 @@ public partial class Xdigf001Context : DbContext
 
             entity.ToTable("inventory_item");
 
-            entity.HasIndex(e => new { e.NpcItemId, e.NpcName }, "u_fk_inventory_item_npc_item").IsUnique();
+            entity.HasIndex(e => new { e.NpcItemId, e.NpcId }, "u_fk_inventory_item_npc_item").IsUnique();
 
             entity.Property(e => e.InvitemId).HasColumnName("invitem_id");
             entity.Property(e => e.CharacterInventoryCharacterN)
@@ -220,10 +220,8 @@ public partial class Xdigf001Context : DbContext
             entity.Property(e => e.Durability).HasColumnName("durability");
             entity.Property(e => e.ItemId).HasColumnName("item_id");
             entity.Property(e => e.Level).HasColumnName("level");
+            entity.Property(e => e.NpcId).HasColumnName("npc_id");
             entity.Property(e => e.NpcItemId).HasColumnName("npc_item_id");
-            entity.Property(e => e.NpcName)
-                .HasMaxLength(32)
-                .HasColumnName("npc_name");
             entity.Property(e => e.Position).HasColumnName("position");
             entity.Property(e => e.StackCount).HasColumnName("stack_count");
 
@@ -246,8 +244,8 @@ public partial class Xdigf001Context : DbContext
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_inventory_item_city_inventor");
 
-            entity.HasOne(d => d.Npc).WithOne(p => p.InventoryItem)
-                .HasForeignKey<InventoryItem>(d => new { d.NpcItemId, d.NpcName })
+            entity.HasOne(d => d.NpcI).WithOne(p => p.InventoryItem)
+                .HasForeignKey<InventoryItem>(d => new { d.NpcItemId, d.NpcId })
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_inventory_item_npc_item");
         });
@@ -313,13 +311,11 @@ public partial class Xdigf001Context : DbContext
 
         modelBuilder.Entity<Npc>(entity =>
         {
-            entity.HasKey(e => e.NpcName).HasName("pk_npc");
+            entity.HasKey(e => e.NpcId).HasName("pk_npc");
 
             entity.ToTable("npc");
 
-            entity.Property(e => e.NpcName)
-                .HasMaxLength(32)
-                .HasColumnName("npc_name");
+            entity.Property(e => e.NpcId).HasColumnName("npc_id");
             entity.Property(e => e.CityName)
                 .HasMaxLength(32)
                 .HasColumnName("city_name");
@@ -333,20 +329,18 @@ public partial class Xdigf001Context : DbContext
 
         modelBuilder.Entity<NpcItem>(entity =>
         {
-            entity.HasKey(e => new { e.NpcItemId, e.NpcName }).HasName("pk_npc_item");
+            entity.HasKey(e => new { e.NpcItemId, e.NpcId }).HasName("pk_npc_item");
 
             entity.ToTable("npc_item");
 
             entity.Property(e => e.NpcItemId)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("npc_item_id");
-            entity.Property(e => e.NpcName)
-                .HasMaxLength(32)
-                .HasColumnName("npc_name");
+            entity.Property(e => e.NpcId).HasColumnName("npc_id");
             entity.Property(e => e.PriceGold).HasColumnName("price_gold");
 
-            entity.HasOne(d => d.NpcNameNavigation).WithMany(p => p.NpcItems)
-                .HasForeignKey(d => d.NpcName)
+            entity.HasOne(d => d.Npc).WithMany(p => p.NpcItems)
+                .HasForeignKey(d => d.NpcId)
                 .HasConstraintName("fk_npc_item_npc");
         });
 
@@ -365,12 +359,10 @@ public partial class Xdigf001Context : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(64)
                 .HasColumnName("name");
-            entity.Property(e => e.NpcName)
-                .HasMaxLength(32)
-                .HasColumnName("npc_name");
+            entity.Property(e => e.NpcId).HasColumnName("npc_id");
 
-            entity.HasOne(d => d.NpcNameNavigation).WithMany(p => p.Quests)
-                .HasForeignKey(d => d.NpcName)
+            entity.HasOne(d => d.Npc).WithMany(p => p.Quests)
+                .HasForeignKey(d => d.NpcId)
                 .HasConstraintName("fk_quest_npc");
         });
 

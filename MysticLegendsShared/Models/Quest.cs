@@ -7,7 +7,7 @@ public partial class Quest
 {
     public int QuestId { get; set; }
 
-    public string NpcName { get; set; } = null!;
+    public int NpcId { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -19,7 +19,7 @@ public partial class Quest
 
     public virtual ICollection<AcceptedQuest> AcceptedQuests { get; set; } = new List<AcceptedQuest>();
 
-    public virtual Npc NpcNameNavigation { get; set; } = null!;
+    public virtual Npc Npc { get; set; } = null!;
 
     public virtual QuestRequirement? QuestRequirement { get; set; }
 

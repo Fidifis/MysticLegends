@@ -19,7 +19,7 @@ public partial class InventoryItem
 
     public int? NpcItemId { get; set; }
 
-    public string? NpcName { get; set; }
+    public int? NpcId { get; set; }
 
     public int Level { get; set; }
 
@@ -39,7 +39,7 @@ public partial class InventoryItem
 
     public virtual Item Item { get; set; } = null!;
 
-    public virtual NpcItem? Npc { get; set; }
+    public virtual NpcItem? NpcI { get; set; }
 
     public virtual TradeMarket? TradeMarket { get; set; }
 }

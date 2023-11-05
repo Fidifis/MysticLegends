@@ -7,11 +7,11 @@ public partial class NpcItem
 {
     public int NpcItemId { get; set; }
 
-    public string NpcName { get; set; } = null!;
+    public int NpcId { get; set; }
 
     public int? PriceGold { get; set; }
 
     public virtual InventoryItem? InventoryItem { get; set; }
 
-    public virtual Npc NpcNameNavigation { get; set; } = null!;
+    public virtual Npc Npc { get; set; } = null!;
 }
