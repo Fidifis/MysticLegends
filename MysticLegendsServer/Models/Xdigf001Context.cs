@@ -135,11 +135,18 @@ public partial class Xdigf001Context : DbContext
                 .HasMaxLength(32)
                 .HasColumnName("character_name");
             entity.Property(e => e.CharacterClass).HasColumnName("character_class");
+            entity.Property(e => e.CityName)
+                .HasMaxLength(32)
+                .HasColumnName("city_name");
             entity.Property(e => e.CurrencyGold).HasColumnName("currency_gold");
             entity.Property(e => e.Level).HasColumnName("level");
             entity.Property(e => e.Username)
                 .HasMaxLength(32)
                 .HasColumnName("username");
+
+            entity.HasOne(d => d.CityNameNavigation).WithMany(p => p.Characters)
+                .HasForeignKey(d => d.CityName)
+                .HasConstraintName("fk_character_city");
 
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Characters)
                 .HasForeignKey(d => d.Username)
