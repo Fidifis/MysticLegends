@@ -21,11 +21,11 @@ public partial class InventoryItem
 
     public int? NpcId { get; set; }
 
-    public int Level { get; set; }
-
     public int StackCount { get; set; }
 
     public int Position { get; set; }
+
+    public int? Level { get; set; }
 
     public int? Durability { get; set; }
 
