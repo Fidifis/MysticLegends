@@ -29,24 +29,24 @@ INSERT INTO character_inventory (character_name, capacity)
 VALUES ('zmrdus', 10);
 
 -- Insert data into the "npc" table
-INSERT INTO npc (npc_name, city_name, npc_type, currency_gold)
-VALUES ('Npc1', 'City1', 1, 500);
+INSERT INTO npc (npc_id, city_name, npc_type, currency_gold)
+VALUES (1, 'City1', 1, 500);
 
-INSERT INTO npc_item (npc_item_id, npc_name, price_gold)
-VALUES (1, 'Npc1', 100),
-       (2, 'Npc1', 200);
+INSERT INTO npc_item (npc_item_id, npc_id, price_gold)
+VALUES (1, 1, 100),
+       (2, 1, 200);
 
 -- Insert data into the "inventory_item" table
-INSERT INTO inventory_item (invitem_id, character_inventory_character_n, character_name, npc_item_id, npc_name, item_id, level, stack_count, position)
+INSERT INTO inventory_item (invitem_id, character_inventory_character_n, character_name, npc_item_id, npc_id, item_id, level, stack_count, position)
 VALUES (1, 'zmrdus', NULL, NULL, NULL, 1, 1, 1, 0),
        (2, 'zmrdus', NULL, NULL, NULL, 2, 1, 1, 1),
        (3, 'zmrdus', NULL, NULL, NULL, 1, 1, 1, 2),
-       (4, NULL, NULL, 1, 'Npc1', 1, 1, 1, 3),
-       (5, NULL, NULL, 2, 'Npc1', 2, 1, 1, 4);
+       (4, NULL, NULL, 1, 1, 1, 1, 1, 3),
+       (5, NULL, NULL, 2, 1, 2, 1, 1, 4);
 
 -- Insert data into the "quest" table
-INSERT INTO quest (quest_id, npc_name, name, description, is_repeable, is_offered)
-VALUES (1, 'Npc1', 'Quest1', 'Description of Quest1', TRUE, TRUE);
+INSERT INTO quest (quest_id, npc_id, name, description, is_repeable, is_offered)
+VALUES (1, 1, 'Quest1', 'Description of Quest1', TRUE, TRUE);
 
 -- Insert data into the "quest_requirement" table
 INSERT INTO quest_requirement (quest_id, item_id, amount, mob_type)

@@ -366,11 +366,11 @@
       "parent": null,
       "attr": [
         {
-          "name": "npc_name",
+          "name": "npc_id",
           "primary": true,
           "unique": false,
           "nullable": false,
-          "type": "varchar(32)"
+          "type": "serial"
         },
         {
           "name": "npc_type",
