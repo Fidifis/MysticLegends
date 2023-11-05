@@ -10,11 +10,12 @@ namespace MysticLegendsServer
         {
             var builder = WebApplication.CreateBuilder(args);
 
-#if DEBUG
-            var connectionString = builder.Configuration.GetConnectionString("GameDB");
-#else
-            var connectionString = Environment.GetEnvironmentVariable("CONNECTIONSTRING") ?? throw new Exception("No CONNECTIONSTRING env variable defined");
-#endif
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var connectionString = (environment == Environments.Development
+                ? builder.Configuration.GetConnectionString("GameDB")
+                : Environment.GetEnvironmentVariable("CONNECTIONSTRING"))
+                ?? throw new Exception("No CONNECTIONSTRING env variable defined");
+
 
             // Add services to the container.
 

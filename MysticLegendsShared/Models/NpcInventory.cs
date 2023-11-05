@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace MysticLegendsShared.Models;
 
+// TODO remove this from database and reimport model
+[Obsolete("Removed from DB schema")]
 public partial class NpcInventory
 {
     public string NpcName { get; set; } = null!;

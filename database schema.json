@@ -399,6 +399,13 @@
       "parent": null,
       "attr": [
         {
+          "name": "npc_item_id",
+          "primary": true,
+          "unique": false,
+          "nullable": false,
+          "type": null
+        },
+        {
           "name": "price_gold",
           "primary": false,
           "unique": false,
@@ -786,7 +793,7 @@
         "identifying": false,
         "optional": false,
         "cardinality": 0,
-        "xor": "13a82928ab5a9a6631368d1ab5a9c5ab5a9a6e5babb95ab5a9a6edd66c98",
+        "xor": "13a82928ab5a9a666bf2e9fab5a9c5ab5a9a6e5babb95ab5a9a6edd66c98",
         "name": null,
         "transform": {
           "anchor": {
@@ -840,7 +847,7 @@
         "identifying": false,
         "optional": false,
         "cardinality": 0,
-        "xor": "13a82928ab5a9a6631368d1ab5a9c5ab5a9a6e5babb95ab5a9a6edd66c98",
+        "xor": "13a82928ab5a9a666bf2e9fab5a9c5ab5a9a6e5babb95ab5a9a6edd66c98",
         "name": null,
         "transform": {
           "anchor": {
@@ -886,7 +893,7 @@
         "identifying": false,
         "optional": false,
         "cardinality": 0,
-        "xor": "13a82928ab5a9a6631368d1ab5a9c5ab5a9a6e5babb95ab5a9a6edd66c98",
+        "xor": "13a82928ab5a9a666bf2e9fab5a9c5ab5a9a6e5babb95ab5a9a6edd66c98",
         "name": null,
         "transform": {
           "anchor": {
@@ -1171,6 +1178,52 @@
     [
       {
         "entity": "Npc_item",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": "this is required both sides",
+        "transform": {
+          "anchor": {
+            "x": 470.4285697937012,
+            "y": 812.7856903076172,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 511.4285697937012,
+              "y": 812.7756458520889
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Inventory_item",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 1,
+        "xor": "13a82928ab5a9a666bf2e9fab5a9c5ab5a9a6e5babb95ab5a9a6edd66c98",
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 558.4285697937012,
+            "y": 812.7656013965607,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 511.4285697937012,
+              "y": 812.7756458520889
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Npc_item",
         "identifying": true,
         "optional": false,
         "cardinality": 0,
@@ -1208,52 +1261,6 @@
             {
               "x": 265.9285697937012,
               "y": 812.7856903076172
-            }
-          ],
-          "manual": false
-        }
-      }
-    ],
-    [
-      {
-        "entity": "Npc_item",
-        "identifying": true,
-        "optional": false,
-        "cardinality": 1,
-        "xor": null,
-        "name": null,
-        "transform": {
-          "anchor": {
-            "x": 470.4285697937012,
-            "y": 812.7856903076172,
-            "edge": 1
-          },
-          "points": [
-            {
-              "x": 511.4285697937012,
-              "y": 813.0356903076172
-            }
-          ],
-          "manual": false
-        }
-      },
-      {
-        "entity": "Inventory_item",
-        "identifying": false,
-        "optional": false,
-        "cardinality": 1,
-        "xor": "13a82928ab5a9a6631368d1ab5a9c5ab5a9a6e5babb95ab5a9a6edd66c98",
-        "name": null,
-        "transform": {
-          "anchor": {
-            "x": 558.4285697937012,
-            "y": 813.2856903076172,
-            "edge": 3
-          },
-          "points": [
-            {
-              "x": 511.4285697937012,
-              "y": 813.0356903076172
             }
           ],
           "manual": false

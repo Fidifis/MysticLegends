@@ -32,7 +32,9 @@ VALUES ('zmrdus', 10);
 INSERT INTO inventory_item (invitem_id, character_inventory_character_n, character_name, item_id, level, stack_count, position)
 VALUES (1, 'zmrdus', NULL, 1, 1, 1, 0),
        (2, 'zmrdus', NULL, 2, 1, 1, 1),
-       (3, 'zmrdus', NULL, 1, 1, 1, 2);
+       (3, 'zmrdus', NULL, 1, 1, 1, 2),
+       (4, NULL, NULL, 1, 1, 1, 3),
+       (5, NULL, NULL, 2, 1, 1, 4);
 
 -- Insert data into the "npc" table
 INSERT INTO npc (npc_name, city_name, npc_type, currency_gold)
@@ -54,3 +56,7 @@ INSERT INTO battle_stats (stat_type, method, invitem_id, value)
 VALUES (1, 0, 1, 50),  -- Example stat 1
        (1, 1, 2, 3),  -- Example stat 2
        (1, 0, 3, 60);  -- Example stat 3
+
+INSERT INTO npc_item (npc_name, invitem_id, price_gold)
+VALUES ('Npc1', 4, 100),
+       ('Npc1', 5, 200);
