@@ -23,9 +23,9 @@ namespace MysticLegendsServer.Controllers
             var items = dbContext.NpcItems
                 .Where(item => item.NpcName == npcId && item.PriceGold != null)
                 .Take(100)
-                .Include(npcItem => npcItem.Invitem)
+                .Include(npcItem => npcItem.InventoryItem!)
                     .ThenInclude(invItem => invItem.Item)
-                .Include(npcItem => npcItem.Invitem)
+                .Include(npcItem => npcItem.InventoryItem!)
                     .ThenInclude(invItem => invItem.BattleStats);
             return Ok(items);
         }
