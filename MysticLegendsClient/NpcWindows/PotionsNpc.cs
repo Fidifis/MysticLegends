@@ -2,7 +2,7 @@
 
 internal sealed class PotionsNpc: NpcWindow
 {
-    public PotionsNpc()
+    public PotionsNpc(int npcId) : base (npcId)
     {
         SetSplashImage("/images/NPCs/potion_crafter.png");
     }

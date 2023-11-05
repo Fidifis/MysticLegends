@@ -11,14 +11,16 @@ namespace MysticLegendsClient
     /// </summary>
     public abstract partial class NpcWindow : Window, ISingleInstanceWindow
     {
+        protected readonly int NpcId;
         protected readonly FrameworkElement[] views;
 
         protected InventoryView? inventoryRelation;
         protected CharacterWindow? characterWindowRelation;
 
-        public NpcWindow()
+        public NpcWindow(int npcId)
         {
             InitializeComponent();
+            NpcId = npcId;
             views = new FrameworkElement[] { buyView, sellView, questsView };
 
             buyView.ItemDropSourceCallback = ItemDropSource;

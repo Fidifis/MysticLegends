@@ -1,16 +1,16 @@
 -- Insert data into the "user" table
 INSERT INTO "user" (username, password_hash) VALUES ('zmrdus', 'your_password_hash');
 
--- Insert data into the "character" table
-INSERT INTO character (character_name, username, character_class, level, currency_gold)
-VALUES ('zmrdus', 'zmrdus', 1, 1, 1000);
-
 -- Insert data into the "city" table
-INSERT INTO city (city_name) VALUES ('City1');
+INSERT INTO city (city_name) VALUES ('Ayreim');
+
+-- Insert data into the "character" table
+INSERT INTO character (character_name, username, character_class, level, currency_gold, city_name)
+VALUES ('zmrdus', 'zmrdus', 1, 1, 1000, 'Ayreim');
 
 -- Insert data into the "city_inventory" table
 INSERT INTO city_inventory (city_name, character_name, capacity)
-VALUES ('City1', 'zmrdus', 100);
+VALUES ('Ayreim', 'zmrdus', 100);
 
 -- Insert data into the "area" table
 INSERT INTO area (area_name) VALUES ('Area1');
@@ -30,7 +30,7 @@ VALUES ('zmrdus', 10);
 
 -- Insert data into the "npc" table
 INSERT INTO npc (npc_id, city_name, npc_type, currency_gold)
-VALUES (1, 'City1', 1, 500);
+VALUES (1, 'Ayreim', 1, 500);
 
 INSERT INTO npc_item (npc_item_id, npc_id, price_gold)
 VALUES (1, 1, 100),

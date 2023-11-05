@@ -22,7 +22,7 @@ namespace MysticLegendsClient
         }
 
         private readonly SingleInstanceWindow<CharacterWindow> characterWindow = new();
-        private readonly SingleInstanceWindow<PotionsNpc> potionsWindow = new();
+        private readonly SingleInstanceWindow potionsWindow = new(typeof (PotionsNpc), 1);
 
         public CityWindow()
         {
