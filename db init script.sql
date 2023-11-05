@@ -22,7 +22,8 @@ VALUES ('Area1', 'Mob1', 1, 1, 5);
 -- Insert data into the "item" table
 INSERT INTO item (item_id, name, icon, item_type, max_stack, max_durability)
 VALUES (1, 'Item1', 'bodyArmor/ayreimWarrior', 10, 1, 100),
-       (2, 'Item2', 'helmet/ayreimWarrior', 11, 1, 100);
+       (2, 'Item2', 'helmet/ayreimWarrior', 11, 1, 100),
+       (3, 'smlHealthPotion', 'potion/smallHealth', 20, 50, NULL);
 
 
 INSERT INTO character_inventory (character_name, capacity)
@@ -34,7 +35,8 @@ VALUES (1, 'Ayreim', 1, 500);
 
 INSERT INTO npc_item (npc_item_id, npc_id, price_gold)
 VALUES (1, 1, 100),
-       (2, 1, 200);
+       (2, 1, 200),
+       (3, 1, 10);
 
 -- Insert data into the "inventory_item" table
 INSERT INTO inventory_item (invitem_id, character_inventory_character_n, character_name, npc_item_id, npc_id, item_id, level, stack_count, position)
@@ -42,7 +44,8 @@ VALUES (1, 'zmrdus', NULL, NULL, NULL, 1, 1, 1, 0),
        (2, 'zmrdus', NULL, NULL, NULL, 2, 1, 1, 1),
        (3, 'zmrdus', NULL, NULL, NULL, 1, 1, 1, 2),
        (4, NULL, NULL, 1, 1, 1, 1, 1, 3),
-       (5, NULL, NULL, 2, 1, 2, 1, 1, 4);
+       (5, NULL, NULL, 2, 1, 2, 1, 1, 4),
+       (6, NULL, NULL, 3, 1, 3, NULL, 1, 5);
 
 -- Insert data into the "quest" table
 INSERT INTO quest (quest_id, npc_id, name, description, is_repeable, is_offered)
@@ -60,3 +63,11 @@ INSERT INTO battle_stats (stat_type, method, invitem_id, value)
 VALUES (1, 0, 1, 50),  -- Example stat 1
        (1, 1, 2, 3),  -- Example stat 2
        (1, 0, 3, 60);  -- Example stat 3
+
+SELECT setval('inventory_item_invitem_id_seq', (SELECT max(invitem_id) FROM inventory_item));
+SELECT setval('item_item_id_seq', (SELECT max(item_id) FROM item));
+SELECT setval('mob_mob_id_seq', (SELECT max(mob_id) FROM mob));
+SELECT setval('npc_item_npc_item_id_seq', (SELECT max(npc_item_id) FROM npc_item));
+SELECT setval('npc_npc_id_seq', (SELECT max(npc_id) FROM npc));
+SELECT setval('quest_quest_id_seq', (SELECT max(quest_id) FROM quest));
+SELECT setval('refresh_token_record_id_seq', (SELECT max(record_id) FROM refresh_token));

@@ -110,16 +110,23 @@ namespace MysticLegendsClient
             return new InventoryItem() { InvitemId = item.InvitemId, Item = item.Item, StackCount = item.StackCount, Position = item.Position };
         }
 
-        protected void BuyButton_Click(object? sender, RoutedEventArgs? e)
+        protected async Task<List<NpcItem>> GetOfferedItemsAsync()
+        {
+            return await GameState.Current.Connection.GetAsync<List<NpcItem>>($"api/NpcShop/{NpcId}/offered-items");
+        }
+
+        protected async void BuyButton_Click(object? sender, RoutedEventArgs? e)
         {
             ChangeToView(buyView);
-            // TODO: fetch data
+            var items = await GetOfferedItemsAsync();
+
+            // TODO: Workaround - implement ability to process npc items
+            var __convertedItems = new List<InventoryItem>();
+            items.ForEach(item => __convertedItems.Add(item.InventoryItem!));
+
             var inv = new ArtifficialInventory
             {
-                InventoryItems = new List<InventoryItem>() {
-                new() { StackCount = 10, Item = new Item() { Icon = "bodyArmor/ayreimWarrior" } },
-                new() { StackCount = 10, Item = new Item() { Icon = "helmet/ayreimWarrior"} },
-                }
+                InventoryItems = __convertedItems
             };
 
             buyView.Data = inv;

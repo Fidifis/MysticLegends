@@ -206,13 +206,6 @@
           "type": "serial"
         },
         {
-          "name": "level",
-          "primary": false,
-          "unique": false,
-          "nullable": false,
-          "type": "integer"
-        },
-        {
           "name": "stack_count",
           "primary": false,
           "unique": false,
@@ -224,6 +217,13 @@
           "primary": false,
           "unique": false,
           "nullable": false,
+          "type": "integer"
+        },
+        {
+          "name": "level",
+          "primary": false,
+          "unique": false,
+          "nullable": true,
           "type": "integer"
         },
         {
