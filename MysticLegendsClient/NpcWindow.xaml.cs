@@ -14,14 +14,16 @@ namespace MysticLegendsClient
         protected readonly FrameworkElement[] views;
 
         protected InventoryView? inventoryRelation;
+        protected CharacterWindow? characterWindowRelation;
 
         public NpcWindow()
         {
             InitializeComponent();
             views = new FrameworkElement[] { buyView, sellView, questsView };
 
-            buyView.ItemDropSourceCallback = ItemDrop;
-            sellViewInventory.ItemDropTargetCallback = ItemDrop;
+            buyView.ItemDropSourceCallback = ItemDropSource;
+            sellViewInventory.ItemDropSourceCallback = ItemDropSource;
+            sellViewInventory.ItemDropTargetCallback = ItemDropTarget;
         }
 
         public void ShowWindow()
@@ -53,9 +55,8 @@ namespace MysticLegendsClient
             }
         }
 
-        protected void ItemDrop(ItemDropContext source, ItemDropContext target)
+        protected void ItemDropSource(ItemDropContext source, ItemDropContext target)
         {
-            InventoryView? inventoryView;
             if (source.Owner == buyView && target.Owner == buyView &&
                 source.ContextId == target.ContextId)
             {
@@ -70,19 +71,28 @@ namespace MysticLegendsClient
             else if (source.Owner == sellViewInventory && (target.Owner as InventoryView)?.Owner as CharacterWindow is not null)
             {
                 // TODO: server call inventory swap (item leaves sell grid and new position in inventory is set)
+                var item = sellViewInventory.GetByContextId(source.ContextId)!;
+                characterWindowRelation?.ReturnItem(this, item.InvitemId, target.ContextId);
+                sellViewInventory.Data?.InventoryItems.Remove(item);
+                sellViewInventory.Update();
             }
+        }
+        protected void ItemDropTarget(ItemDropContext source, ItemDropContext target)
+        {
+            InventoryView? inventoryView;
 
-            else if (target.Owner == sellViewInventory && (inventoryView = source.Owner as InventoryView)?.Owner as CharacterWindow is not null)
+            if (target.Owner == sellViewInventory && (inventoryView = source.Owner as InventoryView)?.Owner is CharacterWindow characterWindow)
             {
                 // TODO: tmp remove from inventory view, add to sell grid
                 var movingItem = inventoryView.GetByContextId(source.ContextId)!;
                 inventoryView.LockItem(this, movingItem.InvitemId);
                 Debug.Assert(inventoryRelation is null || inventoryRelation == inventoryView);
                 inventoryRelation = inventoryView;
+                characterWindowRelation = characterWindow;
 
                 var itemCopy = PartialItemCopy(movingItem);
                 itemCopy.Position = target.ContextId;
-                sellViewInventory.Data!.InventoryItems.Add(PartialItemCopy(itemCopy));
+                sellViewInventory.Data!.InventoryItems.Add(itemCopy);
                 sellViewInventory.Update();
             }
             else if (source.Owner == sellViewInventory && target.Owner == sellViewInventory)

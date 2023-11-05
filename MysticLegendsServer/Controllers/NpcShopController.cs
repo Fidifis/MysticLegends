@@ -18,10 +18,10 @@ namespace MysticLegendsServer.Controllers
         }
 
         [HttpGet("{npcId}/offered-items")]
-        public ObjectResult GetOfferedItems(string npcId)
+        public ObjectResult GetOfferedItems(int npcId)
         {
             var items = dbContext.NpcItems
-                .Where(item => item.NpcName == npcId && item.PriceGold != null)
+                .Where(item => item.NpcId == npcId && item.PriceGold != null)
                 .Take(100)
                 .Include(npcItem => npcItem.InventoryItem!)
                     .ThenInclude(invItem => invItem.Item)

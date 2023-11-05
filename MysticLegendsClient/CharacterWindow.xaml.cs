@@ -29,6 +29,12 @@ namespace MysticLegendsClient
             await Refresh();
         }
 
+        public void ReturnItem(object sender, int itemId, int position)
+        {
+            inventoryView.ReleaseLock(sender, itemId);
+            SwapServerCall(itemId, position);
+        }
+
         private async Task Refresh()
         {
             Character characterData = await GameState.Current.Connection.GetAsync<Character>("/api/Character/zmrdus");
