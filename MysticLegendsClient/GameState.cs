@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace MysticLegendsClient;
+﻿namespace MysticLegendsClient;
 
 internal class GameState : IDisposable
 {
@@ -8,10 +6,7 @@ internal class GameState : IDisposable
     public ApiClient Connection { get; private init; }
     public TokenStore TokenStore { get; private init; } = new();
 
-    public event EventHandler<CurrencyUpdateEventArgs>? CurrencyUpdateEvent;
-    public void CurrencyUpdate(object? sender, CurrencyUpdateEventArgs e) => CurrencyUpdateEvent?.Invoke(sender, e);
-
-    private bool cityTravel = false;
+    public GameEvents GameEvents { get; private init; } = new();
 
     public static void MakeGameStateCurrent(GameState gs)
     {

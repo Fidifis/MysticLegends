@@ -9,18 +9,16 @@ namespace MysticLegendsClient
     /// <summary>
     /// Interakční logika pro NpcWindow.xaml
     /// </summary>
-    public partial class NpcWindow : Window, ISingleInstanceWindow
+    public abstract partial class NpcWindow : Window, ISingleInstanceWindow
     {
-        private readonly FrameworkElement[] views;
+        protected readonly FrameworkElement[] views;
 
-        private InventoryView? inventoryRelation;
+        protected InventoryView? inventoryRelation;
 
-        public NpcWindow(NpcType npcType)
+        public NpcWindow()
         {
             InitializeComponent();
             views = new FrameworkElement[] { buyView, sellView, questsView };
-
-            SetSplashImage(npcType);
 
             buyView.ItemDropSourceCallback = ItemDrop;
             sellViewInventory.ItemDropTargetCallback = ItemDrop;
@@ -33,21 +31,17 @@ namespace MysticLegendsClient
             Activate();
         }
 
-        private void SetSplashImage(NpcType npcType)
+        protected void SetSplashImage(string image)
         {
-            splashImage.Source = BitmapTools.FromResource(npcType switch
-            {
-                NpcType.PotionsCrafter => "/images/NPCs/potion_crafter.png",
-                _ => throw new NotImplementedException("requested npc type not implemented")
-            });
+            splashImage.Source = BitmapTools.FromResource(image);
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        protected void Window_Loaded(object sender, RoutedEventArgs e)
         {
             BuyButton_Click(null, null);
         }
 
-        private void ChangeToView(FrameworkElement toShow)
+        protected void ChangeToView(FrameworkElement toShow)
         {
             inventoryRelation?.ReleaseLock(this);
             foreach (var element in views)
@@ -59,7 +53,7 @@ namespace MysticLegendsClient
             }
         }
 
-        private void ItemDrop(ItemDropContext source, ItemDropContext target)
+        protected void ItemDrop(ItemDropContext source, ItemDropContext target)
         {
             InventoryView? inventoryView;
             if (source.Owner == buyView && target.Owner == buyView &&
@@ -104,7 +98,7 @@ namespace MysticLegendsClient
             return new InventoryItem() { InvitemId = item.InvitemId, Item = item.Item, StackCount = item.StackCount, Position = item.Position };
         }
 
-        private void BuyButton_Click(object? sender, RoutedEventArgs? e)
+        protected void BuyButton_Click(object? sender, RoutedEventArgs? e)
         {
             ChangeToView(buyView);
             // TODO: fetch data
@@ -119,19 +113,19 @@ namespace MysticLegendsClient
             buyView.Data = inv;
         }
 
-        private void SellButton_Click(object sender, RoutedEventArgs e)
+        protected void SellButton_Click(object sender, RoutedEventArgs e)
         {
             ChangeToView(sellView);
 
             sellViewInventory.Data = new ArtifficialInventory { Capacity = 20 };
         }
 
-        private void QuestsButton_Click(object sender, RoutedEventArgs e)
+        protected void QuestsButton_Click(object sender, RoutedEventArgs e)
         {
             ChangeToView(questsView);
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        protected virtual void Window_Closed(object sender, EventArgs e)
         {
             inventoryRelation?.ReleaseLock(this);
         }

@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace MysticLegendsClient.CityWindows
 {
-    internal class AyreimCity : CityWindow
+    internal sealed class AyreimCity : CityWindow
     {
         private readonly SingleInstanceWindow<CharacterWindow> ayreimMarketWindow = new();
 

@@ -1,6 +1,6 @@
 ﻿using MysticLegendsClient.Controls;
+using MysticLegendsClient.NpcWindows;
 using MysticLegendsClient.Resources;
-using MysticLegendsShared.Utilities;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -22,13 +22,13 @@ namespace MysticLegendsClient
         }
 
         private readonly SingleInstanceWindow<CharacterWindow> characterWindow = new();
-        private readonly SingleInstanceWindow potionsWindow = new(typeof (NpcWindow), NpcType.PotionsCrafter);
+        private readonly SingleInstanceWindow<PotionsNpc> potionsWindow = new();
 
         public CityWindow()
         {
             InitializeComponent();
             _=RefreshCurrencyAsync();
-            GameState.Current.CurrencyUpdateEvent += CurrencyChanged;
+            GameState.Current.GameEvents.CurrencyUpdateEvent += CurrencyChanged;
         }
 
         public CityWindow(string title): this()
@@ -44,25 +44,25 @@ namespace MysticLegendsClient
                 switch (button)
                 {
                     case ButtonType.Blacksmith:
-                        AddButton("Blacksmith", Icons.city_blacksmith, (object? s, RoutedEventArgs e) => { });
+                        AddButton("Blacksmith", Icons.city_blacksmith, (_, _) => { });
                         break;
                     case ButtonType.Potions:
-                        AddButton("Potions", Icons.city_potions, (object? s, RoutedEventArgs e) => { potionsWindow.Instance.ShowWindow(); });
+                        AddButton("Potions", Icons.city_potions, (_, _) => { potionsWindow.Instance.ShowWindow(); });
                         break;
                     case ButtonType.TradeMarket:
-                        AddButton("Trade Market", Icons.city_tradeMarket, (object? s, RoutedEventArgs e) => { });
+                        AddButton("Trade Market", Icons.city_tradeMarket, (_, _) => { });
                         break;
                     case ButtonType.Storage:
-                        AddButton("Storage", Icons.city_storage, (object? s, RoutedEventArgs e) => { });
+                        AddButton("Storage", Icons.city_storage, (_, _) => { });
                         break;
                     case ButtonType.Scout:
-                        AddButton("Scout", Icons.city_scout, (object? s, RoutedEventArgs e) => { });
+                        AddButton("Scout", Icons.city_scout, (_, _) => { });
                         break;
                     case ButtonType.DarkAlley:
-                        AddButton("Dark Alley", Icons.city_darkAlley, (object? s, RoutedEventArgs e) => { });
+                        AddButton("Dark Alley", Icons.city_darkAlley, (_, _) => { });
                         break;
                     case ButtonType.RebelsHideout:
-                        AddButton("Rebels Hideout", Icons.city_hideout, (object? s, RoutedEventArgs e) => { });
+                        AddButton("Rebels Hideout", Icons.city_hideout, (_, _) => { });
                         break;
                 }
             }

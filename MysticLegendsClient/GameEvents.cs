@@ -1,11 +1,7 @@
 ﻿namespace MysticLegendsClient;
 
-internal class CurrencyUpdateEventArgs: EventArgs
+internal class GameEvents
 {
-    public int Value { get; init; }
-
-    public CurrencyUpdateEventArgs(int value)
-    {
-        Value = value;
-    }
+    public event EventHandler<CurrencyUpdateEventArgs>? CurrencyUpdateEvent;
+    public void CurrencyUpdate(object? sender, CurrencyUpdateEventArgs e) => CurrencyUpdateEvent?.Invoke(sender, e);
 }
