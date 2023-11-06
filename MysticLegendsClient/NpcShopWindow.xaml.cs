@@ -79,7 +79,7 @@ namespace MysticLegendsClient
             {
                 // TODO: tmp remove from inventory view, add to sell grid
                 var movingItem = inventoryView.GetByContextId(source.ContextId)!;
-                inventoryView.LockItem(this, movingItem.InvitemId);
+                inventoryView.ItemLockVisual(this, movingItem.InvitemId);
                 Debug.Assert(inventoryRelation is null || inventoryRelation == inventoryView);
                 inventoryRelation = inventoryView;
                 characterWindowRelation = characterWindow;

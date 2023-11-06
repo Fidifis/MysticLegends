@@ -26,16 +26,16 @@ namespace MysticLegendsClient.Controls
         {
             InitializeComponent();
             DataContext = this;
-            //Owner = owner;
         }
 
         public event IItemView.ItemDropEventHandler? ItemDropEvent;
 
         public ICollection<IViewableItem> Items { get; set; } = new List<IViewableItem>();
 
+        public ICollection<ItemViewRelation> ViewRelations { get; init; } = new List<ItemViewRelation>();
+
         public void Update() => FillData(Items);
 
-        //public FrameworkElement? Owner { get; set; }
 
         private static readonly DependencyProperty counterVisibility = DependencyProperty.Register("ShowCounter", typeof(Visibility), typeof(InventoryView));
 
@@ -151,37 +151,38 @@ namespace MysticLegendsClient.Controls
             ItemSlots[index].Item2.Content = labelString;
         }
 
-        public void LockItem(object owner, int itemId)
+        public void AddRelation(ItemViewRelation relation)
         {
-            var item = (Data?.InventoryItems.Where(item => item.InvitemId == itemId).FirstOrDefault()) ?? throw new Exception("Item not found");
-            var img = ItemSlots[item.Position];
-            LockedItems.Add(new (owner, item.Position));
-            img.Item1.Opacity = 0.2;
-        }
+            ViewRelations.Add(relation);
 
-        public void ReleaseLock(object owner)
-        {
-            foreach (var item in LockedItems)
+            if (relation.ManagingView == this)
             {
-                if (item.Item1 == owner)
-                    UnlockItem(item.Item2);
+                var item = relation.ManagingView == this ? relation.ManagedSlot : relation.TransitSlot;
+                ItemLockVisual(item.Position, true);
             }
-            LockedItems.Clear();
+            else if (relation.TransitingView == this)
+            {
+                Items.Add(relation.TransitSlot);
+                Update();
+            }
+            else Debug.Assert(false);
         }
 
-        public void ReleaseLock(object owner, int itemId)
+        public void ReleaseItem(IViewableItem item)
         {
-            var position = (Data?.InventoryItems.Where(item => item.InvitemId == itemId).FirstOrDefault()?.Position) ?? throw new Exception("Item not found");
-            var lockListIndex = LockedItems.FindIndex(item => item.Item2 == position && owner == item.Item1);
-            if (lockListIndex < 0) throw new Exception("Item not found");
-
-            LockedItems.RemoveAt(lockListIndex);
-            UnlockItem(position);
+            ItemLockVisual(item.Position, false);
         }
 
-        private void UnlockItem(int position)
+        public virtual void TransitItem(IViewableItem item)
         {
-            ItemSlots[position].Item1.Opacity = 1;
+            ItemLockVisual(item.Position, false);
+
+        }
+
+
+        private void ItemLockVisual(int position, bool isLocked)
+        {
+            ItemSlots[position].Item1.Opacity = isLocked ? 0.2 : 1;
         }
 
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
