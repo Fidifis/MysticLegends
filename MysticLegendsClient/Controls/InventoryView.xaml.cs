@@ -4,10 +4,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using MysticLegendsClient.Resources;
 using System.Windows.Input;
-using MysticLegendsShared.Utilities;
-using MysticLegendsShared.Models;
-using System.Windows.Media.Imaging;
-using System.Collections;
 
 namespace MysticLegendsClient.Controls
 {
@@ -16,26 +12,24 @@ namespace MysticLegendsClient.Controls
     /// </summary>
     public partial class InventoryView : UserControl, IItemView
     {
-        public InventoryView()
-        {
-            InitializeComponent();
-            DataContext = this;
-        }
+        public InventoryView(): this(false)
+        { }
 
-        public InventoryView(FrameworkElement owner)
+        public InventoryView(bool canTransitItems)
         {
             InitializeComponent();
             DataContext = this;
+            CanTransitItems = canTransitItems;
         }
 
         public event IItemView.ItemDropEventHandler? ItemDropEvent;
 
-        public ICollection<IViewableItem> Items { get; set; } = new List<IViewableItem>();
+        public int Capacity { get; private set; } = -1;
 
+        private readonly List<Tuple<ItemSlot, Image, Label>> ItemSlots = new();
+
+        public bool CanTransitItems { get; init; } = false;
         public ICollection<ItemViewRelation> ViewRelations { get; init; } = new List<ItemViewRelation>();
-
-        public void Update() => FillData(Items);
-
 
         private static readonly DependencyProperty counterVisibility = DependencyProperty.Register("ShowCounter", typeof(Visibility), typeof(InventoryView));
 
@@ -45,13 +39,8 @@ namespace MysticLegendsClient.Controls
             set { SetValue(counterVisibility, value); }
         }
 
-        private int ItemCount { get => ItemSlots.Count(item => item.Item1.Source is not null); }
-        private int Capacity { get => ItemSlots.Count; }
-        private string CapacityCounter { get => $"{ItemCount}/{Capacity}"; }
-
-        private readonly List<Tuple<Image, Label>> ItemSlots = new();
-        [Obsolete]
-        private readonly List<Tuple<object, int>> LockedItems = new();
+        private int ItemCount => ItemSlots.Count;
+        private string CapacityCounter => $"{ItemCount}/{Capacity}";
 
         private FrameworkElement CreateSlot(out Image image, out Label label)
         {
@@ -97,8 +86,9 @@ namespace MysticLegendsClient.Controls
         private void AddToSlot(FrameworkElement element, Image image, Label label)
         {
             inventoryPanel.Children.Add(element);
-            ItemSlots.Add(new (image, label));
-            element.Tag = new ItemSlot(this, ItemSlots.Count - 1);
+            var itemSlot = new ItemSlot(this, ItemSlots.Count - 1);
+            ItemSlots.Add(new (itemSlot, image, label));
+            element.Tag = itemSlot;
         }
 
         private void UpdateSlots(int count)
@@ -116,78 +106,53 @@ namespace MysticLegendsClient.Controls
             capacityCounter.Content = CapacityCounter;
         }
 
-        private void FillData(ICollection<IViewableItem> inventoryData)
+        public void FillData(ICollection<IViewableItem> items, int capacity)
         {
-            var inventoryItems = inventoryData;
-            var inventoryCapacity = inventoryData.Count;
+            Capacity = capacity;
+            PutItems(items);
+        }
 
-            var infiniteMode = inventoryCapacity == -1;
-            var capacity = infiniteMode ? inventoryItems.Count : inventoryCapacity;
+        public void PutItems(ICollection<IViewableItem> items)
+        {
+            var infiniteMode = Capacity == -1;
+            var capacity = infiniteMode ? items.Count() : Capacity;
 
             UpdateSlots(capacity);
             for (int i = 0; i < ItemSlots.Count; i++)
             {
-                ItemSlots[i].Item1.Source = null;
-                ItemSlots[i].Item2.Content = "";
+                SetSlot(i, null);
+                
             }
 
             int fi = 0;
-            foreach (var item in inventoryItems)
+            foreach (var item in items)
             {
-                var stackCountStr = item.StackNumber == 1 ? "" : item.StackNumber.ToString();
                 if (infiniteMode)
-                    SetSlot(fi++, item.Icon, stackCountStr);
+                    SetSlot(fi++, item);
                 else
                     if (item.Position < ItemSlots.Count)
-                        SetSlot(item.Position, item.Icon, stackCountStr);
+                        SetSlot(item.Position, item);
             }
 
             UpdateCapacityCounter();
         }
 
-        private void SetSlot(int index, string icon, string labelString)
+        private void SetSlot(int index, IViewableItem? item)
         {
-            ItemSlots[index].Item1.Source = BitmapTools.FromResource(ItemIcons.ResourceManager.GetString(icon)!);
-            ItemSlots[index].Item2.Content = labelString;
-        }
-
-        public void AddRelation(ItemViewRelation relation)
-        {
-            ViewRelations.Add(relation);
-
-            if (relation.ManagingView == this)
-            {
-                var item = relation.ManagingView == this ? relation.ManagedSlot : relation.TransitSlot;
-                ItemLockVisual(item.Position, true);
-            }
-            else if (relation.TransitingView == this)
-            {
-                Items.Add(relation.TransitSlot);
-                Update();
-            }
-            else Debug.Assert(false);
-        }
-
-        public void ReleaseItem(IViewableItem item)
-        {
-            ItemLockVisual(item.Position, false);
-        }
-
-        public virtual void TransitItem(IViewableItem item)
-        {
-            ItemLockVisual(item.Position, false);
-
+            ItemSlots[index].Item1.Item = item;
+            ItemSlots[index].Item2.Source = item is null ? null : BitmapTools.FromResource(ItemIcons.ResourceManager.GetString(item.Icon)!);
+            ItemSlots[index].Item3.Content = item?.StackNumber == 1 ? "" : item?.StackNumber.ToString();
         }
 
 
         private void ItemLockVisual(int position, bool isLocked)
         {
-            ItemSlots[position].Item1.Opacity = isLocked ? 0.2 : 1;
+            ItemSlots[position].Item2.Opacity = isLocked ? 0.2 : 1;
         }
 
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (((FrameworkElement)sender).Tag is ItemSlot slot && ItemSlots[slot.GridPosition].Item1.Source is not null)
+            if (((FrameworkElement)sender).Tag is ItemSlot slot && ItemSlots[slot.GridPosition].Item1.Item is not null)
             {
                 var data = new DataObject(typeof(ItemSlot), slot);
                 DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Move);
@@ -205,6 +170,33 @@ namespace MysticLegendsClient.Controls
 
                 ItemDropEvent?.Invoke(sourceSlot.Owner, new ItemDropEventArgs(sourceSlot, targetSlot));
             }
+        }
+
+        public void AddRelation(ItemViewRelation relation)
+        {
+            ViewRelations.Add(relation);
+
+            if (relation.ManagedSlot.Owner == this)
+            {
+                ItemLockVisual(relation.ManagedSlot.Item!.Position, true);
+            }
+            else if (relation.TransitSlot.Owner == this)
+            {
+                SetSlot(relation.TransitSlot.GridPosition, relation.TransitSlot.Item!);
+            }
+            else Debug.Assert(false);
+        }
+
+        public void RemoveFromManaged(ItemSlot managed)
+        {
+            ViewRelations.Remove(((IItemView)this).GetRelationBySlot(managed)!);
+            ItemLockVisual(managed.GridPosition, false);
+        }
+
+        public void RemoveFromTransit(ItemSlot transit)
+        {
+            ViewRelations.Remove(((IItemView)this).GetRelationBySlot(transit)!);
+            SetSlot(transit.GridPosition, transit.Item!);
         }
     }
 }

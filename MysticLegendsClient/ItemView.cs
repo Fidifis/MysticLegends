@@ -1,6 +1,4 @@
-﻿using MysticLegendsShared.Models;
-
-namespace MysticLegendsClient;
+﻿namespace MysticLegendsClient;
 
 public interface IViewableItem
 {
@@ -25,8 +23,8 @@ public class ItemSlot
 
 public class ItemViewRelation
 {
-    public ItemSlot ManagedSlot { get; private set; }
-    public ItemSlot TransitSlot { get; private set; }
+    public ItemSlot ManagedSlot { get; init; }
+    public ItemSlot TransitSlot { get; init; }
 
     public ItemViewRelation(ItemSlot managedSlot, ItemSlot transitSlot)
     {
@@ -37,7 +35,6 @@ public class ItemViewRelation
 
 public class ItemDropEventArgs: EventArgs
 {
-
     public ItemSlot FromSlot { get; private set; }
     public ItemSlot ToSlot { get; private set; }
 
@@ -51,48 +48,39 @@ public class ItemDropEventArgs: EventArgs
 public interface IItemView
 {
     public delegate void ItemDropEventHandler(IItemView sender, ItemDropEventArgs args);
-    public ICollection<IViewableItem> Items { get; set; }
-    public void Update();
+    //public IEnumerable<IViewableItem> Items => ItemSlots.Where(slot => slot.Item is not null).Select(slot => slot.Item!);  // TODO Maybe useless
+    //public IEnumerable<ItemSlot> ItemSlots { get; } // TODO Maybe useless
+    public void PutItems(ICollection<IViewableItem> items); // TODO Maybe useless
     public event ItemDropEventHandler? ItemDropEvent;
-    //public IItemViewLogicHandler LogicHandler { get; set; }
 
-    public ICollection<ItemViewRelation> ViewRelations { get; init; }
+    //public IViewableItem GetItemByGridPosition();
+    
+
+    public bool CanTransitItems { get => false; }
+    public ICollection<ItemViewRelation> ViewRelations { get; }
     public static void EstablishRelation(ItemSlot managedSlot, ItemSlot transitSlot)
     {
+        if (!managedSlot.Owner.CanTransitItems || !transitSlot.Owner.CanTransitItems)
+            throw new Exception("Both sides must allow item transition");
+
         var relation = new ItemViewRelation(managedSlot, transitSlot);
         managedSlot.Owner.AddRelation(relation);
         transitSlot.Owner.AddRelation(relation);
     }
-    public virtual void AddRelation(ItemViewRelation relation) => ViewRelations.Add(relation);
+    public void AddRelation(ItemViewRelation relation) { }
 
-    public virtual void ReleaseFromManaged(ItemSlot managed) => ViewRelations.Remove(GetRelationBySlot(managed)!);
-    public virtual void FulfillFromManaged(ItemSlot managed) => ViewRelations.Remove(GetRelationBySlot(managed)!);
-    public virtual void ReleaseFromTransit(ItemSlot transit) => ViewRelations.Remove(GetRelationBySlot(transit)!);
-    public virtual void FulfillFromTransit(ItemSlot transit) => ViewRelations.Remove(GetRelationBySlot(transit)!);
+    public void RemoveFromManaged(ItemSlot managed) { }
+    public void RemoveFromTransit(ItemSlot transit) { }
 
-    public static void AbortTransition(IItemView view)
+    public static void CloseTransition(IItemView view)
     {
         var relations = new List<ItemViewRelation>(view.ViewRelations);
         foreach (var relation in relations)
         {
-            relation.ManagedSlot.Owner.ReleaseFromManaged(relation.ManagedSlot);
-            relation.TransitSlot.Owner.ReleaseFromTransit(relation.TransitSlot);
-        }
-    }
-    public static void FulfillTransition(IItemView view)
-    {
-        var relations = new List<ItemViewRelation>(view.ViewRelations);
-        foreach (var relation in relations)
-        {
-            relation.ManagedSlot.Owner.FulfillFromManaged(relation.ManagedSlot);
-            relation.TransitSlot.Owner.FulfillFromTransit(relation.TransitSlot);
+            relation.ManagedSlot.Owner.RemoveFromManaged(relation.ManagedSlot);
+            relation.TransitSlot.Owner.RemoveFromTransit(relation.TransitSlot);
         }
     }
 
-    public virtual ItemViewRelation? GetRelationBySlot(ItemSlot slot) => ViewRelations.FirstOrDefault((relation) => relation.ManagedSlot == slot || relation.TransitSlot == slot);
-}
-
-public interface IItemViewLogicHandler
-{
-    
+    public ItemViewRelation? GetRelationBySlot(ItemSlot slot) => ViewRelations.FirstOrDefault((relation) => relation.ManagedSlot == slot || relation.TransitSlot == slot);
 }
