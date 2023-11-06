@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
 CONTEXT_FILE_NAME="Xdigf001Context.cs"
