@@ -1,16 +1,12 @@
-﻿namespace MysticLegendsClient;
+﻿using MysticLegendsShared.Models;
+using System.Windows;
+using System.Windows.Controls;
 
-public interface IViewableItem
-{
-    public int Id { get; }
-    public string Icon { get; }
-    public int StackNumber { get; }
-    public int Position { get; }
-}
+namespace MysticLegendsClient;
 
 public class ItemSlot
 {
-    public IViewableItem? Item { get; set; }
+    public InventoryItem? Item { get; set; }
     public IItemView Owner { get; set; }
     public int GridPosition { get; set; }
 
@@ -35,8 +31,9 @@ public class ItemViewRelation
 
 public class ItemDropEventArgs: EventArgs
 {
-    public ItemSlot FromSlot { get; private set; }
-    public ItemSlot ToSlot { get; private set; }
+    public ItemSlot FromSlot { get; init; }
+    public ItemSlot ToSlot { get; init; }
+    public bool IsHandover { get; set; } = false;
 
     public ItemDropEventArgs(ItemSlot from, ItemSlot to)
     {
@@ -48,16 +45,21 @@ public class ItemDropEventArgs: EventArgs
 public interface IItemView
 {
     public delegate void ItemDropEventHandler(IItemView sender, ItemDropEventArgs args);
-    //public IEnumerable<IViewableItem> Items => ItemSlots.Where(slot => slot.Item is not null).Select(slot => slot.Item!);  // TODO Maybe useless
-    //public IEnumerable<ItemSlot> ItemSlots { get; } // TODO Maybe useless
-    public void PutItems(ICollection<IViewableItem> items); // TODO Maybe useless
+    public ICollection<InventoryItem> Items { get; set; }
+    public void Update();
+
     public event ItemDropEventHandler? ItemDropEvent;
+    public void InvokeItemDropEvent(IItemView sender, ItemDropEventArgs args);
 
-    //public IViewableItem GetItemByGridPosition();
-    
+    //public ItemSlot GetSlotByPosition(int position);
 
-    public bool CanTransitItems { get => false; }
-    public ICollection<ItemViewRelation> ViewRelations { get; }
+    public static void DropEventHandover(ItemDropEventArgs args)
+    {
+        if (args.IsHandover) return;
+        args.IsHandover = true;
+        args.FromSlot.Owner.InvokeItemDropEvent(args.ToSlot.Owner, args);
+    }
+
     public static void EstablishRelation(ItemSlot managedSlot, ItemSlot transitSlot)
     {
         if (!managedSlot.Owner.CanTransitItems || !transitSlot.Owner.CanTransitItems)
@@ -67,10 +69,12 @@ public interface IItemView
         managedSlot.Owner.AddRelation(relation);
         transitSlot.Owner.AddRelation(relation);
     }
-    public void AddRelation(ItemViewRelation relation) { }
+    public bool CanTransitItems { get; }
+    public ICollection<ItemViewRelation> ViewRelations { get; }
+    public void AddRelation(ItemViewRelation relation);
 
-    public void RemoveFromManaged(ItemSlot managed) { }
-    public void RemoveFromTransit(ItemSlot transit) { }
+    public void RemoveFromManaged(ItemSlot managed);
+    public void RemoveFromTransit(ItemSlot transit);
 
     public static void CloseTransition(IItemView view)
     {
@@ -82,5 +86,41 @@ public interface IItemView
         }
     }
 
-    public ItemViewRelation? GetRelationBySlot(ItemSlot slot) => ViewRelations.FirstOrDefault((relation) => relation.ManagedSlot == slot || relation.TransitSlot == slot);
+    public ItemViewRelation? GetRelationBySlot(ItemSlot slot);
+}
+
+public abstract class ItemViewUserControl : UserControl, IItemView
+{
+    public abstract ICollection<InventoryItem> Items { get; set; }
+    public abstract void Update();
+
+    public event IItemView.ItemDropEventHandler? ItemDropEvent;
+    public void InvokeItemDropEvent(IItemView sender, ItemDropEventArgs args) => ItemDropEvent?.Invoke(sender, args);
+
+    //public abstract ItemSlot GetSlotByPosition(int position);
+
+    public virtual bool CanTransitItems { get; set; } = false;
+    public ICollection<ItemViewRelation> ViewRelations { get; init; } = new LinkedList<ItemViewRelation>();
+    public virtual void AddRelation(ItemViewRelation relation) { }
+    public virtual void RemoveFromManaged(ItemSlot managed) { }
+    public virtual void RemoveFromTransit(ItemSlot transit) { }
+
+    public virtual ItemViewRelation? GetRelationBySlot(ItemSlot slot) => ViewRelations.FirstOrDefault((relation) => relation.ManagedSlot == slot || relation.TransitSlot == slot);
+
+    protected virtual void HandleDrag(ItemSlot itemSlot)
+    {
+        var data = new DataObject(typeof(ItemSlot), itemSlot);
+        DragDrop.DoDragDrop(this, data, DragDropEffects.Move);
+    }
+
+    protected virtual void HandleDrop(ItemSlot itemSlot, DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent(typeof(ItemSlot)))
+        {
+            var sourceSlot = (ItemSlot)e.Data.GetData(typeof(ItemSlot));
+            var targetSlot = itemSlot;
+
+            InvokeItemDropEvent(sourceSlot.Owner, new ItemDropEventArgs(sourceSlot, targetSlot));
+        }
+    }
 }

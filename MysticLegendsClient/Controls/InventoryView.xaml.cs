@@ -4,13 +4,14 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using MysticLegendsClient.Resources;
 using System.Windows.Input;
+using MysticLegendsShared.Models;
 
 namespace MysticLegendsClient.Controls
 {
     /// <summary>
     /// Interakční logika pro InventoryView.xaml
     /// </summary>
-    public partial class InventoryView : UserControl, IItemView
+    public partial class InventoryView : ItemViewUserControl
     {
         public InventoryView(): this(false)
         { }
@@ -22,14 +23,17 @@ namespace MysticLegendsClient.Controls
             CanTransitItems = canTransitItems;
         }
 
-        public event IItemView.ItemDropEventHandler? ItemDropEvent;
-
         public int Capacity { get; private set; } = -1;
+
+        public override ICollection<InventoryItem> Items
+        {
+            get => ItemSlots.Where((slot) => slot.Item1.Item is not null).Select((slot) => slot.Item1.Item!).ToList();
+            set => FillData(value);
+        }
 
         private readonly List<Tuple<ItemSlot, Image, Label>> ItemSlots = new();
 
-        public bool CanTransitItems { get; init; } = false;
-        public ICollection<ItemViewRelation> ViewRelations { get; init; } = new List<ItemViewRelation>();
+        public override bool CanTransitItems { get; set; } = false;
 
         private static readonly DependencyProperty counterVisibility = DependencyProperty.Register("ShowCounter", typeof(Visibility), typeof(InventoryView));
 
@@ -41,6 +45,12 @@ namespace MysticLegendsClient.Controls
 
         private int ItemCount => ItemSlots.Count;
         private string CapacityCounter => $"{ItemCount}/{Capacity}";
+
+        public override void Update()
+        {
+            // TODO: rework
+            FillData(Items);
+        }
 
         private FrameworkElement CreateSlot(out Image image, out Label label)
         {
@@ -86,7 +96,7 @@ namespace MysticLegendsClient.Controls
         private void AddToSlot(FrameworkElement element, Image image, Label label)
         {
             inventoryPanel.Children.Add(element);
-            var itemSlot = new ItemSlot(this, ItemSlots.Count - 1);
+            var itemSlot = new ItemSlot(this, ItemSlots.Count);
             ItemSlots.Add(new (itemSlot, image, label));
             element.Tag = itemSlot;
         }
@@ -106,16 +116,16 @@ namespace MysticLegendsClient.Controls
             capacityCounter.Content = CapacityCounter;
         }
 
-        public void FillData(ICollection<IViewableItem> items, int capacity)
+        public void FillData(ICollection<InventoryItem> items, int capacity)
         {
             Capacity = capacity;
-            PutItems(items);
+            FillData(items);
         }
 
-        public void PutItems(ICollection<IViewableItem> items)
+        private void FillData(ICollection<InventoryItem> items)
         {
             var infiniteMode = Capacity == -1;
-            var capacity = infiniteMode ? items.Count() : Capacity;
+            var capacity = infiniteMode ? items.Count : Capacity;
 
             UpdateSlots(capacity);
             for (int i = 0; i < ItemSlots.Count; i++)
@@ -137,13 +147,14 @@ namespace MysticLegendsClient.Controls
             UpdateCapacityCounter();
         }
 
-        private void SetSlot(int index, IViewableItem? item)
+        private void SetSlot(int index, InventoryItem? item)
         {
             ItemSlots[index].Item1.Item = item;
-            ItemSlots[index].Item2.Source = item is null ? null : BitmapTools.FromResource(ItemIcons.ResourceManager.GetString(item.Icon)!);
-            ItemSlots[index].Item3.Content = item?.StackNumber == 1 ? "" : item?.StackNumber.ToString();
+            ItemSlots[index].Item2.Source = item is null ? null : BitmapTools.FromResource(ItemIcons.ResourceManager.GetString(item.Item.Icon)!);
+            ItemSlots[index].Item3.Content = item?.StackCount == 1 ? "" : item?.StackCount.ToString();
         }
 
+        //public override ItemSlot GetSlotByPosition(int position) => ItemSlots.Where((slot) => slot.Item1.GridPosition == position).Select((record) => record.Item1).First();
 
         private void ItemLockVisual(int position, bool isLocked)
         {
@@ -154,25 +165,18 @@ namespace MysticLegendsClient.Controls
         {
             if (((FrameworkElement)sender).Tag is ItemSlot slot && ItemSlots[slot.GridPosition].Item1.Item is not null)
             {
-                var data = new DataObject(typeof(ItemSlot), slot);
-                DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Move);
+                HandleDrag(slot);
             }
         }
 
         private void Image_Drop(object sender, DragEventArgs e)
         {
             var target = (FrameworkElement)sender;
-
-            if (e.Data.GetDataPresent(typeof(ItemSlot)))
-            {
-                var sourceSlot = (ItemSlot)e.Data.GetData(typeof(ItemSlot));
-                var targetSlot = (ItemSlot)target.Tag;
-
-                ItemDropEvent?.Invoke(sourceSlot.Owner, new ItemDropEventArgs(sourceSlot, targetSlot));
-            }
+            var targetSlot = (ItemSlot)target.Tag;
+            HandleDrop(targetSlot, e);
         }
 
-        public void AddRelation(ItemViewRelation relation)
+        public override void AddRelation(ItemViewRelation relation)
         {
             ViewRelations.Add(relation);
 
@@ -187,13 +191,13 @@ namespace MysticLegendsClient.Controls
             else Debug.Assert(false);
         }
 
-        public void RemoveFromManaged(ItemSlot managed)
+        public override void RemoveFromManaged(ItemSlot managed)
         {
             ViewRelations.Remove(((IItemView)this).GetRelationBySlot(managed)!);
             ItemLockVisual(managed.GridPosition, false);
         }
 
-        public void RemoveFromTransit(ItemSlot transit)
+        public override void RemoveFromTransit(ItemSlot transit)
         {
             ViewRelations.Remove(((IItemView)this).GetRelationBySlot(transit)!);
             SetSlot(transit.GridPosition, transit.Item!);

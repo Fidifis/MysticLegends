@@ -3,21 +3,27 @@ using MysticLegendsClient.Resources;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using MysticLegendsShared.Models;
 
 namespace MysticLegendsClient.Controls
 {
     /// <summary>
     /// Interakční logika pro CharacterView.xaml
     /// </summary>
-    public partial class CharacterView : UserControl, IItemView
+    public partial class CharacterView : ItemViewUserControl
     {
-        public event IItemView.ItemDropEventHandler? ItemDropEvent;
-
-        public ICollection<ItemViewRelation> ViewRelations => throw new NotImplementedException();
-
         public CharacterView()
         {
             InitializeComponent();
+
+            Slots = new()
+            {
+                new(bodyArmorSlot, bodyArmorImage),
+                new(helmetSlot, helmetImage),
+                new(glovesSlot, glovesImage),
+                new(bootsSlot, bootsImage),
+                new(weaponSlot, weaponImage),
+            };
 
             bodyArmorSlot.Tag = new ItemSlot(this, (int)ItemType.BodyArmor);
             helmetSlot.Tag = new ItemSlot(this, (int)ItemType.Helmet);
@@ -26,41 +32,54 @@ namespace MysticLegendsClient.Controls
             weaponSlot.Tag = new ItemSlot(this, (int)ItemType.Weapon);
         }
 
-        public void PutItems(ICollection<IViewableItem> items)
+        private List<Tuple<Grid, Image>> Slots;
+
+        //Rework
+        private ICollection<InventoryItem> data = new List<InventoryItem>();
+        public override ICollection<InventoryItem> Items
         {
-            PutItems(items.Cast<InventoryItemViewable>());
+            get => data;
+            set
+            {
+                data = value;
+                FillData(data);
+            }
         }
 
-        public void FillData(string characterName, IEnumerable<InventoryItemViewable> items)
-        {
-            this.characterName.Content = characterName;
+        //public override ItemSlot GetSlotByPosition(int position) => GetSlotByPosition(position);
 
-            PutItems(items);
-        }
+        public override void Update() => FillData(data);
 
-        public void PutItems(IEnumerable<InventoryItemViewable> items)
+        private void FillData(ICollection<InventoryItem> items)
         {
             var battleStats = ComputeBattleStats(items);
             FillBattleStats(battleStats);
             FillEquipedItems(items);
         }
 
+        public void FillData(string characterName, ICollection<InventoryItem> items)
+        {
+            this.characterName.Content = characterName;
+
+            FillData(items);
+        }
+
         private void ClearEquipedItems()
         {
             var images = new Image[] { weaponImage, bodyArmorImage, helmetImage, glovesImage, bootsImage };
-            foreach (var image in images)
+            foreach (var slot in Slots)
             {
-                ((ItemSlot)image.Tag).Item = null;
-                image.Source = null;
+                ((ItemSlot)slot.Item1.Tag).Item = null;
+                slot.Item2.Source = null;
             }
         }
 
-        private void FillEquipedItems(IEnumerable<InventoryItemViewable> equipedItems)
+        private void FillEquipedItems(IEnumerable<InventoryItem> equipedItems)
         {
             ClearEquipedItems();
             foreach (var item in equipedItems)
             {
-                var iconResource = ItemIcons.ResourceManager.GetString(item.Source.Item.Icon);
+                var iconResource = ItemIcons.ResourceManager.GetString(item.Item.Icon);
                 if (iconResource is null)
                 {
                     // TODO: use Logger
@@ -69,27 +88,26 @@ namespace MysticLegendsClient.Controls
                 }
                 var bitmap = BitmapTools.FromResource(iconResource);
 
-                Image? imageControl = GetImageByItemType((ItemType)item.Source.Item.ItemType);
+                var imageControl = GetImageByItemType((ItemType)item.Item.ItemType);
 
-                if (imageControl is null) continue;
-                imageControl.Source = bitmap;
-                ((ItemSlot)imageControl.Tag).Item = item;
+                imageControl.Item2.Source = bitmap;
+                ((ItemSlot)imageControl.Item1.Tag).Item = item;
             }
         }
 
-        private Image? GetImageByItemType(ItemType itemType) => itemType switch
+        private Tuple<Grid, Image> GetImageByItemType(ItemType itemType) => itemType switch
         {
-            ItemType.Weapon => weaponImage,
-            ItemType.BodyArmor => bodyArmorImage,
-            ItemType.Helmet => helmetImage,
-            ItemType.Gloves => glovesImage,
-            ItemType.Boots => bootsImage,
-            _ => null,
+            ItemType.Weapon => new(weaponSlot, weaponImage),
+            ItemType.BodyArmor => new(bodyArmorSlot, bodyArmorImage),
+            ItemType.Helmet => new(helmetSlot, helmetImage),
+            ItemType.Gloves => new(glovesSlot, glovesImage),
+            ItemType.Boots => new(bootsSlot, bootsImage),
+            _ => throw new Exception("Wrong item type"),
         };
 
-        private BattleStats ComputeBattleStats(IEnumerable<InventoryItemViewable> items)
+        private BattleStats ComputeBattleStats(IEnumerable<InventoryItem> items)
         {
-            var battleStats = from item in items where item.Source.BattleStats is not null select new BattleStats(item.Source.BattleStats);
+            var battleStats = from item in items where item.BattleStats is not null select new BattleStats(item.BattleStats);
 
             return new BattleStats(battleStats);
         }
@@ -115,24 +133,17 @@ namespace MysticLegendsClient.Controls
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (((FrameworkElement)sender).Tag is ItemSlot slot && GetImageByItemType((ItemType)slot.GridPosition)?.Source is not null)
+            if (((FrameworkElement)sender).Tag is ItemSlot slot && GetImageByItemType((ItemType)slot.GridPosition).Item2.Source is not null)
             {
-                var data = new DataObject(typeof(ItemSlot), slot);
-                DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Move);
+                HandleDrag(slot);
             }
         }
 
         private void Grid_Drop(object sender, DragEventArgs e)
         {
             var target = (FrameworkElement)sender;
-
-            if (e.Data.GetDataPresent(typeof(FrameworkElement)))
-            {
-                var sourceSlot = (ItemSlot)e.Data.GetData(typeof(ItemSlot));
-                var targetSlot = (ItemSlot)target.Tag;
-
-                ItemDropEvent?.Invoke(sourceSlot.Owner, new ItemDropEventArgs(sourceSlot, targetSlot));
-            }
+            var targetSlot = (ItemSlot)target.Tag;
+            HandleDrop(targetSlot, e);
         }
     }
 }

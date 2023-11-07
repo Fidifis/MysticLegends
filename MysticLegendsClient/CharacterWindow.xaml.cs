@@ -19,33 +19,32 @@ namespace MysticLegendsClient
         public CharacterWindow()
         {
             InitializeComponent();
-            characterView.ItemDropTargetCallback = InventoryDrop;
-            inventoryView.ItemDropTargetCallback = InventoryDrop;
-            inventoryView.Owner = this;
+            characterView.ItemDropEvent += InventoryDropOnCharacter;
+            inventoryView.ItemDropEvent += InventoryDropOnInventory;
+
+            inventoryView.CanTransitItems = true;
+
+            GameState.Current.GameEvents.CharacterInventoryUpdateEvent += (object? sender, CharacterInventoryUpdateEventArgs e) => inventoryView.Items = e.InventoryItems;
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            await Refresh();
-        }
-
-        public void ReturnItem(object sender, int itemId, int position)
-        {
-            inventoryView.ReleaseLock(sender, itemId);
-            SwapServerCall(itemId, position);
-        }
-
-        private async Task Refresh()
         {
             Character characterData = await GameState.Current.Connection.GetAsync<Character>("/api/Character/zmrdus");
             FillData(characterData);
         }
 
+        [Obsolete]
+        public void ReturnItem(object sender, int itemId, int position)
+        {
+            //inventoryView.ReleaseLock(sender, itemId);
+            SwapServerCall(itemId, position);
+        }
+
         private void FillData(Character characterData)
         {
-            characterView.Data = characterData;
+            characterView.FillData(characterData.CharacterName, characterData.InventoryItems);
             if (characterData.CharacterInventory is not null)
-                inventoryView.Data = characterData.CharacterInventory;
+                inventoryView.FillData(characterData.CharacterInventory.InventoryItems, characterData.CharacterInventory.Capacity);
         }
 
         private void EquipSwapCheckExec(InventoryItem inventoryItem, InventoryItem equipedItem)
@@ -53,18 +52,12 @@ namespace MysticLegendsClient
             if (inventoryItem.Item.ItemType == equipedItem.Item.ItemType)
                 EquipSwapServerCall(inventoryItem.InvitemId);
         }
-        private void InventoryDrop(ItemDropContext source, ItemDropContext target)
+        private void InventoryDropOnCharacter(IItemView sender, ItemDropEventArgs args)
         {
-            if (source.Owner == inventoryView && target.Owner == inventoryView)
+            if (sender == inventoryView)
             {
-                var inventoryItem = inventoryView.GetByContextId(source.ContextId);
-                SwapServerCall(inventoryItem!.InvitemId, target.ContextId);
-            }
-
-            else if (source.Owner == inventoryView && target.Owner == characterView)
-            {
-                var inventoryItem = inventoryView.GetByContextId(source.ContextId);
-                var equipedItem = characterView.GetByContextId(target.ContextId);
+                var inventoryItem = args.FromSlot.Item;
+                var equipedItem = args.ToSlot.Item;
 
                 if (inventoryItem is not null && equipedItem is not null)
                     EquipSwapCheckExec(inventoryItem, equipedItem);
@@ -72,16 +65,26 @@ namespace MysticLegendsClient
                 else if (inventoryItem is not null)
                     EquipServerCall(inventoryItem.InvitemId);
             }
-            else if (source.Owner == characterView && target.Owner == inventoryView)
+        }
+
+        private void InventoryDropOnInventory(IItemView sender, ItemDropEventArgs args)
+        {
+            if (sender == inventoryView)
             {
-                var inventoryItem = inventoryView.GetByContextId(target.ContextId);
-                var equipedItem = characterView.GetByContextId(source.ContextId);
+                SwapServerCall(args.FromSlot.Item!.InvitemId, args.ToSlot.GridPosition);
+            }
+            else if (sender == characterView)
+            {
+                var inventoryItem = args.ToSlot.Item;
+                var equipedItem = args.FromSlot.Item;
                 if (inventoryItem is not null && equipedItem is not null)
                     EquipSwapCheckExec(inventoryItem, equipedItem);
 
                 else if (equipedItem is not null)
-                    UnequipServerCall(equipedItem.InvitemId, target.ContextId);
+                    UnequipServerCall(equipedItem.InvitemId, args.ToSlot.GridPosition);
             }
+            else
+                IItemView.DropEventHandover(args);
         }
 
         private async void SwapServerCall(int itemId, int position)
@@ -92,7 +95,7 @@ namespace MysticLegendsClient
                 ["position"] = position.ToString(),
             };
             var newInventory1 = await GameState.Current.Connection.PostAsync<CharacterInventory>("/api/Character/zmrdus/inventory-swap", parameters1.ToImmutableDictionary());
-            inventoryView.Data = newInventory1;
+            inventoryView.Items = newInventory1.InventoryItems;
         }
 
         private async void EquipServerCall(int itemToEquip)

@@ -1,7 +1,6 @@
 ﻿using MysticLegendsClient.Controls;
 using MysticLegendsShared.Models;
 using MysticLegendsShared.Utilities;
-using System.Diagnostics;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -22,9 +21,10 @@ namespace MysticLegendsClient
             InitializeComponent();
             views = new FrameworkElement[] { buyView, sellView, questsView };
 
-            buyView.ItemDropSourceCallback = ItemDropSource;
-            sellViewInventory.ItemDropSourceCallback = ItemDropSource;
-            sellViewInventory.ItemDropTargetCallback = ItemDropTarget;
+            buyView.ItemDropEvent += ItemDropBuy;
+            sellViewInventory.ItemDropEvent += ItemDropSell;
+
+            sellViewInventory.CanTransitItems = true;
         }
 
         protected override void SetSplashImage(string image)
@@ -39,7 +39,7 @@ namespace MysticLegendsClient
 
         protected void ChangeToView(FrameworkElement toShow)
         {
-            inventoryRelation?.ReleaseLock(this);
+            IItemView.CloseTransition(sellViewInventory);
             foreach (var element in views)
             {
                 if (element == toShow)
@@ -49,55 +49,50 @@ namespace MysticLegendsClient
             }
         }
 
-        protected void ItemDropSource(ItemDropContext source, ItemDropContext target)
+        protected void ItemDropBuy(IItemView sender, ItemDropEventArgs args)
         {
-            if (source.Owner == buyView && target.Owner == buyView &&
-                source.ContextId == target.ContextId)
+            if (sender == buyView && args.ToSlot == args.FromSlot)
             {
                 var response = MessageBox.Show("Do you want to buy this item?", "buy", MessageBoxButton.YesNo);
             }
 
-            else if (source.Owner == buyView && (target.Owner as InventoryView)?.Owner as CharacterWindow is not null)
+            else if (args.IsHandover)
             {
                 // TODO: server call buy
             }
-
-            else if (source.Owner == sellViewInventory && (target.Owner as InventoryView)?.Owner as CharacterWindow is not null)
-            {
-                // TODO: server call inventory swap (item leaves sell grid and new position in inventory is set)
-                var item = sellViewInventory.GetByContextId(source.ContextId)!;
-                characterWindowRelation?.ReturnItem(this, item.InvitemId, target.ContextId);
-                sellViewInventory.Data?.InventoryItems.Remove(item);
-                sellViewInventory.Update();
-            }
         }
-        protected void ItemDropTarget(ItemDropContext source, ItemDropContext target)
+        protected void ItemDropSell(IItemView sender, ItemDropEventArgs args)
         {
-            InventoryView? inventoryView;
-
-            if (target.Owner == sellViewInventory && (inventoryView = source.Owner as InventoryView)?.Owner is CharacterWindow characterWindow)
+            if (sender == sellViewInventory)
             {
-                // TODO: tmp remove from inventory view, add to sell grid
-                var movingItem = inventoryView.GetByContextId(source.ContextId)!;
-                inventoryView.ItemLockVisual(this, movingItem.InvitemId);
-                Debug.Assert(inventoryRelation is null || inventoryRelation == inventoryView);
-                inventoryRelation = inventoryView;
-                characterWindowRelation = characterWindow;
-
-                var itemCopy = PartialItemCopy(movingItem);
-                itemCopy.Position = target.ContextId;
-                sellViewInventory.Data!.InventoryItems.Add(itemCopy);
+                // Moving item within sellView
+                var item = args.FromSlot.Item;
+                item!.Position = args.ToSlot.GridPosition;
                 sellViewInventory.Update();
             }
-            else if (source.Owner == sellViewInventory && target.Owner == sellViewInventory)
+            else if (args.IsHandover)
             {
-                var item = sellViewInventory.GetByContextId(source.ContextId);
-                item!.Position = target.ContextId;
+                // Item leaves sell grid and new position in inventory is set
+
+                sender.InvokeItemDropEvent(sender, new ItemDropEventArgs(sender.GetRelationBySlot(args.FromSlot)!.ManagedSlot, args.ToSlot));
+                IItemView.CloseTransition(sellViewInventory);
+                // or do a server call for inventory swap
+            }
+            else
+            {
+                // remove from inventory view, add to sell grid
+                var itemCopy = PartialItemCopy(args.FromSlot.Item!);
+                itemCopy.Position = args.ToSlot.GridPosition;
+                // TODO: REWORK!!!
+                var _velky_spatny = sellViewInventory.Items;
+                _velky_spatny.Add(itemCopy);
+                sellViewInventory.Items = _velky_spatny;
                 sellViewInventory.Update();
+                IItemView.EstablishRelation(args.FromSlot, args.ToSlot);
             }
         }
 
-        private static InventoryItem PartialItemCopy(InventoryItem item)
+        protected static InventoryItem PartialItemCopy(InventoryItem item)
         {
             return new InventoryItem() { InvitemId = item.InvitemId, Item = item.Item, StackCount = item.StackCount, Position = item.Position };
         }
@@ -121,14 +116,14 @@ namespace MysticLegendsClient
                 InventoryItems = __convertedItems
             };
 
-            buyView.Data = inv;
+            buyView.Items = inv.InventoryItems;
         }
 
         protected void SellButton_Click(object sender, RoutedEventArgs e)
         {
             ChangeToView(sellView);
 
-            sellViewInventory.Data = new ArtifficialInventory { Capacity = 20 };
+            sellViewInventory.FillData(new List<InventoryItem>(), 20);
         }
 
         protected void QuestsButton_Click(object sender, RoutedEventArgs e)
@@ -138,7 +133,7 @@ namespace MysticLegendsClient
 
         protected virtual void Window_Closed(object sender, EventArgs e)
         {
-            inventoryRelation?.ReleaseLock(this);
+            IItemView.CloseTransition(sellViewInventory);
         }
     }
 }
