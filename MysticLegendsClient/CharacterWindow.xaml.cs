@@ -1,6 +1,5 @@
 ﻿using MysticLegendsShared.Models;
 using MysticLegendsShared.Utilities;
-using System.Collections.Immutable;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -25,13 +24,16 @@ namespace MysticLegendsClient
 
             inventoryView.CanTransitItems = true;
 
-            GameState.Current.GameEvents.CharacterInventoryUpdateEvent += (object? sender, CharacterInventoryUpdateEventArgs e) =>
-                inventoryView.Items = e.InventoryItems.AsReadOnly();
+            GameState.Current.GameEvents.CharacterInventoryUpdateEvent += (object? sender, UpdateEventArgs<IReadOnlyCollection<InventoryItem>> e) =>
+                inventoryView.Items = e.Value;
+
+            GameState.Current.GameEvents.CharacterUpdateEvent += (object? sender, UpdateEventArgs<Character> e) =>
+                FillData(e.Value);
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Character characterData = await GameState.Current.Connection.GetAsync<Character>("/api/Character/zmrdus");
+            Character characterData = await ApiCalls.CharacterCall.GetCharacterServerCallAsync("zmrdus");
             FillData(characterData);
         }
 
@@ -45,7 +47,7 @@ namespace MysticLegendsClient
         private void EquipSwapCheckExec(InventoryItem inventoryItem, InventoryItem equipedItem)
         {
             if (inventoryItem.Item.ItemType == equipedItem.Item.ItemType)
-                EquipSwapServerCall(inventoryItem.InvitemId);
+                ApiCalls.CharacterCall.EquipSwapServerCall(this, inventoryItem.InvitemId);
         }
         private void InventoryDropOnCharacter(IItemView sender, ItemDropEventArgs args)
         {
@@ -58,7 +60,7 @@ namespace MysticLegendsClient
                     EquipSwapCheckExec(inventoryItem, equipedItem);
 
                 else if (inventoryItem is not null)
-                    EquipServerCall(inventoryItem.InvitemId);
+                    ApiCalls.CharacterCall.EquipServerCall(this, inventoryItem.InvitemId);
             }
         }
 
@@ -66,7 +68,7 @@ namespace MysticLegendsClient
         {
             if (sender == inventoryView)
             {
-                SwapServerCall(args.FromSlot.Item!.InvitemId, args.ToSlot.GridPosition);
+                ApiCalls.CharacterCall.SwapServerCall(this, args.FromSlot.Item!.InvitemId, args.ToSlot.GridPosition);
             }
             else if (sender == characterView)
             {
@@ -76,53 +78,10 @@ namespace MysticLegendsClient
                     EquipSwapCheckExec(inventoryItem, equipedItem);
 
                 else if (equipedItem is not null)
-                    UnequipServerCall(equipedItem.InvitemId, args.ToSlot.GridPosition);
+                    ApiCalls.CharacterCall.UnequipServerCall(this, equipedItem.InvitemId, args.ToSlot.GridPosition);
             }
             else
                 IItemView.DropEventHandover(args);
-        }
-
-        private async void SwapServerCall(int itemId, int position)
-        {
-            var parameters1 = new Dictionary<string, string>
-            {
-                ["itemId"] = itemId.ToString(),
-                ["position"] = position.ToString(),
-            };
-            var newInventory1 = await GameState.Current.Connection.PostAsync<CharacterInventory>("/api/Character/zmrdus/inventory-swap", parameters1.ToImmutableDictionary());
-            inventoryView.Items = newInventory1.InventoryItems.AsReadOnly();
-        }
-
-        private async void EquipServerCall(int itemToEquip)
-        {
-            var parameters = new Dictionary<string, string>
-            {
-                ["equipItemId"] = itemToEquip.ToString(),
-            };
-            var characterData = await GameState.Current.Connection.PostAsync<Character>("/api/Character/zmrdus/equip-item", parameters.ToImmutableDictionary());
-            FillData(characterData);
-        }
-
-        private async void UnequipServerCall(int itemToUnequip, int? position)
-        {
-            var parameters = new Dictionary<string, string>
-            {
-                ["unequipItemId"] = itemToUnequip.ToString(),
-            };
-            if (position is not null)
-                parameters["position"] = position.ToString()!;
-            var characterData = await GameState.Current.Connection.PostAsync<Character>("/api/Character/zmrdus/unequip-item", parameters.ToImmutableDictionary());
-            FillData(characterData);
-        }
-
-        private async void EquipSwapServerCall(int itemToSwapEquip)
-        {
-            var parameters = new Dictionary<string, string>
-            {
-                ["equipItemId"] = itemToSwapEquip.ToString(),
-            };
-            var characterData = await GameState.Current.Connection.PostAsync<Character>("/api/Character/zmrdus/swap-equip-item", parameters.ToImmutableDictionary());
-            FillData(characterData);
         }
     }
 }

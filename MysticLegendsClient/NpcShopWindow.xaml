@@ -31,7 +31,7 @@
                 <Grid Grid.Row="1" VerticalAlignment="Center" Height="150">
                     <Label Content="Price" FontSize="15" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0"/>
                     <TextBox x:Name="priceTextBox" Text="0" FontSize="20" VerticalAlignment="Top" Margin="30" TextAlignment="Center" IsReadOnly="True"/>
-                    <Button Content="SELL" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="100" Height="25" Margin="0,0,0,20"/>
+                    <Button Content="SELL" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="100" Height="25" Margin="0,0,0,20" Click="MakeSell_Click"/>
                 </Grid>
             </Grid>
             <Grid x:Name="questsView" Visibility="Hidden">

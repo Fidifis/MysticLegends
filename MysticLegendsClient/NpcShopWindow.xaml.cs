@@ -50,7 +50,7 @@ namespace MysticLegendsClient
 
         protected async void UpdateSellPrice()
         {
-            var price = await GetOfferedPrice(sellViewInventory.Items);
+            var price = await ApiCalls.NpcCall.GetOfferedPriceServerCallAsync(NpcId, sellViewInventory.Items);
             priceTextBox.Text = price.ToString();
         }
 
@@ -101,24 +101,10 @@ namespace MysticLegendsClient
             return new InventoryItem() { InvitemId = item.InvitemId, Item = item.Item, BattleStats = item.BattleStats, StackCount = item.StackCount, Position = item.Position };
         }
 
-        protected async Task<List<InventoryItem>> GetOfferedItemsAsync()
-        {
-            return await GameState.Current.Connection.GetAsync<List<InventoryItem>>($"api/NpcShop/{NpcId}/offered-items");
-        }
-
-        protected async Task<int> GetOfferedPrice(IReadOnlyCollection<InventoryItem> items)
-        {
-            var parameters = new Dictionary<string, string>
-            {
-                ["items"] = JsonSerializer.Serialize(items.Select(item => item.InvitemId))
-            };
-            return await GameState.Current.Connection.PostAsync<int>($"api/NpcShop/{NpcId}/estimate-sell-price", parameters);
-        }
-
         protected async void BuyButton_Click(object? sender, RoutedEventArgs? e)
         {
             ChangeToView(buyView);
-            var items = await GetOfferedItemsAsync();
+            var items = await ApiCalls.NpcCall.GetOfferedItemsServerCallAsync(NpcId);
 
             buyView.Items = items;
         }
@@ -138,6 +124,15 @@ namespace MysticLegendsClient
         protected virtual void Window_Closed(object sender, EventArgs e)
         {
             sellViewInventory.CloseRelations();
+        }
+
+        private void MakeSell_Click(object sender, RoutedEventArgs e)
+        {
+            ApiCalls.NpcCall.SellItemsServerCall(this, NpcId, sellViewInventory.Items);
+            ApiCalls.CharacterCall.UpdateCharacter(this, "zmrdus");
+            ApiCalls.CharacterCall.UpdateCurrency(this, "zmrdus");
+            sellViewInventory.CloseRelations();
+            sellViewInventory.Items = new List<InventoryItem>();
         }
     }
 }

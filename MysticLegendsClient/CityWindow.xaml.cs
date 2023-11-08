@@ -27,7 +27,7 @@ namespace MysticLegendsClient
         public CityWindow()
         {
             InitializeComponent();
-            _=RefreshCurrencyAsync();
+            RefreshCurrency();
             GameState.Current.GameEvents.CurrencyUpdateEvent += CurrencyChanged;
         }
 
@@ -80,15 +80,15 @@ namespace MysticLegendsClient
             characterWindow.Instance.ShowWindow();
         }
 
-        private void CurrencyChanged(object? sender, CurrencyUpdateEventArgs e)
+        private void CurrencyChanged(object? sender, UpdateEventArgs<int> e)
         {
             currencyLabel.Content = e.Value;
         }
 
-        private async Task RefreshCurrencyAsync()
+        private async void RefreshCurrency()
         {
-            var currency = await GameState.Current.Connection.GetAsync<int>("/api/Character/zmrdus/currency");
-            CurrencyChanged(this, new CurrencyUpdateEventArgs(currency));
+            var currency = await ApiCalls.CharacterCall.GetCharacterCurrencyCallAsync("zmrdus");
+            CurrencyChanged(this, new(currency));
         }
 
         protected virtual void Window_Closed(object sender, EventArgs e)

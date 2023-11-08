@@ -49,7 +49,7 @@ namespace MysticLegendsServer.Controllers
         {
             return await dbContext.Characters
                 .Where(character => character.CharacterName == characterName)
-                .Select(character => character.CurrencyGold).FirstAsync();
+                .Select(character => character.CurrencyGold).SingleAsync();
         }
 
         // POST api/<PlayerController>

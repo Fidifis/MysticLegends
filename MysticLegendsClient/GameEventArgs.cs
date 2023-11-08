@@ -1,23 +1,11 @@
-﻿using MysticLegendsShared.Models;
+﻿namespace MysticLegendsClient;
 
-namespace MysticLegendsClient;
-
-internal class CurrencyUpdateEventArgs: EventArgs
+internal class UpdateEventArgs<T> : EventArgs
 {
-    public int Value { get; init; }
+    public T Value { get; init; }
 
-    public CurrencyUpdateEventArgs(int value)
+    public UpdateEventArgs(T value)
     {
         Value = value;
-    }
-}
-
-internal class CharacterInventoryUpdateEventArgs : EventArgs
-{
-    public ICollection<InventoryItem> InventoryItems { get; init; }
-
-    public CharacterInventoryUpdateEventArgs(ICollection<InventoryItem> value)
-    {
-        InventoryItems = value;
     }
 }
