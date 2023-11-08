@@ -193,14 +193,14 @@ namespace MysticLegendsClient.Controls
 
         public override void RemoveFromManaged(ItemSlot managed)
         {
-            ViewRelations.Remove(((IItemView)this).GetRelationBySlot(managed)!);
+            ViewRelations.Remove(GetRelationBySlot(managed)!);
             ItemLockVisual(managed.GridPosition, false);
         }
 
         public override void RemoveFromTransit(ItemSlot transit)
         {
-            ViewRelations.Remove(((IItemView)this).GetRelationBySlot(transit)!);
-            SetSlot(transit.GridPosition, transit.Item!);
+            ViewRelations.Remove(GetRelationBySlot(transit)!);
+            SetSlot(transit.GridPosition, null);
         }
     }
 }
