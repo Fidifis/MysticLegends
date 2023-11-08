@@ -30,7 +30,7 @@
                 <controls:InventoryView x:Name="sellViewInventory" Grid.Row="0" CounterVisibility="Collapsed" Margin="0,40,0,0"/>
                 <Grid Grid.Row="1" VerticalAlignment="Center" Height="150">
                     <Label Content="Price" FontSize="15" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0"/>
-                    <TextBox Text="0" FontSize="20" VerticalAlignment="Top" Margin="30" TextAlignment="Center" IsReadOnly="True"/>
+                    <TextBox x:Name="priceTextBox" Text="0" FontSize="20" VerticalAlignment="Top" Margin="30" TextAlignment="Center" IsReadOnly="True"/>
                     <Button Content="SELL" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="100" Height="25" Margin="0,0,0,20"/>
                 </Grid>
             </Grid>

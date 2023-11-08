@@ -1,5 +1,6 @@
 ﻿using MysticLegendsClient.Controls;
 using MysticLegendsShared.Models;
+using System.Text.Json;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -47,6 +48,12 @@ namespace MysticLegendsClient
             }
         }
 
+        protected async void UpdateSellPrice()
+        {
+            var price = await GetOfferedPrice(sellViewInventory.Items);
+            priceTextBox.Text = price.ToString();
+        }
+
         protected void ItemDropBuy(IItemView sender, ItemDropEventArgs args)
         {
             if (sender == buyView && args.ToSlot == args.FromSlot)
@@ -74,6 +81,7 @@ namespace MysticLegendsClient
                 var relationFromSlot = sender.GetRelationBySlot(args.FromSlot)!;
                 sender.InvokeItemDropEvent(sender, new ItemDropEventArgs(relationFromSlot.ManagedSlot, args.ToSlot)); // or do a server call for inventory swap
                 sellViewInventory.RemoveRelationFromTransit(relationFromSlot.TransitSlot);
+                UpdateSellPrice();
             }
             else
             {
@@ -83,6 +91,8 @@ namespace MysticLegendsClient
 
                 if (ItemViewRelation.EstablishRelation(args.FromSlot, args.ToSlot))
                     sellViewInventory.AddItem(itemCopy);
+
+                UpdateSellPrice();
             }
         }
 
@@ -94,6 +104,15 @@ namespace MysticLegendsClient
         protected async Task<List<InventoryItem>> GetOfferedItemsAsync()
         {
             return await GameState.Current.Connection.GetAsync<List<InventoryItem>>($"api/NpcShop/{NpcId}/offered-items");
+        }
+
+        protected async Task<int> GetOfferedPrice(IReadOnlyCollection<InventoryItem> items)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                ["items"] = JsonSerializer.Serialize(items.Select(item => item.InvitemId))
+            };
+            return await GameState.Current.Connection.PostAsync<int>($"api/NpcShop/{NpcId}/estimate-sell-price", parameters);
         }
 
         protected async void BuyButton_Click(object? sender, RoutedEventArgs? e)

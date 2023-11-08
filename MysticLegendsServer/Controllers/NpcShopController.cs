@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MysticLegendsServer.Models;
+using MysticLegendsShared.Models;
+using System.Text.Json;
 
 namespace MysticLegendsServer.Controllers
 {
@@ -28,6 +30,15 @@ namespace MysticLegendsServer.Controllers
                 .Include(invItem => invItem.Item)
                 .Include(invItem => invItem.BattleStats);
             return Ok(items);
+        }
+
+        [HttpPost("{npcId}/estimate-sell-price")]
+        public ObjectResult GetOfferedItems(int npcId, [FromBody] Dictionary<string, string> paramters)
+        {
+            var jsonString = paramters["items"];
+            var items = JsonSerializer.Deserialize<List<int>>(jsonString)!;
+
+            return Ok(items.Count * 10);
         }
     }
 }
