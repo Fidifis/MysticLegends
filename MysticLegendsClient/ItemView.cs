@@ -80,6 +80,7 @@ public interface IItemView
     public void RemoveRelationFromManaged(ItemSlot managed);
     public void RemoveRelationFromTransit(ItemSlot transit);
 
+    public void CloseRelation(ItemViewRelation relation);
     public void CloseRelations();
 
     public ItemViewRelation? GetRelationBySlot(ItemSlot slot);
@@ -124,13 +125,18 @@ public abstract class ItemViewUserControl : UserControl, IItemView
         }
     }
 
+    public void CloseRelation(ItemViewRelation relation)
+    {
+        relation.ManagedSlot.Owner.RemoveRelationFromManaged(relation.ManagedSlot);
+        relation.TransitSlot.Owner.RemoveRelationFromTransit(relation.TransitSlot);
+    }
+
     public void CloseRelations()
     {
         var relations = new List<ItemViewRelation>(ViewRelations);
         foreach (var relation in relations)
         {
-            relation.ManagedSlot.Owner.RemoveRelationFromManaged(relation.ManagedSlot);
-            relation.TransitSlot.Owner.RemoveRelationFromTransit(relation.TransitSlot);
+            CloseRelation(relation);
         }
     }
 }

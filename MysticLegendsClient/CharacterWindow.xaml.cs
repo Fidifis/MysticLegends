@@ -35,13 +35,6 @@ namespace MysticLegendsClient
             FillData(characterData);
         }
 
-        [Obsolete]
-        public void ReturnItem(object sender, int itemId, int position)
-        {
-            //inventoryView.ReleaseLock(sender, itemId);
-            SwapServerCall(itemId, position);
-        }
-
         private void FillData(Character characterData)
         {
             characterView.FillData(characterData.CharacterName, characterData.InventoryItems.AsReadOnly());
