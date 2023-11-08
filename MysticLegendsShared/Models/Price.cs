@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace MysticLegendsShared.Models;
 
-public partial class TradeMarket
+public partial class Price
 {
     public int InvitemId { get; set; }
 
-    public DateTime ListedSince { get; set; }
+    public int PriceGold { get; set; }
 
-    public DateTime BiddingEnds { get; set; }
+    public int? BidGold { get; set; }
 
     public virtual InventoryItem Invitem { get; set; } = null!;
 }

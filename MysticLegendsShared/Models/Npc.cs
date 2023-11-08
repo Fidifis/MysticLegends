@@ -15,7 +15,7 @@ public partial class Npc
 
     public virtual City CityNameNavigation { get; set; } = null!;
 
-    public virtual ICollection<NpcItem> NpcItems { get; set; } = new List<NpcItem>();
+    public virtual ICollection<InventoryItem> InventoryItems { get; set; } = new List<InventoryItem>();
 
     public virtual ICollection<Quest> Quests { get; set; } = new List<Quest>();
 }

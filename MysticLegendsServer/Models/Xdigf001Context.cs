@@ -38,7 +38,7 @@ public partial class Xdigf001Context : DbContext
 
     public virtual DbSet<Npc> Npcs { get; set; }
 
-    public virtual DbSet<NpcItem> NpcItems { get; set; }
+    public virtual DbSet<Price> Prices { get; set; }
 
     public virtual DbSet<Quest> Quests { get; set; }
 
@@ -95,7 +95,7 @@ public partial class Xdigf001Context : DbContext
 
             entity.HasOne(d => d.UsernameNavigation).WithOne(p => p.AccessToken)
                 .HasForeignKey<AccessToken>(d => d.Username)
-                .HasConstraintName("fk_access_token_user");
+                .HasConstraintName("fk_access_token_users");
         });
 
         modelBuilder.Entity<Area>(entity =>
@@ -150,7 +150,7 @@ public partial class Xdigf001Context : DbContext
 
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Characters)
                 .HasForeignKey(d => d.Username)
-                .HasConstraintName("fk_character_user");
+                .HasConstraintName("fk_character_users");
         });
 
         modelBuilder.Entity<CharacterInventory>(entity =>
@@ -209,8 +209,6 @@ public partial class Xdigf001Context : DbContext
 
             entity.ToTable("inventory_item");
 
-            entity.HasIndex(e => new { e.NpcItemId, e.NpcId }, "u_fk_inventory_item_npc_item").IsUnique();
-
             entity.Property(e => e.InvitemId).HasColumnName("invitem_id");
             entity.Property(e => e.CharacterInventoryCharacterN)
                 .HasMaxLength(32)
@@ -228,7 +226,6 @@ public partial class Xdigf001Context : DbContext
             entity.Property(e => e.ItemId).HasColumnName("item_id");
             entity.Property(e => e.Level).HasColumnName("level");
             entity.Property(e => e.NpcId).HasColumnName("npc_id");
-            entity.Property(e => e.NpcItemId).HasColumnName("npc_item_id");
             entity.Property(e => e.Position).HasColumnName("position");
             entity.Property(e => e.StackCount).HasColumnName("stack_count");
 
@@ -246,15 +243,15 @@ public partial class Xdigf001Context : DbContext
                 .HasForeignKey(d => d.ItemId)
                 .HasConstraintName("fk_inventory_item_item");
 
+            entity.HasOne(d => d.Npc).WithMany(p => p.InventoryItems)
+                .HasForeignKey(d => d.NpcId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_inventory_item_npc");
+
             entity.HasOne(d => d.City).WithMany(p => p.InventoryItems)
                 .HasForeignKey(d => new { d.CityName, d.CityInventoryCharacterName })
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_inventory_item_city_inventor");
-
-            entity.HasOne(d => d.NpcI).WithOne(p => p.InventoryItem)
-                .HasForeignKey<InventoryItem>(d => new { d.NpcItemId, d.NpcId })
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("fk_inventory_item_npc_item");
         });
 
         modelBuilder.Entity<Item>(entity =>
@@ -334,21 +331,21 @@ public partial class Xdigf001Context : DbContext
                 .HasConstraintName("fk_npc_city");
         });
 
-        modelBuilder.Entity<NpcItem>(entity =>
+        modelBuilder.Entity<Price>(entity =>
         {
-            entity.HasKey(e => new { e.NpcItemId, e.NpcId }).HasName("pk_npc_item");
+            entity.HasKey(e => e.InvitemId).HasName("pk_price");
 
-            entity.ToTable("npc_item");
+            entity.ToTable("price");
 
-            entity.Property(e => e.NpcItemId)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("npc_item_id");
-            entity.Property(e => e.NpcId).HasColumnName("npc_id");
+            entity.Property(e => e.InvitemId)
+                .ValueGeneratedNever()
+                .HasColumnName("invitem_id");
+            entity.Property(e => e.BidGold).HasColumnName("bid_gold");
             entity.Property(e => e.PriceGold).HasColumnName("price_gold");
 
-            entity.HasOne(d => d.Npc).WithMany(p => p.NpcItems)
-                .HasForeignKey(d => d.NpcId)
-                .HasConstraintName("fk_npc_item_npc");
+            entity.HasOne(d => d.Invitem).WithOne(p => p.Price)
+                .HasForeignKey<Price>(d => d.InvitemId)
+                .HasConstraintName("fk_price_inventory_item");
         });
 
         modelBuilder.Entity<Quest>(entity =>
@@ -440,7 +437,7 @@ public partial class Xdigf001Context : DbContext
 
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.RefreshTokens)
                 .HasForeignKey(d => d.Username)
-                .HasConstraintName("fk_refresh_token_user");
+                .HasConstraintName("fk_refresh_token_users");
         });
 
         modelBuilder.Entity<TradeMarket>(entity =>
@@ -452,7 +449,12 @@ public partial class Xdigf001Context : DbContext
             entity.Property(e => e.InvitemId)
                 .ValueGeneratedNever()
                 .HasColumnName("invitem_id");
-            entity.Property(e => e.PriceGold).HasColumnName("price_gold");
+            entity.Property(e => e.BiddingEnds)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("bidding_ends");
+            entity.Property(e => e.ListedSince)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("listed_since");
 
             entity.HasOne(d => d.Invitem).WithOne(p => p.TradeMarket)
                 .HasForeignKey<TradeMarket>(d => d.InvitemId)
@@ -461,9 +463,9 @@ public partial class Xdigf001Context : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Username).HasName("pk_user");
+            entity.HasKey(e => e.Username).HasName("pk_users");
 
-            entity.ToTable("user");
+            entity.ToTable("users");
 
             entity.Property(e => e.Username)
                 .HasMaxLength(32)
