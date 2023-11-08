@@ -92,6 +92,7 @@ public interface IItemView
 public abstract class ItemViewUserControl : UserControl, IItemView
 {
     public abstract ICollection<InventoryItem> Items { get; set; }
+
     public abstract void Update();
 
     public event IItemView.ItemDropEventHandler? ItemDropEvent;

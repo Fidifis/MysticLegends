@@ -111,12 +111,7 @@ namespace MysticLegendsClient
             var __convertedItems = new List<InventoryItem>();
             items.ForEach(item => __convertedItems.Add(item.InventoryItem!));
 
-            var inv = new ArtifficialInventory
-            {
-                InventoryItems = __convertedItems
-            };
-
-            buyView.Items = inv.InventoryItems;
+            buyView.Items = items.Select(item => item.InventoryItem!).ToList();
         }
 
         protected void SellButton_Click(object sender, RoutedEventArgs e)
