@@ -19,13 +19,25 @@ public class ItemSlot
 
 public class ItemViewRelation
 {
-    public ItemSlot ManagedSlot { get; init; }
-    public ItemSlot TransitSlot { get; init; }
+    public ItemSlot ManagedSlot { get; set; }
+    public ItemSlot TransitSlot { get; set; }
 
     public ItemViewRelation(ItemSlot managedSlot, ItemSlot transitSlot)
     {
         ManagedSlot = managedSlot;
         TransitSlot = transitSlot;
+    }
+
+    public static bool EstablishRelation(ItemSlot managedSlot, ItemSlot transitSlot)
+    {
+        if (!managedSlot.Owner.CanTransitItems || !transitSlot.Owner.CanTransitItems)
+            return false;
+            //throw new Exception("Both sides must allow item transition");
+
+        var relation = new ItemViewRelation(managedSlot, transitSlot);
+        managedSlot.Owner.AddRelation(relation);
+        transitSlot.Owner.AddRelation(relation);
+        return true;
     }
 }
 
@@ -45,8 +57,10 @@ public class ItemDropEventArgs: EventArgs
 public interface IItemView
 {
     public delegate void ItemDropEventHandler(IItemView sender, ItemDropEventArgs args);
-    public ICollection<InventoryItem> Items { get; set; }
-    public void Update();
+    public IReadOnlyCollection<InventoryItem> Items { get; set; }
+    //public void Update();
+    public void AddItem(InventoryItem item);
+    public void UpdateItem(InventoryItem updatedItem);
 
     public event ItemDropEventHandler? ItemDropEvent;
     public void InvokeItemDropEvent(IItemView sender, ItemDropEventArgs args);
@@ -60,40 +74,24 @@ public interface IItemView
         args.FromSlot.Owner.InvokeItemDropEvent(args.ToSlot.Owner, args);
     }
 
-    public static void EstablishRelation(ItemSlot managedSlot, ItemSlot transitSlot)
-    {
-        if (!managedSlot.Owner.CanTransitItems || !transitSlot.Owner.CanTransitItems)
-            throw new Exception("Both sides must allow item transition");
-
-        var relation = new ItemViewRelation(managedSlot, transitSlot);
-        managedSlot.Owner.AddRelation(relation);
-        transitSlot.Owner.AddRelation(relation);
-    }
     public bool CanTransitItems { get; }
-    public ICollection<ItemViewRelation> ViewRelations { get; }
+    //public ICollection<ItemViewRelation> ViewRelations { get; }
     public void AddRelation(ItemViewRelation relation);
+    public void RemoveRelationFromManaged(ItemSlot managed);
+    public void RemoveRelationFromTransit(ItemSlot transit);
 
-    public void RemoveFromManaged(ItemSlot managed);
-    public void RemoveFromTransit(ItemSlot transit);
-
-    public static void CloseTransition(IItemView view)
-    {
-        var relations = new List<ItemViewRelation>(view.ViewRelations);
-        foreach (var relation in relations)
-        {
-            relation.ManagedSlot.Owner.RemoveFromManaged(relation.ManagedSlot);
-            relation.TransitSlot.Owner.RemoveFromTransit(relation.TransitSlot);
-        }
-    }
+    public void CloseRelations();
 
     public ItemViewRelation? GetRelationBySlot(ItemSlot slot);
 }
 
 public abstract class ItemViewUserControl : UserControl, IItemView
 {
-    public abstract ICollection<InventoryItem> Items { get; set; }
+    public abstract IReadOnlyCollection<InventoryItem> Items { get; set; }
 
-    public abstract void Update();
+    //public abstract void Update();
+    public abstract void AddItem(InventoryItem item);
+    public abstract void UpdateItem(InventoryItem updatedItem);
 
     public event IItemView.ItemDropEventHandler? ItemDropEvent;
     public void InvokeItemDropEvent(IItemView sender, ItemDropEventArgs args) => ItemDropEvent?.Invoke(sender, args);
@@ -101,10 +99,11 @@ public abstract class ItemViewUserControl : UserControl, IItemView
     //public abstract ItemSlot GetSlotByPosition(int position);
 
     public virtual bool CanTransitItems { get; set; } = false;
-    public ICollection<ItemViewRelation> ViewRelations { get; init; } = new LinkedList<ItemViewRelation>();
+    protected LinkedList<ItemViewRelation> ViewRelations { get; init; } = new();
+
     public virtual void AddRelation(ItemViewRelation relation) { }
-    public virtual void RemoveFromManaged(ItemSlot managed) { }
-    public virtual void RemoveFromTransit(ItemSlot transit) { }
+    public virtual void RemoveRelationFromManaged(ItemSlot managed) { }
+    public virtual void RemoveRelationFromTransit(ItemSlot transit) { }
 
     public virtual ItemViewRelation? GetRelationBySlot(ItemSlot slot) => ViewRelations.FirstOrDefault((relation) => relation.ManagedSlot == slot || relation.TransitSlot == slot);
 
@@ -122,6 +121,16 @@ public abstract class ItemViewUserControl : UserControl, IItemView
             var targetSlot = itemSlot;
 
             InvokeItemDropEvent(sourceSlot.Owner, new ItemDropEventArgs(sourceSlot, targetSlot));
+        }
+    }
+
+    public void CloseRelations()
+    {
+        var relations = new List<ItemViewRelation>(ViewRelations);
+        foreach (var relation in relations)
+        {
+            relation.ManagedSlot.Owner.RemoveRelationFromManaged(relation.ManagedSlot);
+            relation.TransitSlot.Owner.RemoveRelationFromTransit(relation.TransitSlot);
         }
     }
 }

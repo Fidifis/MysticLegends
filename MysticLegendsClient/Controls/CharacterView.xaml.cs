@@ -12,52 +12,73 @@ namespace MysticLegendsClient.Controls
     /// </summary>
     public partial class CharacterView : ItemViewUserControl
     {
+        private readonly struct SlotTuple
+        {
+            public ItemSlot ItemSlot { get; init; }
+            public Grid Grid { get; init; }
+            public Image Image { get; init; }
+        }
+
         public CharacterView()
         {
             InitializeComponent();
 
             Slots = new()
             {
-                new(bodyArmorSlot, bodyArmorImage),
-                new(helmetSlot, helmetImage),
-                new(glovesSlot, glovesImage),
-                new(bootsSlot, bootsImage),
-                new(weaponSlot, weaponImage),
+                new() { ItemSlot = new(this, (int)ItemType.BodyArmor), Grid = bodyArmorSlot, Image = bodyArmorImage },
+                new() { ItemSlot = new(this, (int)ItemType.Helmet), Grid = helmetSlot, Image = helmetImage },
+                new() { ItemSlot = new(this, (int)ItemType.Gloves), Grid = glovesSlot, Image = glovesImage },
+                new() { ItemSlot = new(this, (int)ItemType.Boots), Grid = bootsSlot, Image = bootsImage },
+                new() { ItemSlot = new(this, (int)ItemType.Weapon), Grid = weaponSlot, Image = weaponImage },
             };
 
-            bodyArmorSlot.Tag = new ItemSlot(this, (int)ItemType.BodyArmor);
-            helmetSlot.Tag = new ItemSlot(this, (int)ItemType.Helmet);
-            glovesSlot.Tag = new ItemSlot(this, (int)ItemType.Gloves);
-            bootsSlot.Tag = new ItemSlot(this, (int)ItemType.Boots);
-            weaponSlot.Tag = new ItemSlot(this, (int)ItemType.Weapon);
+            //Slots.ForEach(slot => slot.Item2.Tag = slot.Item1);
         }
 
-        private List<Tuple<Grid, Image>> Slots;
+        private readonly List<SlotTuple> Slots;
 
-        //Rework
-        private ICollection<InventoryItem> data = new List<InventoryItem>();
-        public override ICollection<InventoryItem> Items
+        //private List<InventoryItem> data = new List<InventoryItem>();
+        public override IReadOnlyCollection<InventoryItem> Items
         {
-            get => data;
-            set
-            {
-                data = value;
-                FillData(data);
-            }
+            get => Slots.Where(slot => slot.ItemSlot.Item is not null).Select(slot => slot.ItemSlot.Item!).ToList();
+            set => FillData(value);
         }
 
         //public override ItemSlot GetSlotByPosition(int position) => GetSlotByPosition(position);
 
-        public override void Update() => FillData(data);
+        //public override void Update() => FillData(data);
 
-        private void FillData(ICollection<InventoryItem> items)
+        public override void AddItem(InventoryItem item)
+        {
+            var iconResource = ItemIcons.ResourceManager.GetString(item.Item.Icon);
+            if (iconResource is null)
+            {
+                // TODO: use Logger
+                Console.WriteLine("Icon not found");
+                return;
+            }
+            var bitmap = BitmapTools.FromResource(iconResource);
+
+            var slot = GetSlotByItemType(item.Item.ItemType);
+
+            slot.Image.Source = bitmap;
+            slot.ItemSlot.Item = item;
+        }
+
+        public override void UpdateItem(InventoryItem updatedItem)
+        {
+            // idk what to do here. I don't expect the items to change
+            throw new NotImplementedException();
+        }
+
+        private void FillData(IReadOnlyCollection<InventoryItem> items)
         {
             var battleStats = ComputeBattleStats(items);
             FillBattleStats(battleStats);
             FillEquipedItems(items);
         }
 
-        public void FillData(string characterName, ICollection<InventoryItem> items)
+        public void FillData(string characterName, IReadOnlyCollection<InventoryItem> items)
         {
             this.characterName.Content = characterName;
 
@@ -66,11 +87,10 @@ namespace MysticLegendsClient.Controls
 
         private void ClearEquipedItems()
         {
-            var images = new Image[] { weaponImage, bodyArmorImage, helmetImage, glovesImage, bootsImage };
             foreach (var slot in Slots)
             {
-                ((ItemSlot)slot.Item1.Tag).Item = null;
-                slot.Item2.Source = null;
+                slot.ItemSlot.Item = null;
+                slot.Image.Source = null;
             }
         }
 
@@ -79,36 +99,18 @@ namespace MysticLegendsClient.Controls
             ClearEquipedItems();
             foreach (var item in equipedItems)
             {
-                var iconResource = ItemIcons.ResourceManager.GetString(item.Item.Icon);
-                if (iconResource is null)
-                {
-                    // TODO: use Logger
-                    Console.WriteLine("Icon not found");
-                    continue;
-                }
-                var bitmap = BitmapTools.FromResource(iconResource);
-
-                var imageControl = GetImageByItemType((ItemType)item.Item.ItemType);
-
-                imageControl.Item2.Source = bitmap;
-                ((ItemSlot)imageControl.Item1.Tag).Item = item;
+                AddItem(item);
             }
         }
 
-        private Tuple<Grid, Image> GetImageByItemType(ItemType itemType) => itemType switch
-        {
-            ItemType.Weapon => new(weaponSlot, weaponImage),
-            ItemType.BodyArmor => new(bodyArmorSlot, bodyArmorImage),
-            ItemType.Helmet => new(helmetSlot, helmetImage),
-            ItemType.Gloves => new(glovesSlot, glovesImage),
-            ItemType.Boots => new(bootsSlot, bootsImage),
-            _ => throw new Exception("Wrong item type"),
-        };
+        private SlotTuple GetSlotByItemType(int itemType) =>
+            Slots.First(slot => slot.ItemSlot.GridPosition == itemType);
+
+        private SlotTuple GetSlotByGrid(Grid grid) => Slots.FirstOrDefault(slot => slot.Grid == grid);
 
         private BattleStats ComputeBattleStats(IEnumerable<InventoryItem> items)
         {
             var battleStats = from item in items where item.BattleStats is not null select new BattleStats(item.BattleStats);
-
             return new BattleStats(battleStats);
         }
 
@@ -133,17 +135,17 @@ namespace MysticLegendsClient.Controls
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (((FrameworkElement)sender).Tag is ItemSlot slot && GetImageByItemType((ItemType)slot.GridPosition).Item2.Source is not null)
+            var slot = GetSlotByGrid((Grid)sender);
+            if (slot.Image.Source is not null)
             {
-                HandleDrag(slot);
+                HandleDrag(slot.ItemSlot);
             }
         }
 
         private void Grid_Drop(object sender, DragEventArgs e)
         {
-            var target = (FrameworkElement)sender;
-            var targetSlot = (ItemSlot)target.Tag;
-            HandleDrop(targetSlot, e);
+            var target = GetSlotByGrid((Grid)sender);
+            HandleDrop(target.ItemSlot, e);
         }
     }
 }

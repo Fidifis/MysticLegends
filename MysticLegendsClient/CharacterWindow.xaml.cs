@@ -1,4 +1,5 @@
 ﻿using MysticLegendsShared.Models;
+using MysticLegendsShared.Utilities;
 using System.Collections.Immutable;
 using System.Windows;
 
@@ -24,7 +25,8 @@ namespace MysticLegendsClient
 
             inventoryView.CanTransitItems = true;
 
-            GameState.Current.GameEvents.CharacterInventoryUpdateEvent += (object? sender, CharacterInventoryUpdateEventArgs e) => inventoryView.Items = e.InventoryItems;
+            GameState.Current.GameEvents.CharacterInventoryUpdateEvent += (object? sender, CharacterInventoryUpdateEventArgs e) =>
+                inventoryView.Items = e.InventoryItems.AsReadOnly();
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -42,9 +44,9 @@ namespace MysticLegendsClient
 
         private void FillData(Character characterData)
         {
-            characterView.FillData(characterData.CharacterName, characterData.InventoryItems);
+            characterView.FillData(characterData.CharacterName, characterData.InventoryItems.AsReadOnly());
             if (characterData.CharacterInventory is not null)
-                inventoryView.FillData(characterData.CharacterInventory.InventoryItems, characterData.CharacterInventory.Capacity);
+                inventoryView.FillData(characterData.CharacterInventory.InventoryItems.AsReadOnly(), characterData.CharacterInventory.Capacity);
         }
 
         private void EquipSwapCheckExec(InventoryItem inventoryItem, InventoryItem equipedItem)
@@ -95,7 +97,7 @@ namespace MysticLegendsClient
                 ["position"] = position.ToString(),
             };
             var newInventory1 = await GameState.Current.Connection.PostAsync<CharacterInventory>("/api/Character/zmrdus/inventory-swap", parameters1.ToImmutableDictionary());
-            inventoryView.Items = newInventory1.InventoryItems;
+            inventoryView.Items = newInventory1.InventoryItems.AsReadOnly();
         }
 
         private async void EquipServerCall(int itemToEquip)

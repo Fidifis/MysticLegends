@@ -1,6 +1,5 @@
 ﻿using MysticLegendsClient.Controls;
 using MysticLegendsShared.Models;
-using MysticLegendsShared.Utilities;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -10,7 +9,6 @@ namespace MysticLegendsClient
     /// </summary>
     public abstract partial class NpcShopWindow : NpcWindow
     {
-        
         protected readonly FrameworkElement[] views;
 
         protected InventoryView? inventoryRelation;
@@ -39,7 +37,7 @@ namespace MysticLegendsClient
 
         protected void ChangeToView(FrameworkElement toShow)
         {
-            IItemView.CloseTransition(sellViewInventory);
+            sellViewInventory.CloseRelations();
             foreach (var element in views)
             {
                 if (element == toShow)
@@ -68,27 +66,23 @@ namespace MysticLegendsClient
                 // Moving item within sellView
                 var item = args.FromSlot.Item;
                 item!.Position = args.ToSlot.GridPosition;
-                sellViewInventory.Update();
+                sellViewInventory.UpdateItem(item);
             }
             else if (args.IsHandover)
             {
                 // Item leaves sell grid and new position in inventory is set
-
-                sender.InvokeItemDropEvent(sender, new ItemDropEventArgs(sender.GetRelationBySlot(args.FromSlot)!.ManagedSlot, args.ToSlot));
-                IItemView.CloseTransition(sellViewInventory);
-                // or do a server call for inventory swap
+                var relationFromSlot = sender.GetRelationBySlot(args.FromSlot)!;
+                sender.InvokeItemDropEvent(sender, new ItemDropEventArgs(relationFromSlot.ManagedSlot, args.ToSlot)); // or do a server call for inventory swap
+                sellViewInventory.RemoveRelationFromTransit(relationFromSlot.TransitSlot);
             }
             else
             {
                 // remove from inventory view, add to sell grid
                 var itemCopy = PartialItemCopy(args.FromSlot.Item!);
                 itemCopy.Position = args.ToSlot.GridPosition;
-                // TODO: REWORK!!!
-                var _velky_spatny = sellViewInventory.Items;
-                _velky_spatny.Add(itemCopy);
-                sellViewInventory.Items = _velky_spatny;
-                sellViewInventory.Update();
-                IItemView.EstablishRelation(args.FromSlot, args.ToSlot);
+
+                if (ItemViewRelation.EstablishRelation(args.FromSlot, args.ToSlot))
+                    sellViewInventory.AddItem(itemCopy);
             }
         }
 
@@ -97,9 +91,9 @@ namespace MysticLegendsClient
             return new InventoryItem() { InvitemId = item.InvitemId, Item = item.Item, StackCount = item.StackCount, Position = item.Position };
         }
 
-        protected async Task<List<NpcItem>> GetOfferedItemsAsync()
+        protected async Task<List<InventoryItem>> GetOfferedItemsAsync()
         {
-            return await GameState.Current.Connection.GetAsync<List<NpcItem>>($"api/NpcShop/{NpcId}/offered-items");
+            return await GameState.Current.Connection.GetAsync<List<InventoryItem>>($"api/NpcShop/{NpcId}/offered-items");
         }
 
         protected async void BuyButton_Click(object? sender, RoutedEventArgs? e)
@@ -107,11 +101,7 @@ namespace MysticLegendsClient
             ChangeToView(buyView);
             var items = await GetOfferedItemsAsync();
 
-            // TODO: Workaround - implement ability to process npc items
-            var __convertedItems = new List<InventoryItem>();
-            items.ForEach(item => __convertedItems.Add(item.InventoryItem!));
-
-            buyView.Items = items.Select(item => item.InventoryItem!).ToList();
+            buyView.Items = items;
         }
 
         protected void SellButton_Click(object sender, RoutedEventArgs e)
@@ -128,7 +118,7 @@ namespace MysticLegendsClient
 
         protected virtual void Window_Closed(object sender, EventArgs e)
         {
-            IItemView.CloseTransition(sellViewInventory);
+            sellViewInventory.CloseRelations();
         }
     }
 }
