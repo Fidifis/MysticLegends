@@ -56,4 +56,12 @@ public struct CBattleStat
     }
 
     public static IEnumerable<CBattleStat> ConvertFromBattleStat(IEnumerable<BattleStat> battleStats) => from bs in battleStats select new CBattleStat(bs);
+
+    public override readonly string ToString() => StatMethod switch
+    {
+        Method.Add => $"Adds {Value} {StatType}",
+        Method.Multiply => $"Multiplies {StatType} by {Value}",
+        Method.Fix => $"Fixes {StatType} at {Value}",
+        _ => "Unknown method"
+    };
 }

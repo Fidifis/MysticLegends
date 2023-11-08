@@ -5,7 +5,6 @@ using System.Windows.Media;
 using MysticLegendsClient.Resources;
 using System.Windows.Input;
 using MysticLegendsShared.Models;
-using static System.Reflection.Metadata.BlobBuilder;
 using MysticLegendsShared.Utilities;
 
 namespace MysticLegendsClient.Controls
@@ -20,6 +19,7 @@ namespace MysticLegendsClient.Controls
             public ItemSlot ItemSlot { get; init; }
             public Image Image { get; init; }
             public Label Label { get; init; }
+            public FrameworkElement Root { get; init; }
         }
 
         public InventoryView(): this(false)
@@ -186,6 +186,8 @@ namespace MysticLegendsClient.Controls
             grid.Children.Add(label);
             grid.Children.Add(border);
 
+            ToolTipService.SetInitialShowDelay(grid, 0);
+
             return grid;
         }
 
@@ -195,11 +197,11 @@ namespace MysticLegendsClient.Controls
             ItemSlots.RemoveRange(index, count);
         }
 
-        private void AddToSlot(FrameworkElement element, Image image, Label label)
+        private void AddSlotToView(FrameworkElement element, Image image, Label label)
         {
             inventoryPanel.Children.Add(element);
             var itemSlot = new ItemSlot(this, ItemSlots.Count);
-            ItemSlots.Add(new() { ItemSlot = itemSlot, Image = image, Label = label });
+            ItemSlots.Add(new() { ItemSlot = itemSlot, Image = image, Label = label, Root = element });
             element.Tag = itemSlot;
         }
 
@@ -208,7 +210,7 @@ namespace MysticLegendsClient.Controls
             Debug.Assert(ItemSlots.Count == inventoryPanel.Children.Count, "list counts differ");
             if (count > ItemSlots.Count)
                 for (int i = ItemSlots.Count; i < count; i++)
-                    AddToSlot(CreateSlot(out Image image, out Label label), image, label);
+                    AddSlotToView(CreateSlot(out Image image, out Label label), image, label);
             else if (count < ItemSlots.Count)
                 RemoveSlotRange(count, ItemSlots.Count - count);
         }
@@ -223,6 +225,7 @@ namespace MysticLegendsClient.Controls
             ItemSlots[index].ItemSlot.Item = item;
             ItemSlots[index].Image.Source = item is null ? null : BitmapTools.FromResource(ItemIcons.ResourceManager.GetString(item.Item.Icon)!);
             ItemSlots[index].Label.Content = item?.StackCount == 1 ? "" : item?.StackCount.ToString();
+            ItemSlots[index].Root.ToolTip = ItemToolTip.Create(item);
         }
 
         //public override ItemSlot GetSlotByPosition(int position) => ItemSlots.Where((slot) => slot.Item1.GridPosition == position).Select((record) => record.Item1).First();

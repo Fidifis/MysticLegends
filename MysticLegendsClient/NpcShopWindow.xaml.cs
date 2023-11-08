@@ -98,7 +98,7 @@ namespace MysticLegendsClient
 
         protected static InventoryItem PartialItemCopy(InventoryItem item)
         {
-            return new InventoryItem() { InvitemId = item.InvitemId, Item = item.Item, StackCount = item.StackCount, Position = item.Position };
+            return new InventoryItem() { InvitemId = item.InvitemId, Item = item.Item, BattleStats = item.BattleStats, StackCount = item.StackCount, Position = item.Position };
         }
 
         protected async Task<List<InventoryItem>> GetOfferedItemsAsync()

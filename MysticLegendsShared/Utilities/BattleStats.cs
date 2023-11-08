@@ -85,4 +85,13 @@ public class BattleStats: IReadOnlyDictionary<CBattleStat.Type, CBattleStat>
     public bool TryGetValue(CBattleStat.Type key, [MaybeNullWhen(false)] out CBattleStat value) => battleStats.TryGetValue(key, out value);
     public IEnumerator<KeyValuePair<CBattleStat.Type, CBattleStat>> GetEnumerator() => battleStats.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => battleStats.GetEnumerator();
+
+    public override string ToString()
+    {
+        var result = "";
+        foreach(var stat in battleStats)
+            result += stat.Value.ToString() + Environment.NewLine;
+
+        return result;
+    }
 }

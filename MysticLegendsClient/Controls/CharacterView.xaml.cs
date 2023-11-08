@@ -15,7 +15,7 @@ namespace MysticLegendsClient.Controls
         private readonly struct SlotTuple
         {
             public ItemSlot ItemSlot { get; init; }
-            public Grid Grid { get; init; }
+            public FrameworkElement Root { get; init; }
             public Image Image { get; init; }
         }
 
@@ -25,11 +25,11 @@ namespace MysticLegendsClient.Controls
 
             Slots = new()
             {
-                new() { ItemSlot = new(this, (int)ItemType.BodyArmor), Grid = bodyArmorSlot, Image = bodyArmorImage },
-                new() { ItemSlot = new(this, (int)ItemType.Helmet), Grid = helmetSlot, Image = helmetImage },
-                new() { ItemSlot = new(this, (int)ItemType.Gloves), Grid = glovesSlot, Image = glovesImage },
-                new() { ItemSlot = new(this, (int)ItemType.Boots), Grid = bootsSlot, Image = bootsImage },
-                new() { ItemSlot = new(this, (int)ItemType.Weapon), Grid = weaponSlot, Image = weaponImage },
+                new() { ItemSlot = new(this, (int)ItemType.BodyArmor), Root = bodyArmorSlot, Image = bodyArmorImage },
+                new() { ItemSlot = new(this, (int)ItemType.Helmet), Root = helmetSlot, Image = helmetImage },
+                new() { ItemSlot = new(this, (int)ItemType.Gloves), Root = glovesSlot, Image = glovesImage },
+                new() { ItemSlot = new(this, (int)ItemType.Boots), Root = bootsSlot, Image = bootsImage },
+                new() { ItemSlot = new(this, (int)ItemType.Weapon), Root = weaponSlot, Image = weaponImage },
             };
 
             //Slots.ForEach(slot => slot.Item2.Tag = slot.Item1);
@@ -63,6 +63,7 @@ namespace MysticLegendsClient.Controls
 
             slot.Image.Source = bitmap;
             slot.ItemSlot.Item = item;
+            slot.Root.ToolTip = ItemToolTip.Create(item);
         }
 
         public override void UpdateItem(InventoryItem updatedItem)
@@ -106,7 +107,7 @@ namespace MysticLegendsClient.Controls
         private SlotTuple GetSlotByItemType(int itemType) =>
             Slots.First(slot => slot.ItemSlot.GridPosition == itemType);
 
-        private SlotTuple GetSlotByGrid(Grid grid) => Slots.FirstOrDefault(slot => slot.Grid == grid);
+        private SlotTuple GetSlotByRoot(FrameworkElement grid) => Slots.FirstOrDefault(slot => slot.Root == grid);
 
         private BattleStats ComputeBattleStats(IEnumerable<InventoryItem> items)
         {
@@ -135,7 +136,7 @@ namespace MysticLegendsClient.Controls
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var slot = GetSlotByGrid((Grid)sender);
+            var slot = GetSlotByRoot((FrameworkElement)sender);
             if (slot.Image.Source is not null)
             {
                 HandleDrag(slot.ItemSlot);
@@ -144,7 +145,7 @@ namespace MysticLegendsClient.Controls
 
         private void Grid_Drop(object sender, DragEventArgs e)
         {
-            var target = GetSlotByGrid((Grid)sender);
+            var target = GetSlotByRoot((FrameworkElement)sender);
             HandleDrop(target.ItemSlot, e);
         }
     }
