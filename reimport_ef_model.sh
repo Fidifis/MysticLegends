@@ -20,7 +20,7 @@ sed -i 's/MysticLegendsServer/MysticLegendsShared/g' "$MODELS_SHARED"/*
 sed -i '1 i\using MysticLegendsShared.Models;' "$MODELS_SERVER/$CONTEXT_FILE_NAME"
 
 # convert to CRLF
-if command -v unix2dos &> /dev/null; then
+if [ $(command -v unix2dos | wc -l) -eq 1 ]; then
     unix2dos "$MODELS_SHARED"/*
     unix2dos "$MODELS_SERVER/$CONTEXT_FILE_NAME"
 fi
