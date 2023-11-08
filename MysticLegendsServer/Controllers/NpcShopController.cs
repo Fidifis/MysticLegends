@@ -54,8 +54,8 @@ namespace MysticLegendsServer.Controllers
             var items = JsonSerializer.Deserialize<List<int>>(jsonString)!;
             var price = EstimateSellPrice(npcId, items);
 
-            var characterAsync = dbContext.Characters.SingleAsync(character => character.CharacterName == characterString);
-            var sellItems = dbContext.InventoryItems.Where(item => items.Contains(item.ItemId));
+            var character = await dbContext.Characters.SingleAsync(character => character.CharacterName == characterString);
+            var sellItems = await dbContext.InventoryItems.Where(item => items.Contains(item.InvitemId)).ToListAsync();
 
             foreach(var item in sellItems)
             {
@@ -70,7 +70,6 @@ namespace MysticLegendsServer.Controllers
                 item.NpcId = npcId;
             }
 
-            var character = await characterAsync;
             character.CurrencyGold += price;
 
             await dbContext.SaveChangesAsync();

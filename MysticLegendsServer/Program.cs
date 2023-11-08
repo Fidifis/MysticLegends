@@ -21,7 +21,7 @@ namespace MysticLegendsServer
 
             builder.Services.AddDbContext<Xdigf001Context>(options => options
                 .UseNpgsql(connectionString,
-                o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+                    o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
             builder.Services.AddControllers().AddJsonOptions(options =>
             {
