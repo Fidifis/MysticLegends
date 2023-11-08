@@ -257,7 +257,7 @@
           "primary": false,
           "unique": false,
           "nullable": false,
-          "type": "varchar(32)"
+          "type": "varchar(64)"
         },
         {
           "name": "icon",
