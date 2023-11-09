@@ -58,12 +58,16 @@ namespace MysticLegendsClient
         {
             if (sender == buyView && args.ToSlot == args.FromSlot)
             {
+                // buy item by clicking
                 var response = MessageBox.Show("Do you want to buy this item?", "buy", MessageBoxButton.YesNo);
+                if (response == MessageBoxResult.Yes)
+                    BuyItem(args.FromSlot.Item!.InvitemId);
             }
 
             else if (args.IsHandover)
             {
-                // TODO: server call buy
+                // buy item by drag to inventory
+                BuyItem(args.FromSlot.Item!.InvitemId);
             }
         }
         protected void ItemDropSell(IItemView sender, ItemDropEventArgs args)
@@ -96,17 +100,27 @@ namespace MysticLegendsClient
             }
         }
 
+        protected async void BuyItem(int invitemId)
+        {
+            await ApiCalls.NpcCall.BuyItemServerCallAsync(this, NpcId, invitemId);
+            ApiCalls.CharacterCall.UpdateCharacter(this, "zmrdus");
+            await RefreshBuyView();
+        }
+
         protected static InventoryItem PartialItemCopy(InventoryItem item)
         {
             return new InventoryItem() { InvitemId = item.InvitemId, Item = item.Item, BattleStats = item.BattleStats, StackCount = item.StackCount, Position = item.Position };
         }
 
+        protected async Task RefreshBuyView()
+        {
+            buyView.Items = await ApiCalls.NpcCall.GetOfferedItemsServerCallAsync(NpcId);
+        }
+
         protected async void BuyButton_Click(object? sender, RoutedEventArgs? e)
         {
             ChangeToView(buyView);
-            var items = await ApiCalls.NpcCall.GetOfferedItemsServerCallAsync(NpcId);
-
-            buyView.Items = items;
+            await RefreshBuyView();
         }
 
         protected void SellButton_Click(object sender, RoutedEventArgs e)
@@ -130,7 +144,6 @@ namespace MysticLegendsClient
         {
             await ApiCalls.NpcCall.SellItemsServerCallAsync(this, NpcId, sellViewInventory.Items);
             ApiCalls.CharacterCall.UpdateCharacter(this, "zmrdus");
-            ApiCalls.CharacterCall.UpdateCurrency(this, "zmrdus");
             sellViewInventory.CloseRelations();
             sellViewInventory.Items = new List<InventoryItem>();
             priceTextBox.Text = "0";

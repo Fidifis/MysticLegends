@@ -29,4 +29,15 @@ internal static class NpcCall
         var response = await GameState.Current.Connection.PostAsync<int>($"api/NpcShop/{npcId}/sell-items", parameters);
         GameState.Current.GameEvents.CurrencyUpdate(sender, new(response));
     }
+
+    public static async Task BuyItemServerCallAsync(object? sender, int npcId, int invitemId)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            ["item"] = invitemId.ToString(),
+            ["character_name"] = "zmrdus",
+        };
+        var response = await GameState.Current.Connection.PostAsync<int>($"api/NpcShop/{npcId}/buy-item", parameters);
+        GameState.Current.GameEvents.CurrencyUpdate(sender, new(response));
+    }
 }

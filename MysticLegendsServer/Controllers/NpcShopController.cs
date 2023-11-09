@@ -60,10 +60,12 @@ namespace MysticLegendsServer.Controllers
             foreach(var item in sellItems)
             {
                 // TODO: check if the item owner is linked with access token
+                // TODO: check if the character is in the same city as npc
                 if (item.CharacterInventoryCharacterN is null || item.CharacterInventoryCharacterN != characterString)
                 {
-                    logger.LogWarning("Trying to sell item not owned by the correct character");
-                    continue;
+                    var msg = "Trying to sell item not owned by the correct character";
+                    logger.LogWarning(msg);
+                    return BadRequest(msg);
                 }
 
                 item.CharacterInventoryCharacterN = null;
@@ -71,6 +73,54 @@ namespace MysticLegendsServer.Controllers
             }
 
             character.CurrencyGold += price;
+
+            await dbContext.SaveChangesAsync();
+
+            return Ok(character.CurrencyGold);
+        }
+
+        [HttpPost("{npcId}/buy-item")]
+        public async Task<ObjectResult> BuyItem(int npcId, [FromBody] Dictionary<string, string> paramters)
+        {
+            var invitemId = int.Parse(paramters["item"]);
+            var characterString = paramters["character_name"];
+
+            var item = await dbContext.InventoryItems
+                .Where(item => item.NpcId == npcId)
+                .Take(1)
+                .Include(item => item.Price)
+                .SingleAsync();
+            var character = await dbContext.Characters.SingleAsync(character => character.CharacterName == characterString);
+
+
+            // TODO: check if the item owner is linked with access token
+            // TODO: check if the character is in the same city as npc
+            if (item.NpcId is null || item.NpcId != npcId)
+            {
+                var msg = "Trying to buy item not owned by the correct npc";
+                logger.LogWarning(msg);
+                return BadRequest(msg);
+            }
+
+            if (item.Price is null)
+            {
+                var msg = "Item is not for sale";
+                logger.LogWarning(msg);
+                return BadRequest(msg);
+            }
+
+            if (item.Price.PriceGold > character.CurrencyGold)
+            {
+                var msg = "Not enough money";
+                logger.LogWarning(msg);
+                return BadRequest(msg);
+            }
+
+            item.NpcId = null;
+            item.CharacterInventoryCharacterN = character.CharacterName;
+            character.CurrencyGold -= item.Price.PriceGold;
+
+            item.Price = null;
 
             await dbContext.SaveChangesAsync();
 
