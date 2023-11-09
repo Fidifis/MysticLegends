@@ -277,7 +277,9 @@ VALUES (1, 'zmrdus', NULL, NULL, 1, 1, 1, 0),
 INSERT INTO price (invitem_id, price_gold)
 VALUES (4, 200),
 	(5, 100),
-	(6, 50);
+	(6, 50),
+       (7, 52),
+       (8, 50);
 
 -- Insert data into the "quest" table
 INSERT INTO quest (quest_id, npc_id, name, description, is_repeable, is_offered)
