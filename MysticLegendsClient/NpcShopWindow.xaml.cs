@@ -126,13 +126,14 @@ namespace MysticLegendsClient
             sellViewInventory.CloseRelations();
         }
 
-        private void MakeSell_Click(object sender, RoutedEventArgs e)
+        private async void MakeSell_Click(object sender, RoutedEventArgs e)
         {
-            ApiCalls.NpcCall.SellItemsServerCall(this, NpcId, sellViewInventory.Items);
+            await ApiCalls.NpcCall.SellItemsServerCallAsync(this, NpcId, sellViewInventory.Items);
             ApiCalls.CharacterCall.UpdateCharacter(this, "zmrdus");
             ApiCalls.CharacterCall.UpdateCurrency(this, "zmrdus");
             sellViewInventory.CloseRelations();
             sellViewInventory.Items = new List<InventoryItem>();
+            priceTextBox.Text = "0";
         }
     }
 }

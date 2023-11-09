@@ -26,14 +26,14 @@ namespace MysticLegendsServer.Controllers
         [HttpGet("{npcId}/offered-items")]
         public async Task<ObjectResult> GetOfferedItems(int npcId)
         {
-            await dbContext.InventoryItems
+            var reslut = await dbContext.InventoryItems
                 .Where(item => item.NpcId == npcId)
                 .Include(invItem => invItem.Price)
                 .Where(invItem => invItem.Price != null)
                 .Take(100)
                 .Include(invItem => invItem.Item)
-                .Include(invItem => invItem.BattleStats).LoadAsync();
-            return Ok(dbContext.InventoryItems);
+                .Include(invItem => invItem.BattleStats).ToListAsync();
+            return Ok(reslut);
         }
 
         [HttpPost("{npcId}/estimate-sell-price")]
