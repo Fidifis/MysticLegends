@@ -24,7 +24,7 @@ namespace MysticLegendsClient
 
         private void ChangeSplashImage(string resource)
         {
-            splashImage.Source = BitmapTools.FromResource(resource);
+            splashImage.Source = BitmapTools.ImageFromResource(resource);
         }
 
         private async void Login_Click(object sender, RoutedEventArgs e)

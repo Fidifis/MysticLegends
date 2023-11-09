@@ -28,6 +28,8 @@ namespace MysticLegendsServer
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
 
+            builder.Services.AddScoped<Auth>();
+
             // Add logging configuration
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole();

@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using MysticLegendsShared.Utilities;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
@@ -11,19 +12,13 @@ namespace MysticLegendsClient
 
     internal class ApiClient: IDisposable
     {
+        private bool disposed = false;
         private readonly HttpClient client = new();
 
         public async Task<bool> HealthCheckAsync()
         {
             var status = await GetAsync<Dictionary<string, string>>("api/Health");
-            try
-            {
-                return status?["status"] == "ok";
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            return status.Get("status") == "ok";
         }
 
         public ApiClient(string address)
@@ -32,11 +27,6 @@ namespace MysticLegendsClient
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
-        }
-
-        public void Dispose()
-        {
-            client.Dispose();
         }
 
         private static Dictionary<string, string> AppendToken(IReadOnlyDictionary<string, string>? paramters)
@@ -48,6 +38,8 @@ namespace MysticLegendsClient
 
         public async Task<T> GetAsync<T>(string path, IReadOnlyDictionary<string,string>? parameters = null)
         {
+            ObjectDisposedException.ThrowIf(disposed, this);
+
             parameters = AppendToken(parameters);
             path = path.TrimEnd('/');
             var combined = path;
@@ -68,6 +60,8 @@ namespace MysticLegendsClient
 
         public async Task<T> PostAsync<T>(string path, IReadOnlyDictionary<string, string>? parameters = null)
         {
+            ObjectDisposedException.ThrowIf(disposed, this);
+
             parameters = AppendToken(parameters);
 
             using var response = await client.PostAsJsonAsync(path, parameters);
@@ -75,6 +69,15 @@ namespace MysticLegendsClient
                 throw new NetworkException(await response.Content.ReadFromJsonAsync<string>() ?? "No parsable data in HTTP response");
 
             return await response.Content.ReadFromJsonAsync<T?>() ?? throw new NullReferenceException();
+        }
+
+        public void Dispose()
+        {
+            if (disposed)
+                return;
+
+            client.Dispose();
+            disposed = true;
         }
     }
 }

@@ -31,10 +31,13 @@ namespace MysticLegendsClient
                 FillData(e.Value);
         }
 
-        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Character characterData = await ApiCalls.CharacterCall.GetCharacterServerCallAsync("zmrdus");
-            FillData(characterData);
+            ErrorCatcher.Try(async () =>
+            {
+                Character characterData = await ApiCalls.CharacterCall.GetCharacterServerCallAsync("zmrdus");
+                FillData(characterData);
+            });
         }
 
         private void FillData(Character characterData)

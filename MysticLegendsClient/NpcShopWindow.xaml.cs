@@ -28,7 +28,7 @@ namespace MysticLegendsClient
 
         protected override void SetSplashImage(string image)
         {
-            splashImage.Source = BitmapTools.FromResource(image);
+            splashImage.Source = BitmapTools.ImageFromResource(image);
         }
 
         protected void Window_Loaded(object sender, RoutedEventArgs e)
@@ -48,10 +48,13 @@ namespace MysticLegendsClient
             }
         }
 
-        protected async void UpdateSellPrice()
+        protected void UpdateSellPrice()
         {
-            var price = await ApiCalls.NpcCall.GetOfferedPriceServerCallAsync(NpcId, sellViewInventory.Items);
-            priceTextBox.Text = price.ToString();
+            ErrorCatcher.Try(async () =>
+            {
+                var price = await ApiCalls.NpcCall.GetOfferedPriceServerCallAsync(NpcId, sellViewInventory.Items);
+                priceTextBox.Text = price.ToString();
+            });
         }
 
         protected void ItemDropBuy(IItemView sender, ItemDropEventArgs args)
@@ -114,7 +117,10 @@ namespace MysticLegendsClient
 
         protected async Task RefreshBuyView()
         {
-            buyView.Items = await ApiCalls.NpcCall.GetOfferedItemsServerCallAsync(NpcId);
+            await ErrorCatcher.TryAsync(async () =>
+            {
+                buyView.Items = await ApiCalls.NpcCall.GetOfferedItemsServerCallAsync(NpcId);
+            });
         }
 
         protected async void BuyButton_Click(object? sender, RoutedEventArgs? e)

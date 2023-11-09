@@ -10,8 +10,7 @@ internal class GameState : IDisposable
 
     public static void MakeGameStateCurrent(GameState gs)
     {
-        if (gs is null)
-            throw new NullReferenceException("GameState is null");
+        ArgumentNullException.ThrowIfNull(gs);
         Current.Dispose();
         Current = gs;
     }
@@ -30,12 +29,6 @@ internal class GameState : IDisposable
             Current = null!;
 
         Connection.Dispose();
-        GC.SuppressFinalize(this);
-    }
-
-    ~GameState()
-    {
-        Dispose();
     }
 }
 

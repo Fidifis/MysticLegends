@@ -57,7 +57,7 @@ namespace MysticLegendsClient.Controls
                 Console.WriteLine("Icon not found");
                 return;
             }
-            var bitmap = BitmapTools.FromResource(iconResource);
+            var bitmap = BitmapTools.ImageFromResource(iconResource);
 
             var slot = GetSlotByItemType(item.Item.ItemType);
 

@@ -26,8 +26,11 @@ internal static class NpcCall
             ["items"] = JsonSerializer.Serialize(items.Select(item => item.InvitemId)),
             ["character_name"] = "zmrdus",
         };
-        var response = await GameState.Current.Connection.PostAsync<int>($"api/NpcShop/{npcId}/sell-items", parameters);
-        GameState.Current.GameEvents.CurrencyUpdate(sender, new(response));
+        await ErrorCatcher.TryAsync(async () =>
+        {
+            var response = await GameState.Current.Connection.PostAsync<int>($"api/NpcShop/{npcId}/sell-items", parameters);
+            GameState.Current.GameEvents.CurrencyUpdate(sender, new(response));
+        });
     }
 
     public static async Task BuyItemServerCallAsync(object? sender, int npcId, int invitemId, int? position = null)
@@ -39,7 +42,10 @@ internal static class NpcCall
         };
         if (position is not null)
             parameters["position"] = position.ToString()!;
-        var response = await GameState.Current.Connection.PostAsync<int>($"api/NpcShop/{npcId}/buy-item", parameters);
-        GameState.Current.GameEvents.CurrencyUpdate(sender, new(response));
+        await ErrorCatcher.TryAsync(async () =>
+        {
+            var response = await GameState.Current.Connection.PostAsync<int>($"api/NpcShop/{npcId}/buy-item", parameters);
+            GameState.Current.GameEvents.CurrencyUpdate(sender, new(response));
+        });
     }
 }

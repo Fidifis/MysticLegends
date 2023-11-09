@@ -223,7 +223,7 @@ namespace MysticLegendsClient.Controls
         private void SetSlot(int index, InventoryItem? item)
         {
             ItemSlots[index].ItemSlot.Item = item;
-            ItemSlots[index].Image.Source = item is null ? null : BitmapTools.FromResource(ItemIcons.ResourceManager.GetString(item.Item.Icon)!);
+            ItemSlots[index].Image.Source = item is null ? null : BitmapTools.ImageFromResource(ItemIcons.ResourceManager.GetString(item.Item.Icon)!);
             ItemSlots[index].Label.Content = item?.StackCount == 1 ? "" : item?.StackCount.ToString();
             ItemSlots[index].Root.ToolTip = ItemToolTip.Create(item);
         }
