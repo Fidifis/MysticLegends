@@ -6,10 +6,7 @@ public static class Extensions
 
     public static T? Get<T>(this IList<T> list, int? index)
     {
-        if (index is null)
-            return default;
-
-        if (list.Count <= index)
+        if (index is null || list.Count <= index)
             return default;
 
         return list[(int)index];

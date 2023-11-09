@@ -21,6 +21,17 @@ namespace MysticLegendsServer.Controllers
             this.logger = logger;
         }
 
+        private bool IsEquipable(ItemType itemType) => itemType switch
+        {
+            ItemType.Weapon
+            or ItemType.BodyArmor
+            or ItemType.Helmet
+            or ItemType.Gloves
+            or ItemType.Boots
+            => true,
+            _ => false
+        };
+
         private async Task<Character> RequestCharacterItems(string characterName)
         {
             return await dbContext.Characters
@@ -110,6 +121,13 @@ namespace MysticLegendsServer.Controllers
 
             var itemToEquip = inventoryItems[itemToEquipIndex];
 
+            if (!IsEquipable((ItemType)itemToEquip.Item.ItemType))
+            {
+                var msg = "this item cannot be equiped";
+                logger.LogWarning(msg);
+                return BadRequest(msg);
+            }
+
             if (equipedItems.Find(item => item.Item.ItemType == itemToEquip.Item.ItemType) is not null)
             {
                 var msg = "trying to equip already equiped item type";
@@ -144,32 +162,18 @@ namespace MysticLegendsServer.Controllers
             }
 
             var itemToUnequip = equipedItems[itemToUnequipIndex];
-            var itemNewInventoryPosition = strposition is not null ? int.Parse(strposition) : itemToUnequip.Position;
-            bool positionFound = false;
+            var desiredPosition = strposition is not null ? int.Parse(strposition) : itemToUnequip.Position;
 
-            var capacity = character.CharacterInventory!.Capacity;
-            for (int i = 0; i < capacity; i++)
-            {
-                if (inventoryItems.Find(item => item.Position == itemNewInventoryPosition) is not null)
-                {
-                    if (++itemNewInventoryPosition >= capacity)
-                        itemNewInventoryPosition -= capacity;
-                }
-                else
-                {
-                    positionFound = true;
-                    break;
-                }
-            }
+            var newPosition = InventoryHandling.FindPositionInInventory(character.CharacterInventory, desiredPosition);
 
-            if (!positionFound)
+            if (newPosition is null)
             {
                 var msg = "No space in inventory";
                 logger.LogWarning(msg);
                 return BadRequest(msg);
             }
 
-            itemToUnequip.Position = itemNewInventoryPosition;
+            itemToUnequip.Position = (int)newPosition;
 
             inventoryItems.Add(itemToUnequip);
             equipedItems.RemoveAt(itemToUnequipIndex);
@@ -206,6 +210,13 @@ namespace MysticLegendsServer.Controllers
 
             var itemToEquip = inventoryItems[itemToEquipIndex];
             var itemToUnequip = equipedItems[itemToUnequipIndex];
+
+            if (!IsEquipable((ItemType)itemToEquip.Item.ItemType))
+            {
+                var msg = "this item cannot be equiped";
+                logger.LogWarning(msg);
+                return BadRequest(msg);
+            }
 
             itemToUnequip.Position = itemToEquip.Position;
 

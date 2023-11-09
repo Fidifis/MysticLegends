@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MysticLegendsServer.Models;
+using MysticLegendsShared.Utilities;
 using System.Text.Json;
 
 namespace MysticLegendsServer.Controllers
@@ -84,43 +85,55 @@ namespace MysticLegendsServer.Controllers
         {
             var invitemId = int.Parse(paramters["item"]);
             var characterString = paramters["character_name"];
+            var position = paramters.Get("position");
 
-            var item = await dbContext.InventoryItems
-                .Where(item => item.NpcId == npcId)
+            var itemToBuy = await dbContext.InventoryItems
+                .Where(item => item.InvitemId == invitemId)
                 .Take(1)
                 .Include(item => item.Price)
                 .SingleAsync();
-            var character = await dbContext.Characters.SingleAsync(character => character.CharacterName == characterString);
+            var character = await dbContext.Characters
+                .Include(character => character.CharacterInventory)
+                .ThenInclude(inventory => inventory!.InventoryItems)
+                .SingleAsync(character => character.CharacterName == characterString);
 
 
             // TODO: check if the item owner is linked with access token
             // TODO: check if the character is in the same city as npc
-            if (item.NpcId is null || item.NpcId != npcId)
+            if (itemToBuy.NpcId is null || itemToBuy.NpcId != npcId)
             {
                 var msg = "Trying to buy item not owned by the correct npc";
                 logger.LogWarning(msg);
                 return BadRequest(msg);
             }
 
-            if (item.Price is null)
+            if (itemToBuy.Price is null)
             {
                 var msg = "Item is not for sale";
                 logger.LogWarning(msg);
                 return BadRequest(msg);
             }
 
-            if (item.Price.PriceGold > character.CurrencyGold)
+            if (itemToBuy.Price.PriceGold > character.CurrencyGold)
             {
                 var msg = "Not enough money";
                 logger.LogWarning(msg);
                 return BadRequest(msg);
             }
 
-            item.NpcId = null;
-            item.CharacterInventoryCharacterN = character.CharacterName;
-            character.CurrencyGold -= item.Price.PriceGold;
+            var newPosition = InventoryHandling.FindPositionInInventory(character.CharacterInventory!, int.Parse(position ?? "0"));
 
-            item.Price = null;
+            if (newPosition is null)
+            {
+                return BadRequest("Inventory is full");
+            }
+
+            itemToBuy.NpcId = null;
+            itemToBuy.CharacterInventoryCharacterN = character.CharacterName;
+            itemToBuy.Position = (int)newPosition;
+
+            character.CurrencyGold -= itemToBuy.Price.PriceGold;
+            itemToBuy.Price = null;
 
             await dbContext.SaveChangesAsync();
 

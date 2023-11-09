@@ -61,13 +61,13 @@ namespace MysticLegendsClient
                 // buy item by clicking
                 var response = MessageBox.Show("Do you want to buy this item?", "buy", MessageBoxButton.YesNo);
                 if (response == MessageBoxResult.Yes)
-                    BuyItem(args.FromSlot.Item!.InvitemId);
+                    BuyItem(args.FromSlot.Item!.InvitemId, args.ToSlot.GridPosition);
             }
 
             else if (args.IsHandover)
             {
                 // buy item by drag to inventory
-                BuyItem(args.FromSlot.Item!.InvitemId);
+                BuyItem(args.FromSlot.Item!.InvitemId, args.ToSlot.GridPosition);
             }
         }
         protected void ItemDropSell(IItemView sender, ItemDropEventArgs args)
@@ -100,9 +100,9 @@ namespace MysticLegendsClient
             }
         }
 
-        protected async void BuyItem(int invitemId)
+        protected async void BuyItem(int invitemId, int position)
         {
-            await ApiCalls.NpcCall.BuyItemServerCallAsync(this, NpcId, invitemId);
+            await ApiCalls.NpcCall.BuyItemServerCallAsync(this, NpcId, invitemId, position);
             ApiCalls.CharacterCall.UpdateCharacter(this, "zmrdus");
             await RefreshBuyView();
         }
