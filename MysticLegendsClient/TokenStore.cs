@@ -30,7 +30,7 @@ namespace MysticLegendsClient
             return null;
         }
 
-        public void SaveRefreshToken(string token)
+        public void SaveRefreshToken(string? token)
         {
             var dir = Path.GetDirectoryName(StorePath);
 
@@ -39,10 +39,15 @@ namespace MysticLegendsClient
 
             var data = ReadJsonFile(StorePath) ?? new();
 
-            var tokenBytes = encoding.GetBytes(token);
-            var base64Token = Convert.ToBase64String(tokenBytes);
+            data.Remove(refreshTokenString);
 
-            data[refreshTokenString] = base64Token;
+            if (token is not null)
+            {
+                var tokenBytes = encoding.GetBytes(token);
+                var base64Token = Convert.ToBase64String(tokenBytes);
+
+                data[refreshTokenString] = base64Token;
+            }
 
             var json = JsonSerializer.Serialize(data);
             File.WriteAllText(StorePath, json);

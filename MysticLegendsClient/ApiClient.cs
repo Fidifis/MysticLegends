@@ -13,6 +13,8 @@ namespace MysticLegendsClient
     internal class ApiClient: IDisposable
     {
         private bool disposed = false;
+
+        private readonly TokenStore tokenStore;
         private readonly HttpClient client = new();
 
         public async Task<bool> HealthCheckAsync()
@@ -21,8 +23,10 @@ namespace MysticLegendsClient
             return status.Get("status") == "ok";
         }
 
-        public ApiClient(string address)
+        public ApiClient(string address, TokenStore tokenStore)
         {
+            this.tokenStore = tokenStore;
+
             client.BaseAddress = new Uri(address);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(

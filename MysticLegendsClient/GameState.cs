@@ -20,7 +20,7 @@ internal class GameState : IDisposable
 
     public GameState(string serverAddress)
     {
-        Connection = new(serverAddress);
+        Connection = new(serverAddress, TokenStore);
     }
 
     public void Dispose()

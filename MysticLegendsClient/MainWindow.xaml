@@ -8,7 +8,8 @@
         Title="Mystic Legends - Login"
         Height="500" Width="900"
         MinHeight="400" MinWidth="200"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded">
     <Window.Resources>
         <Style x:Key="MarginBot" TargetType="{x:Type FrameworkElement}">
             <Setter Property="Margin" Value="0 0 0 10" />
@@ -45,10 +46,11 @@
 
             <Label Content="Password"/>
             <PasswordBox x:Name="password" Height="25"/>
-            <CheckBox x:Name="remember" Content="Remeber password" Style="{StaticResource MarginBot}"/>
+            <CheckBox x:Name="remember" Content="Remeber me" Style="{StaticResource MarginBot}"/>
 
-            <Button Content="Log in" Margin="0 20 0 10" Click="Login_Click" Height="25"/>
-            <Button Content="Register" Height="25"/>
+            <Button x:Name="loginButton" Content="Log in" Margin="0 20 0 10" Click="Login_Click" Height="25" IsEnabled="False"/>
+            <Button x:Name="registerButton" Content="Register" Height="25" IsEnabled="False"/>
+            <Label x:Name="loggingInLabel" Content="Logging in" HorizontalAlignment="Center"/>
         </StackPanel>
         <Grid Grid.Column="1">
             <Image x:Name="splashImage" Stretch="UniformToFill" Source="/images/Graphics/LoginScreen.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>

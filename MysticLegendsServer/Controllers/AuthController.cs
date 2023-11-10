@@ -29,7 +29,7 @@ namespace MysticLegendsServer.Controllers
             return Ok(token);
         }
 
-        [HttpPost("access-token")]
+        [HttpPost("token")]
         public async Task<ObjectResult> GetAccessToken([FromBody] Dictionary<string, string> paramters)
         {
             var refreshToken = paramters["refreshToken"];

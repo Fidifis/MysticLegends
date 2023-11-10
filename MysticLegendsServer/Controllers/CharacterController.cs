@@ -13,12 +13,14 @@ namespace MysticLegendsServer.Controllers
     public class CharacterController : ControllerBase
     {
         private Xdigf001Context dbContext;
-        ILogger<CharacterController> logger;
+        private ILogger<CharacterController> logger;
+        private Auth auth;
 
-        public CharacterController(Xdigf001Context context, ILogger<CharacterController> logger)
+        public CharacterController(Xdigf001Context context, ILogger<CharacterController> logger, Auth auth)
         {
             dbContext = context;
             this.logger = logger;
+            this.auth = auth;
         }
 
         private bool IsEquipable(ItemType itemType) => itemType switch
@@ -67,6 +69,9 @@ namespace MysticLegendsServer.Controllers
         [HttpPost("{characterName}/inventory-swap")]
         public async Task<ObjectResult> InventorySwap(string characterName, [FromBody] Dictionary<string, string> paramters)
         {
+            if (!await auth.ValidateAsync(Request.Headers, characterName))
+                return StatusCode(403, "Unauthorized");
+
             var itemToMove = int.Parse(paramters["itemId"]);
             var targetPosition = int.Parse(paramters["position"]);
             var accessToken = paramters["accessToken"];
