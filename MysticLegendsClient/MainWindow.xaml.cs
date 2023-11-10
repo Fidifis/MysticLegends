@@ -48,7 +48,7 @@ namespace MysticLegendsClient
                 return;
             }
 
-            if (await Authenticate())
+            if (await Authenticate(failFastGameState))
             {
                 EnterGame();
             }
@@ -86,8 +86,8 @@ namespace MysticLegendsClient
 
             try
             {
-                var refreshToken = await ApiCalls.AuthCall.LoginServerCallAsync(username.Text, password.Password);
-                var accessToken = await ApiCalls.AuthCall.TokenServerCallAsync(refreshToken);
+                var refreshToken = await ApiCalls.AuthCall.LoginServerCallAsync(username.Text, password.Password, gameState);
+                var accessToken = await ApiCalls.AuthCall.TokenServerCallAsync(refreshToken, gameState);
 
                 if (remember.IsChecked == true)
                 {
@@ -108,16 +108,16 @@ namespace MysticLegendsClient
             }
         }
 
-        private async Task<bool> Authenticate()
+        private async Task<bool> Authenticate(GameState gameState)
         {
-            var refreshToken = await GameState.Current.TokenStore.ReadRefreshTokenAsync();
+            var refreshToken = await gameState.TokenStore.ReadRefreshTokenAsync();
             if (refreshToken is null)
                 return false;
 
             try
             {
                 var accressToken = await ApiCalls.AuthCall.TokenServerCallAsync(refreshToken);
-                GameState.Current.TokenStore.AccessToken = accressToken;
+                gameState.TokenStore.AccessToken = accressToken;
                 return true;
             }
             catch (Exception) { }

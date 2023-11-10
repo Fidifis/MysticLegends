@@ -38,7 +38,7 @@ namespace MysticLegendsClient
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
-            client.Timeout = timeout ?? TimeSpan.FromSeconds(20);
+            client.Timeout = timeout ?? TimeSpan.FromSeconds(10);
         }
 
         private static Dictionary<string, string> AppendToken(IReadOnlyDictionary<string, string>? paramters)
