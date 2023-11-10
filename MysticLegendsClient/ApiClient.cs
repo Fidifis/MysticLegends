@@ -19,11 +19,17 @@ namespace MysticLegendsClient
 
         public async Task<bool> HealthCheckAsync()
         {
-            var status = await GetAsync<Dictionary<string, string>>("api/Health");
-            return status.Get("status") == "ok";
+            try
+            {
+                var status = await GetAsync<Dictionary<string, string>>("api/Health");
+                return status.Get("status") == "ok";
+            }
+            catch (Exception) { }
+
+            return false;
         }
 
-        public ApiClient(string address, TokenStore tokenStore)
+        public ApiClient(string address, TokenStore tokenStore, TimeSpan? timeout = null)
         {
             this.tokenStore = tokenStore;
 
@@ -31,6 +37,8 @@ namespace MysticLegendsClient
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
+
+            client.Timeout = timeout ?? TimeSpan.FromSeconds(20);
         }
 
         private static Dictionary<string, string> AppendToken(IReadOnlyDictionary<string, string>? paramters)

@@ -8,6 +8,8 @@ internal class GameState : IDisposable
 
     public GameEvents GameEvents { get; private init; } = new();
 
+    public const string OfficialServersUrl = "https://servers.mysticlegends.fidifis.com";
+
     public static void MakeGameStateCurrent(GameState gs)
     {
         ArgumentNullException.ThrowIfNull(gs);
@@ -15,12 +17,17 @@ internal class GameState : IDisposable
         Current = gs;
     }
 
-    public GameState() : this("http://localhost:5281")
+    public GameState() : this(OfficialServersUrl)
     { }
 
     public GameState(string serverAddress)
     {
         Connection = new(serverAddress, TokenStore);
+    }
+
+    public GameState(string serverAddress, TimeSpan HttpTimeout)
+    {
+        Connection = new(serverAddress, TokenStore, HttpTimeout);
     }
 
     public void Dispose()

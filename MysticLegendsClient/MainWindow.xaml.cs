@@ -9,10 +9,18 @@ namespace MysticLegendsClient
     /// </summary>
     public partial class MainWindow : Window
     {
+        private enum ServerConncetionType
+        {
+            OfficialServers,
+            Localhost,
+            Custom
+        }
+
         string[] SplashImages = { "/images/Graphics/LoginScreen.png", "/images/Graphics/LoginScreen2.png", "/images/Graphics/LoginScreen3.png" };
         public MainWindow()
         {
             InitializeComponent();
+            serverSelect.ItemsSource = Enum.GetValues(typeof (ServerConncetionType));
             ChangeSplashImage(ChooseRandom(SplashImages));
         }
 
@@ -31,9 +39,12 @@ namespace MysticLegendsClient
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!await GameState.Current.Connection.HealthCheckAsync())
+            using var failFastGameState = new GameState(GameState.OfficialServersUrl, TimeSpan.FromSeconds(3));
+
+            if (!await failFastGameState.Connection.HealthCheckAsync())
             {
-                MessageBox.Show("Can't connect to server", "Connection failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                //MessageBox.Show("Can't connect to server", "Connection failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                SwitchLoginInterface(true);
                 return;
             }
 
@@ -42,19 +53,21 @@ namespace MysticLegendsClient
                 EnterGame();
             }
 
-            remember.IsChecked = GameState.Current.TokenStore.GetRefreshToken() is not null;
-            // TODO: Fill username
+            remember.IsChecked = await failFastGameState.TokenStore.ReadRefreshTokenAsync() is not null;
+            username.Text = await failFastGameState.TokenStore.ReadUserNameAsync();
 
             SwitchLoginInterface(true);
         }
 
         private async void Login_Click(object sender, RoutedEventArgs e)
         {
-            if (!await GameState.Current.Connection.HealthCheckAsync())
+            var gameState = (ServerConncetionType)serverSelect.SelectedItem switch
             {
-                MessageBox.Show("Can't connect to server", "Connection failed", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+                ServerConncetionType.OfficialServers => new GameState(),
+                ServerConncetionType.Localhost => new GameState("http://localhost:5281"),
+                ServerConncetionType.Custom => new GameState(customServerTxt.Text),
+                _ => new GameState()
+            };
 
             if (username.Text == "" || password.Password == "")
             {
@@ -64,15 +77,27 @@ namespace MysticLegendsClient
 
             SwitchLoginInterface(false);
 
+            if (!await gameState.Connection.HealthCheckAsync())
+            {
+                MessageBox.Show("Can't connect to server", "Connection failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                SwitchLoginInterface(true);
+                return;
+            }
+
             try
             {
                 var refreshToken = await ApiCalls.AuthCall.LoginServerCallAsync(username.Text, password.Password);
                 var accessToken = await ApiCalls.AuthCall.TokenServerCallAsync(refreshToken);
 
                 if (remember.IsChecked == true)
-                    GameState.Current.TokenStore.SaveRefreshToken(refreshToken);
+                {
+                    await gameState.TokenStore.SaveRefreshToken(refreshToken);
+                    await gameState.TokenStore.SaveUsername(username.Text);
+                }
 
-                GameState.Current.TokenStore.AccessToken = accessToken;
+                gameState.TokenStore.AccessToken = accessToken;
+
+                GameState.MakeGameStateCurrent(gameState);
                 EnterGame();
             }
             catch (Exception)
@@ -85,7 +110,7 @@ namespace MysticLegendsClient
 
         private async Task<bool> Authenticate()
         {
-            var refreshToken = GameState.Current.TokenStore.GetRefreshToken();
+            var refreshToken = await GameState.Current.TokenStore.ReadRefreshTokenAsync();
             if (refreshToken is null)
                 return false;
 

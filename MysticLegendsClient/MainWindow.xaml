@@ -30,11 +30,7 @@
 
         <StackPanel Grid.Column="0" Margin="20" VerticalAlignment="Center">
             <StackPanel Margin="0 0 0 20">
-                <ComboBox x:Name="serverSelect" SelectedIndex="0" SelectionChanged="ServerSelect_SelectionChanged">
-                    <ComboBoxItem Content="Official server"/>
-                    <ComboBoxItem Content="localhost:3000"/>
-                    <ComboBoxItem Content="Custom"/>
-                </ComboBox>
+                <ComboBox x:Name="serverSelect" SelectedIndex="0" SelectionChanged="ServerSelect_SelectionChanged"/>
                 <StackPanel x:Name="customServerControls" Visibility="Collapsed">
                     <Label Content="IP or DNS"/>
                     <TextBox x:Name="customServerTxt" Height="25"/>
