@@ -53,8 +53,8 @@ namespace MysticLegendsClient
                 EnterGame();
             }
 
-            remember.IsChecked = await failFastGameState.TokenStore.ReadRefreshTokenAsync() is not null;
-            username.Text = await failFastGameState.TokenStore.ReadUserNameAsync();
+            remember.IsChecked = await failFastGameState.TokenStore.ReadRefreshTokenAsync(failFastGameState.Connection.Host) is not null;
+            username.Text = await failFastGameState.TokenStore.ReadUserNameAsync(failFastGameState.Connection.Host);
 
             SwitchLoginInterface(true);
         }
@@ -91,8 +91,8 @@ namespace MysticLegendsClient
 
                 if (remember.IsChecked == true)
                 {
-                    await gameState.TokenStore.SaveRefreshToken(refreshToken);
-                    await gameState.TokenStore.SaveUsername(username.Text);
+                    await gameState.TokenStore.SaveRefreshToken(refreshToken, gameState.Connection.Host);
+                    await gameState.TokenStore.SaveUsername(username.Text, gameState.Connection.Host);
                 }
 
                 gameState.TokenStore.AccessToken = accessToken;
@@ -110,7 +110,7 @@ namespace MysticLegendsClient
 
         private async Task<bool> Authenticate(GameState gameState)
         {
-            var refreshToken = await gameState.TokenStore.ReadRefreshTokenAsync();
+            var refreshToken = await gameState.TokenStore.ReadRefreshTokenAsync(gameState.Connection.Host);
             if (refreshToken is null)
                 return false;
 

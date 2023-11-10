@@ -17,6 +17,8 @@ namespace MysticLegendsClient
         private readonly TokenStore tokenStore;
         private readonly HttpClient client = new();
 
+        public string Host { get; private init; }
+
         public async Task<bool> HealthCheckAsync()
         {
             try
@@ -32,8 +34,9 @@ namespace MysticLegendsClient
         public ApiClient(string address, TokenStore tokenStore, TimeSpan? timeout = null)
         {
             this.tokenStore = tokenStore;
+            Host = address;
 
-            client.BaseAddress = new Uri(address);
+            client.BaseAddress = new Uri(Host);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));

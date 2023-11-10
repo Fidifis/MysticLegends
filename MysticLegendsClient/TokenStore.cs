@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using MysticLegendsShared.Utilities;
+using System.IO;
 using System.Text;
 using System.Text.Json;
 
@@ -21,9 +22,9 @@ namespace MysticLegendsClient
             StorePath = storePath;
         }
 
-        public async Task<string?> ReadRefreshTokenAsync()
+        public async Task<string?> ReadRefreshTokenAsync(string host)
         {
-            var data = await ReadJsonFileAsync(StorePath);
+            var data = await ReadFromJsonAsync(StorePath, host);
             if (data?.ContainsKey(refreshTokenString) == true)
             {
                 var tokenBytes = Convert.FromBase64String(data[refreshTokenString]);
@@ -32,9 +33,9 @@ namespace MysticLegendsClient
             return null;
         }
 
-        public async Task<string?> ReadUserNameAsync()
+        public async Task<string?> ReadUserNameAsync(string host)
         {
-            var data = await ReadJsonFileAsync(StorePath);
+            var data = await ReadFromJsonAsync(StorePath, host);
             if (data?.ContainsKey(usernameString) == true)
             {
                 return data[usernameString];
@@ -42,15 +43,16 @@ namespace MysticLegendsClient
             return null;
         }
 
-        public async Task SaveRefreshToken(string? token)
+        public async Task SaveRefreshToken(string? token, string host)
         {
             var dir = Path.GetDirectoryName(StorePath);
 
             EnsureSavePath(dir!);
 
-            var data = await ReadJsonFileAsync(StorePath) ?? new();
+            var data = await ReadFromJsonAsync(StorePath, host);
 
-            data.Remove(refreshTokenString);
+            data?.Remove(refreshTokenString);
+            data ??= new();
 
             if (token is not null)
             {
@@ -60,36 +62,48 @@ namespace MysticLegendsClient
                 data[refreshTokenString] = base64Token;
             }
 
-            var json = JsonSerializer.Serialize(data);
-            await File.WriteAllTextAsync(StorePath, json);
+            await WriteToJsonAsync(data, StorePath, host);
         }
 
-        public async Task SaveUsername(string? username)
+        public async Task SaveUsername(string? username, string host)
         {
             var dir = Path.GetDirectoryName(StorePath);
 
             EnsureSavePath(dir!);
 
-            var data = await ReadJsonFileAsync(StorePath) ?? new();
-
-            data.Remove(usernameString);
+            var data = await ReadFromJsonAsync(StorePath, host);
+            data?.Remove(usernameString);
+            data ??= new();
 
             if (username is not null)
             {
                 data[usernameString] = username;
             }
 
-            var json = JsonSerializer.Serialize(data);
-            await File.WriteAllTextAsync(StorePath, json);
+            await WriteToJsonAsync(data, StorePath, host);
         }
 
-        private async Task<Dictionary<string,string>?> ReadJsonFileAsync(string path)
+        private async Task<Dictionary<string,string>?> ReadFromJsonAsync(string path, string host)
         {
             if (!File.Exists(path))
                 return null;
 
             using var stream = File.OpenRead(path);
-            return await JsonSerializer.DeserializeAsync<Dictionary<string, string>>(stream);
+            var hostContext = await JsonSerializer.DeserializeAsync<Dictionary<string, Dictionary<string, string>>>(stream);
+            return hostContext?.Get(host);
+        }
+
+        private async Task WriteToJsonAsync(Dictionary<string, string>? data, string path, string host)
+        {
+            var hostContext = new Dictionary<string, Dictionary<string, string>>();
+
+            if (data is null)
+                hostContext.Remove(host);
+            else
+                hostContext[host] = data;
+
+            var json = JsonSerializer.Serialize(hostContext);
+            await File.WriteAllTextAsync(StorePath, json);
         }
 
         private void EnsureSavePath(string dir)
