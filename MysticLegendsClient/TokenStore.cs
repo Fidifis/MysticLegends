@@ -9,7 +9,7 @@ namespace MysticLegendsClient
     {
         public string? AccessToken { get; set; }
 
-        public readonly string StorePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Mystic Legends\tokens.json";
+        public readonly string StorePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Mystic Legends\tokens.json";
         private readonly Encoding encoding = Encoding.UTF8;
 
         private const string refreshTokenString = "refreshToken";
@@ -45,10 +45,6 @@ namespace MysticLegendsClient
 
         public async Task SaveRefreshToken(string? token, string host)
         {
-            var dir = Path.GetDirectoryName(StorePath);
-
-            EnsureSavePath(dir!);
-
             var data = await ReadFromJsonAsync(StorePath, host);
 
             data?.Remove(refreshTokenString);
@@ -67,10 +63,6 @@ namespace MysticLegendsClient
 
         public async Task SaveUsername(string? username, string host)
         {
-            var dir = Path.GetDirectoryName(StorePath);
-
-            EnsureSavePath(dir!);
-
             var data = await ReadFromJsonAsync(StorePath, host);
             data?.Remove(usernameString);
             data ??= new();
@@ -95,19 +87,35 @@ namespace MysticLegendsClient
 
         private async Task WriteToJsonAsync(Dictionary<string, string>? data, string path, string host)
         {
-            var hostContext = new Dictionary<string, Dictionary<string, string>>();
+            EnsureSavePath();
+
+            Dictionary<string, Dictionary<string, string>>? hostContext = null;
+            if (File.Exists(path))
+            {
+                using var stream = File.OpenRead(path);
+                hostContext = await JsonSerializer.DeserializeAsync<Dictionary<string, Dictionary<string, string>>>(stream);
+                stream.Close();
+            }
+
+            hostContext ??= new();
 
             if (data is null)
                 hostContext.Remove(host);
             else
                 hostContext[host] = data;
 
-            var json = JsonSerializer.Serialize(hostContext);
+            var jsonSerializerOptions = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+
+            var json = JsonSerializer.Serialize(hostContext, jsonSerializerOptions);
             await File.WriteAllTextAsync(StorePath, json);
         }
 
-        private void EnsureSavePath(string dir)
+        private void EnsureSavePath()
         {
+            var dir = Path.GetDirectoryName(StorePath);
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir!);
         }

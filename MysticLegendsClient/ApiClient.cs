@@ -14,7 +14,16 @@ namespace MysticLegendsClient
     {
         private bool disposed = false;
 
-        private readonly TokenStore tokenStore;
+        private string accessToken = "";
+        public string AccessToken { get => accessToken;
+            set
+            {
+                accessToken = value;
+                client.DefaultRequestHeaders.Remove("access-token");
+                client.DefaultRequestHeaders.Add("access-token", value);
+            }
+        }
+
         private readonly HttpClient client = new();
 
         public string Host { get; private init; }
@@ -31,9 +40,8 @@ namespace MysticLegendsClient
             return false;
         }
 
-        public ApiClient(string address, TokenStore tokenStore, TimeSpan? timeout = null)
+        public ApiClient(string address, TimeSpan? timeout = null)
         {
-            this.tokenStore = tokenStore;
             Host = address;
 
             client.BaseAddress = new Uri(Host);
@@ -44,31 +52,31 @@ namespace MysticLegendsClient
             client.Timeout = timeout ?? TimeSpan.FromSeconds(10);
         }
 
-        private static Dictionary<string, string> AppendToken(IReadOnlyDictionary<string, string>? paramters)
-        {
-            Dictionary<string, string> dict = paramters is not null ? new(paramters) : new();
-            dict["accessToken"] = "lol";
-            return dict;
-        }
+        //private static Dictionary<string, string> AppendToken(IReadOnlyDictionary<string, string>? paramters)
+        //{
+        //    Dictionary<string, string> dict = paramters is not null ? new(paramters) : new();
+        //    dict["accessToken"] = "lol";
+        //    return dict;
+        //}
 
         public async Task<T> GetAsync<T>(string path, IReadOnlyDictionary<string,string>? parameters = null)
         {
             ObjectDisposedException.ThrowIf(disposed, this);
 
-            parameters = AppendToken(parameters);
             path = path.TrimEnd('/');
             var combined = path;
 
             int i = 0;
-            foreach (var param in parameters)
-            {
-                combined += i++ == 0 ? "?" : "&";
-                combined += $"{param.Key}={param.Value}";
-            }
+            if (parameters is not null)
+                foreach (var param in parameters)
+                {
+                    combined += i++ == 0 ? "?" : "&";
+                    combined += $"{param.Key}={param.Value}";
+                }
 
             using var response = await client.GetAsync(combined);
             if (!response.IsSuccessStatusCode)
-                throw new NetworkException(await response.Content.ReadFromJsonAsync<string>() ?? "No parsable data in HTTP response");
+                throw new NetworkException(await response.Content.ReadAsStringAsync());
 
             return await response.Content.ReadFromJsonAsync<T?>() ?? throw new NullReferenceException();
         }
@@ -77,11 +85,9 @@ namespace MysticLegendsClient
         {
             ObjectDisposedException.ThrowIf(disposed, this);
 
-            parameters = AppendToken(parameters);
-
             using var response = await client.PostAsJsonAsync(path, parameters);
             if (!response.IsSuccessStatusCode)
-                throw new NetworkException(await response.Content.ReadFromJsonAsync<string>() ?? "No parsable data in HTTP response");
+                throw new NetworkException(await response.Content.ReadAsStringAsync());
 
             return await response.Content.ReadFromJsonAsync<T?>() ?? throw new NullReferenceException();
         }

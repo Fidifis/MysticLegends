@@ -7,13 +7,18 @@ internal static class NpcCall
 {
     public static async Task<List<InventoryItem>> GetOfferedItemsServerCallAsync(int npcId)
     {
-        return await GameState.Current.Connection.GetAsync<List<InventoryItem>>($"api/NpcShop/{npcId}/offered-items");
+        var parameters = new Dictionary<string, string>
+        {
+            ["characterName"] = "zmrdus"
+        };
+        return await GameState.Current.Connection.GetAsync<List<InventoryItem>>($"api/NpcShop/{npcId}/offered-items", parameters);
     }
 
     public static async Task<int> GetOfferedPriceServerCallAsync(int npcId, IReadOnlyCollection<InventoryItem> items)
     {
         var parameters = new Dictionary<string, string>
         {
+            ["characterName"] = "zmrdus",
             ["items"] = JsonSerializer.Serialize(items.Select(item => item.InvitemId))
         };
         return await GameState.Current.Connection.PostAsync<int>($"api/NpcShop/{npcId}/estimate-sell-price", parameters);
@@ -24,7 +29,7 @@ internal static class NpcCall
         var parameters = new Dictionary<string, string>
         {
             ["items"] = JsonSerializer.Serialize(items.Select(item => item.InvitemId)),
-            ["character_name"] = "zmrdus",
+            ["characterName"] = "zmrdus",
         };
         await ErrorCatcher.TryAsync(async () =>
         {
@@ -38,7 +43,7 @@ internal static class NpcCall
         var parameters = new Dictionary<string, string>
         {
             ["item"] = invitemId.ToString(),
-            ["character_name"] = "zmrdus",
+            ["characterName"] = "zmrdus",
         };
         if (position is not null)
             parameters["position"] = position.ToString()!;

@@ -1,5 +1,5 @@
 ﻿using MysticLegendsClient.CityWindows;
-using MysticLegendsShared.Models;
+using System;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -26,8 +26,7 @@ namespace MysticLegendsClient
 
         private static string ChooseRandom(string[] list)
         {
-            Random random = new();
-            int index = random.Next(list.Length);
+            int index = Random.Shared.Next(list.Length);
             return list[index];
         }
 
@@ -39,7 +38,13 @@ namespace MysticLegendsClient
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            using var failFastGameState = new GameState(GameState.OfficialServersUrl, TimeSpan.FromSeconds(3));
+            var customConnection = await GameState.Current.ConfigStore.ReadAsync("customConnectionAddress");
+            var connectionTypeString = await GameState.Current.ConfigStore.ReadAsync("connectionType") ?? ServerConncetionType.OfficialServers.ToString();
+            var connectionType = Enum.Parse<ServerConncetionType>(connectionTypeString);
+            var connectionUrl = ConnectionTypeToUrl(connectionType, customConnection);
+            serverSelect.SelectedItem = connectionType;
+
+            using var failFastGameState = new GameState(connectionUrl, TimeSpan.FromSeconds(3));
 
             if (!await failFastGameState.Connection.HealthCheckAsync())
             {
@@ -48,8 +53,10 @@ namespace MysticLegendsClient
                 return;
             }
 
-            if (await Authenticate(failFastGameState))
+            var gameState = new GameState(connectionUrl);
+            if (await Authenticate(gameState))
             {
+                GameState.MakeGameStateCurrent(gameState);
                 EnterGame();
             }
 
@@ -61,13 +68,8 @@ namespace MysticLegendsClient
 
         private async void Login_Click(object sender, RoutedEventArgs e)
         {
-            var gameState = (ServerConncetionType)serverSelect.SelectedItem switch
-            {
-                ServerConncetionType.OfficialServers => new GameState(),
-                ServerConncetionType.Localhost => new GameState("http://localhost:5281"),
-                ServerConncetionType.Custom => new GameState(customServerTxt.Text),
-                _ => new GameState()
-            };
+            var connectionType = (ServerConncetionType)serverSelect.SelectedItem;
+            var gameState = new GameState(ConnectionTypeToUrl(connectionType));
 
             if (username.Text == "" || password.Password == "")
             {
@@ -95,7 +97,9 @@ namespace MysticLegendsClient
                     await gameState.TokenStore.SaveUsername(username.Text, gameState.Connection.Host);
                 }
 
-                gameState.TokenStore.AccessToken = accessToken;
+                gameState.ChangeAccessToken(accessToken);
+                await gameState.ConfigStore.WriteAsync("connectionType", connectionType.ToString());
+                await gameState.ConfigStore.WriteAsync("customConnectionAddress", customServerTxt.Text == "" ? null : customServerTxt.Text);
 
                 GameState.MakeGameStateCurrent(gameState);
                 EnterGame();
@@ -116,8 +120,8 @@ namespace MysticLegendsClient
 
             try
             {
-                var accressToken = await ApiCalls.AuthCall.TokenServerCallAsync(refreshToken);
-                gameState.TokenStore.AccessToken = accressToken;
+                var accessToken = await ApiCalls.AuthCall.TokenServerCallAsync(refreshToken, gameState);
+                gameState.ChangeAccessToken(accessToken);
                 return true;
             }
             catch (Exception) { }
@@ -144,6 +148,17 @@ namespace MysticLegendsClient
             loginButton.IsEnabled = isEnabled;
             registerButton.IsEnabled = isEnabled;
             loggingInLabel.Visibility = isEnabled ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private string ConnectionTypeToUrl(ServerConncetionType connectionType, string? customSubstitute = null)
+        {
+            return connectionType switch
+            {
+                ServerConncetionType.OfficialServers => GameState.OfficialServersUrl,
+                ServerConncetionType.Localhost => "http://localhost:5281",
+                ServerConncetionType.Custom => customSubstitute ?? customServerTxt.Text,
+                _ => ""
+            };
         }
     }
 }

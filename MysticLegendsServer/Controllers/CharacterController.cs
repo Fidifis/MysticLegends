@@ -52,17 +52,23 @@ namespace MysticLegendsServer.Controllers
 
         // GET api/<PlayerController>/5
         [HttpGet("{characterName}")]
-        public async Task<Character> GetCharacter(string characterName, string accessToken)
+        public async Task<ObjectResult> GetCharacter(string characterName)
         {
-            return await RequestCharacterItems(characterName);
+            if (!await auth.ValidateAsync(Request.Headers, characterName))
+                return StatusCode(403, "Unauthorized");
+
+            return Ok(await RequestCharacterItems(characterName));
         }
 
         [HttpGet("{characterName}/currency")]
-        public async Task<int> GetCharacterCurrency(string characterName, string accessToken)
+        public async Task<ObjectResult> GetCharacterCurrency(string characterName)
         {
-            return await dbContext.Characters
+            if (!await auth.ValidateAsync(Request.Headers, characterName))
+                return StatusCode(403, "Unauthorized");
+
+            return Ok(await dbContext.Characters
                 .Where(character => character.CharacterName == characterName)
-                .Select(character => character.CurrencyGold).SingleAsync();
+                .Select(character => character.CurrencyGold).SingleAsync());
         }
 
         // POST api/<PlayerController>
@@ -74,7 +80,6 @@ namespace MysticLegendsServer.Controllers
 
             var itemToMove = int.Parse(paramters["itemId"]);
             var targetPosition = int.Parse(paramters["position"]);
-            var accessToken = paramters["accessToken"];
             var inventory = await dbContext.CharacterInventories
                 .Include(inventory => inventory.InventoryItems)
                     .ThenInclude(item => item.Item)
@@ -114,6 +119,9 @@ namespace MysticLegendsServer.Controllers
         [HttpPost("{characterName}/equip-item")]
         public async Task<ObjectResult> EquipItem(string characterName, [FromBody] Dictionary<string, string> paramters)
         {
+            if (!await auth.ValidateAsync(Request.Headers, characterName))
+                return StatusCode(403, "Unauthorized");
+
             var character = await RequestCharacterItems(characterName);
             var inventoryItems = (List<InventoryItem>)character.CharacterInventory!.InventoryItems;
             var equipedItems = (List<InventoryItem>)character.InventoryItems;
@@ -150,6 +158,9 @@ namespace MysticLegendsServer.Controllers
         [HttpPost("{characterName}/unequip-item")]
         public async Task<ObjectResult> UnequipItem(string characterName, [FromBody] Dictionary<string, string> paramters)
         {
+            if (!await auth.ValidateAsync(Request.Headers, characterName))
+                return StatusCode(403, "Unauthorized");
+
             var character = await RequestCharacterItems(characterName);
             var inventoryItems = (List<InventoryItem>)character.CharacterInventory!.InventoryItems;
             var equipedItems = (List<InventoryItem>)character.InventoryItems;
@@ -190,6 +201,9 @@ namespace MysticLegendsServer.Controllers
         [HttpPost("{characterName}/swap-equip-item")]
         public async Task<ObjectResult> SwapEquipItem(string characterName, [FromBody] Dictionary<string, string> paramters)
         {
+            if (!await auth.ValidateAsync(Request.Headers, characterName))
+                return StatusCode(403, "Unauthorized");
+
             var character = await RequestCharacterItems(characterName);
             var inventoryItems = (List<InventoryItem>)character.CharacterInventory!.InventoryItems;
             var equipedItems = (List<InventoryItem>)character.InventoryItems;

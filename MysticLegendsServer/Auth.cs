@@ -28,10 +28,10 @@ public class Auth: IDisposable
 
     public async Task<bool> ValidateAsync(IHeaderDictionary headers, string characterName)
     {
-        if (!headers.ContainsKey("access_token"))
+        if (!headers.ContainsKey("access-token"))
             return false;
 
-        var accessToken = headers["access_token"].FirstOrDefault();
+        var accessToken = headers["access-token"].FirstOrDefault();
 
         if (accessToken is null)
             return false;
@@ -62,7 +62,7 @@ public class Auth: IDisposable
     {
         ObjectDisposedException.ThrowIf(disposed, this);
 
-        var userTask = dbContext.Users.SingleAsync();
+        var userTask = dbContext.Users.SingleAsync(user => user.Username == username);
         var passwordHash = GetPasswordHash(password);
         var user = await userTask;
 

@@ -11,12 +11,14 @@ namespace MysticLegendsServer.Controllers
     public class NpcShopController : Controller
     {
         private Xdigf001Context dbContext;
-        ILogger<CharacterController> logger;
+        private ILogger<CharacterController> logger;
+        private Auth auth;
 
-        public NpcShopController(Xdigf001Context context, ILogger<CharacterController> logger)
+        public NpcShopController(Xdigf001Context context, ILogger<CharacterController> logger, Auth auth)
         {
             dbContext = context;
             this.logger = logger;
+            this.auth = auth;
         }
 
         private static int EstimateSellPrice(int npcId, IReadOnlyCollection<int> items)
@@ -25,8 +27,11 @@ namespace MysticLegendsServer.Controllers
         }
 
         [HttpGet("{npcId}/offered-items")]
-        public async Task<ObjectResult> GetOfferedItems(int npcId)
+        public async Task<ObjectResult> GetOfferedItems(int npcId, string characterName)
         {
+            if (!await auth.ValidateAsync(Request.Headers, characterName))
+                return StatusCode(403, "Unauthorized");
+
             var reslut = await dbContext.InventoryItems
                 .Where(item => item.NpcId == npcId)
                 .Include(invItem => invItem.Price)
@@ -38,8 +43,13 @@ namespace MysticLegendsServer.Controllers
         }
 
         [HttpPost("{npcId}/estimate-sell-price")]
-        public ObjectResult EstimateSellPrice(int npcId, [FromBody] Dictionary<string, string> paramters)
+        public async Task<ObjectResult> EstimateSellPrice(int npcId, [FromBody] Dictionary<string, string> paramters)
         {
+            var characterName = paramters["characterName"];
+
+            if (!await auth.ValidateAsync(Request.Headers, characterName))
+                return StatusCode(403, "Unauthorized");
+
             var jsonString = paramters["items"];
             var items = JsonSerializer.Deserialize<List<int>>(jsonString)!;
 
@@ -49,8 +59,12 @@ namespace MysticLegendsServer.Controllers
         [HttpPost("{npcId}/sell-items")]
         public async Task<ObjectResult> SellItems(int npcId, [FromBody] Dictionary<string, string> paramters)
         {
+            var characterString = paramters["characterName"];
+
+            if (!await auth.ValidateAsync(Request.Headers, characterString))
+                return StatusCode(403, "Unauthorized");
+
             var jsonString = paramters["items"];
-            var characterString = paramters["character_name"];
 
             var items = JsonSerializer.Deserialize<List<int>>(jsonString)!;
             var price = EstimateSellPrice(npcId, items);
@@ -83,8 +97,12 @@ namespace MysticLegendsServer.Controllers
         [HttpPost("{npcId}/buy-item")]
         public async Task<ObjectResult> BuyItem(int npcId, [FromBody] Dictionary<string, string> paramters)
         {
+            var characterString = paramters["characterName"];
+
+            if (!await auth.ValidateAsync(Request.Headers, characterString))
+                return StatusCode(403, "Unauthorized");
+
             var invitemId = int.Parse(paramters["item"]);
-            var characterString = paramters["character_name"];
             var position = paramters.Get("position");
 
             var itemToBuy = await dbContext.InventoryItems

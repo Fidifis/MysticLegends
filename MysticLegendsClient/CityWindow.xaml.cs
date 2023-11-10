@@ -85,9 +85,9 @@ namespace MysticLegendsClient
             currencyLabel.Content = e.Value;
         }
 
-        private void RefreshCurrency()
+        private async void RefreshCurrency()
         {
-            ErrorCatcher.Try(async () =>
+            await ErrorCatcher.TryAsync(async () =>
             {
                 var currency = await ApiCalls.CharacterCall.GetCharacterCurrencyCallAsync("zmrdus");
                 CurrencyChanged(this, new(currency));
