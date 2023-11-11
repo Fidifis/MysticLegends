@@ -383,7 +383,7 @@
           "name": "currency_gold",
           "primary": false,
           "unique": false,
-          "nullable": false,
+          "nullable": true,
           "type": "integer"
         }
       ],
@@ -411,13 +411,20 @@
           "unique": false,
           "nullable": true,
           "type": "integer"
+        },
+        {
+          "name": "quantity_per_purchase",
+          "primary": false,
+          "unique": false,
+          "nullable": true,
+          "type": "integer"
         }
       ],
       "transform": {
         "x": 247.85713958740234,
         "y": 669.7187347412109,
-        "width": 149,
-        "height": 79
+        "width": 198.42856979370117,
+        "height": 90.28125
       }
     },
     {
@@ -1338,18 +1345,18 @@
         "name": null,
         "transform": {
           "anchor": {
-            "x": 396.85713958740234,
+            "x": 446.2857093811035,
             "y": 709.2187347412109,
             "edge": 1
           },
           "points": [
             {
-              "x": 477.85713958740234,
+              "x": 509.2857093811035,
               "y": 709.2187347412109
             },
             {
-              "x": 477.85713958740234,
-              "y": 785.7187347412109
+              "x": 509.2857093811035,
+              "y": 742.9999847412109
             }
           ],
           "manual": true
@@ -1370,11 +1377,15 @@
           },
           "points": [
             {
-              "x": 477.85713958740234,
+              "x": 509.2857093811035,
               "y": 785.7187347412109
+            },
+            {
+              "x": 509.2857093811035,
+              "y": 742.9999847412109
             }
           ],
-          "manual": false
+          "manual": true
         }
       }
     ],

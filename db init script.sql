@@ -124,14 +124,15 @@ CREATE TABLE npc (
     npc_id SERIAL NOT NULL,
     city_name VARCHAR(32) NOT NULL,
     npc_type INTEGER NOT NULL,
-    currency_gold INTEGER NOT NULL
+    currency_gold INTEGER
 );
 ALTER TABLE npc ADD CONSTRAINT pk_npc PRIMARY KEY (npc_id);
 
 CREATE TABLE price (
     invitem_id INTEGER NOT NULL,
     price_gold INTEGER NOT NULL,
-    bid_gold INTEGER
+    bid_gold INTEGER,
+    quantity_per_purchase INTEGER
 );
 ALTER TABLE price ADD CONSTRAINT pk_price PRIMARY KEY (invitem_id);
 
@@ -228,6 +229,9 @@ ALTER TABLE trade_market ADD CONSTRAINT fk_trade_market_inventory_item FOREIGN K
 ALTER TABLE inventory_item ADD CONSTRAINT xc_inventory_item_city_name_cha CHECK ((city_name IS NOT NULL AND character_name IS NULL AND character_inventory_character_n IS NULL AND npc_id IS NULL) OR (city_name IS NULL AND character_name IS NOT NULL AND character_inventory_character_n IS NULL AND npc_id IS NULL) OR (city_name IS NULL AND character_name IS NULL AND character_inventory_character_n IS NOT NULL AND npc_id IS NULL) OR (city_name IS NULL AND character_name IS NULL AND character_inventory_character_n IS NULL AND npc_id IS NOT NULL));
 
 
+-- BEGINING OF ISERTIONS --
+
+
 -- Insert data into the "users" table
 INSERT INTO "users" (username, password_hash) VALUES ('demo', 'fe01ce2a7fbac8fafaed7c982a04e229');
 
@@ -270,16 +274,16 @@ VALUES (1, 'zmrdus', NULL, NULL, 1, 1, 1, 0),
        (3, 'zmrdus', NULL, NULL, 1, 1, 1, 2),
        (4, NULL, NULL, 1, 1, 1, 1, 3),
        (5, NULL, NULL, 1, 2, 1, 1, 4),
-       (6, NULL, NULL, 1, 3, NULL, 5, 5),
-       (7, NULL, NULL, 1, 3, NULL, 6, 0),
-       (8, NULL, NULL, 1, 3, NULL, 5, 0);
+       (6, NULL, NULL, 1, 3, NULL, 100, 5),
+       (7, NULL, NULL, 1, 3, NULL, 200, 0),
+       (8, NULL, NULL, 1, 3, NULL, 150, 0);
 
-INSERT INTO price (invitem_id, price_gold)
-VALUES (4, 200),
-	(5, 100),
-	(6, 50),
-       (7, 52),
-       (8, 50);
+INSERT INTO price (invitem_id, price_gold, quantity_per_purchase)
+VALUES (4, 200, 1),
+	   (5, 100, 1),
+	   (6, 50, 5),
+       (7, 52, 6),
+       (8, 50, 5);
 
 -- Insert data into the "quest" table
 INSERT INTO quest (quest_id, npc_id, name, description, is_repeable, is_offered)
