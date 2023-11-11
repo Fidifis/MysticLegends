@@ -1,4 +1,5 @@
 ﻿using MysticLegendsClient.CityWindows;
+using MysticLegendsShared.Utilities;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -8,124 +9,37 @@ namespace MysticLegendsClient
     /// </summary>
     public partial class MainWindow : Window
     {
-        private enum ServerConncetionType
-        {
-            OfficialServers,
-            Localhost,
-            Custom
-        }
-
-        string[] SplashImages = { "/images/Graphics/LoginScreen.png", "/images/Graphics/LoginScreen2.png", "/images/Graphics/LoginScreen3.png" };
         public MainWindow()
         {
             InitializeComponent();
-            serverSelect.ItemsSource = Enum.GetValues(typeof (ServerConncetionType));
-            ChangeSplashImage(ChooseRandom(SplashImages));
         }
-
-        private static string ChooseRandom(string[] list)
-        {
-            int index = Random.Shared.Next(list.Length);
-            return list[index];
-        }
-
-        private void ChangeSplashImage(string resource)
-        {
-            splashImage.Source = BitmapTools.ImageFromResource(resource);
-        }
-
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             var customConnection = await GameState.Current.ConfigStore.ReadAsync("customConnectionAddress");
-            var connectionTypeString = await GameState.Current.ConfigStore.ReadAsync("connectionType") ?? ServerConncetionType.OfficialServers.ToString();
-            var connectionType = Enum.Parse<ServerConncetionType>(connectionTypeString);
-            var connectionUrl = ConnectionTypeToUrl(connectionType, customConnection);
-            serverSelect.SelectedItem = connectionType;
+            var connectionTypeString = await GameState.Current.ConfigStore.ReadAsync("connectionType") ?? ServerConnector.ServerConncetionType.OfficialServers.ToString();
+            var connectionType = Enum.Parse<ServerConnector.ServerConncetionType>(connectionTypeString);
+            var connectionUrl = ServerConnector.ConnectionTypeToUrl(connectionType, customConnection);
 
             using var failFastGameState = new GameState(connectionUrl, TimeSpan.FromSeconds(3));
+            var gameState = new GameState(connectionUrl);
 
             if (!await failFastGameState.Connection.HealthCheckAsync())
             {
-                //MessageBox.Show("Can't connect to server", "Connection failed", MessageBoxButton.OK, MessageBoxImage.Error);
-                SwitchLoginInterface(true);
+                MessageBox.Show("Can't connect to server. Try to login again", "Connection failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                EnterLogin(gameState);
                 return;
             }
 
-            var gameState = new GameState(connectionUrl);
-            if (await Authenticate(gameState))
+            GameState.MakeGameStateCurrent(gameState);
+            if (await ServerConnector.Authenticate(gameState))
             {
-                GameState.MakeGameStateCurrent(gameState);
-                EnterGame();
+                EnterCharacterSelect(gameState);
             }
-
-            remember.IsChecked = await failFastGameState.TokenStore.ReadRefreshTokenAsync(failFastGameState.Connection.Host) is not null;
-            username.Text = await failFastGameState.TokenStore.ReadUserNameAsync(failFastGameState.Connection.Host);
-
-            SwitchLoginInterface(true);
-        }
-
-        private async void Login_Click(object sender, RoutedEventArgs e)
-        {
-            var connectionType = (ServerConncetionType)serverSelect.SelectedItem;
-            var gameState = new GameState(ConnectionTypeToUrl(connectionType));
-
-            if (username.Text == "" || password.Password == "")
+            else
             {
-                MessageBox.Show("Please enter username and password");
-                return;
+                EnterLogin(gameState);
             }
-
-            SwitchLoginInterface(false);
-
-            if (!await gameState.Connection.HealthCheckAsync())
-            {
-                MessageBox.Show("Can't connect to server", "Connection failed", MessageBoxButton.OK, MessageBoxImage.Error);
-                SwitchLoginInterface(true);
-                return;
-            }
-
-            try
-            {
-                var refreshToken = await ApiCalls.AuthCall.LoginServerCallAsync(username.Text, password.Password, gameState);
-                var accessToken = await ApiCalls.AuthCall.TokenServerCallAsync(refreshToken, gameState);
-
-                if (remember.IsChecked == true)
-                {
-                    await gameState.TokenStore.SaveRefreshToken(refreshToken, gameState.Connection.Host);
-                    await gameState.TokenStore.SaveUsername(username.Text, gameState.Connection.Host);
-                }
-
-                gameState.ChangeAccessToken(accessToken);
-                await gameState.ConfigStore.WriteAsync("connectionType", connectionType.ToString());
-                await gameState.ConfigStore.WriteAsync("customConnectionAddress", customServerTxt.Text == "" ? null : customServerTxt.Text);
-
-                GameState.MakeGameStateCurrent(gameState);
-                EnterGame();
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Failed to login");
-                SwitchLoginInterface(true);
-                return;
-            }
-        }
-
-        private async Task<bool> Authenticate(GameState gameState)
-        {
-            var refreshToken = await gameState.TokenStore.ReadRefreshTokenAsync(gameState.Connection.Host);
-            if (refreshToken is null)
-                return false;
-
-            try
-            {
-                var accessToken = await ApiCalls.AuthCall.TokenServerCallAsync(refreshToken, gameState);
-                gameState.ChangeAccessToken(accessToken);
-                return true;
-            }
-            catch (Exception) { }
-            
-            return false;
         }
 
         private void EnterGame()
@@ -134,30 +48,37 @@ namespace MysticLegendsClient
             Close();
         }
 
-        private void ServerSelect_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void EnterLogin(GameState gameState)
         {
-            if (customServerControls is null) return;
-            customServerControls.Visibility =
-                serverSelect.SelectedIndex == serverSelect.Items.Count - 1 ?
-                Visibility.Visible : Visibility.Collapsed;
+            Hide();
+            var loginWindow = new LoginWindow();
+            if (loginWindow.ShowDialog() == true)
+                EnterCharacterSelect(gameState);
+            Close();
         }
 
-        private void SwitchLoginInterface(bool isEnabled)
+        private async void EnterCharacterSelect(GameState gameState)
         {
-            loginButton.IsEnabled = isEnabled;
-            registerButton.IsEnabled = isEnabled;
-            loggingInLabel.Visibility = isEnabled ? Visibility.Collapsed : Visibility.Visible;
-        }
-
-        private string ConnectionTypeToUrl(ServerConncetionType connectionType, string? customSubstitute = null)
-        {
-            return connectionType switch
+            IEnumerable<CharacterSelect.CharacterDisplayData>? data = null;
+            await ErrorCatcher.TryAsync(async () =>
             {
-                ServerConncetionType.OfficialServers => GameState.OfficialServersUrl,
-                ServerConncetionType.Localhost => "http://localhost:5281",
-                ServerConncetionType.Custom => customSubstitute ?? customServerTxt.Text,
-                _ => ""
-            };
+                data = (await ApiCalls.UserCall.GetUserCharactersServerCallAsync(gameState.Username))
+                    .Select(character => new CharacterSelect.CharacterDisplayData(character.CharacterName, character.Level, (CharacterClass)character.CharacterClass));
+            });
+            if (data is null)
+            {
+                EnterLogin(gameState);
+                return;
+            }
+
+            Hide();
+            var charSelect = new CharacterSelect(gameState.Username, data);
+            if (charSelect.ShowDialog() == true)
+            {
+                gameState.CharacterName = charSelect.ResultCharacterName!;
+                EnterGame();
+            }
+            Close();
         }
     }
 }

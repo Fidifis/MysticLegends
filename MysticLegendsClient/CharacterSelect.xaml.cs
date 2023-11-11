@@ -15,23 +15,21 @@ namespace MysticLegendsClient
             public string Name { get; set; }
             public int Level { get; set; }
             public CharacterClass CharacterClass { get; set; }
-            public string Image { get; set; }
 
-            public CharacterDisplayData(string name, int level, CharacterClass characterClass, string image)
+            public CharacterDisplayData(string name, int level, CharacterClass characterClass)
             {
                 Name = name;
                 Level = level;
                 CharacterClass = characterClass;
-                Image = image;
             }
         }
 
         public string? ResultCharacterName { get; private set; }
         private bool createMode = false;
         private string userWhenCreating;
-        private IReadOnlyCollection<CharacterDisplayData> charactersToFill;
+        private IEnumerable<CharacterDisplayData> charactersToFill;
 
-        public CharacterSelect(string userWhenCreating, IReadOnlyCollection<CharacterDisplayData> characters)
+        public CharacterSelect(string userWhenCreating, IEnumerable<CharacterDisplayData> characters)
         {
             InitializeComponent();
             this.userWhenCreating = userWhenCreating;
@@ -39,14 +37,14 @@ namespace MysticLegendsClient
             FillView(characters, true);
         }
 
-        private void FillView(IReadOnlyCollection<CharacterDisplayData> characters, bool detailed)
+        private void FillView(IEnumerable<CharacterDisplayData> characters, bool detailed)
         {
             slotsPanel.Children.Clear();
             foreach (var character in characters)
             {
                 var characterBanner = new CharacterBanner()
                 {
-                    BannerImage = BitmapTools.ImageFromResource(character.Image),
+                    BannerImage = BitmapTools.ImageFromResource(GetImageForClass(character.CharacterClass)),
                     CharacterName = character.Name,
                     CharClass = character.CharacterClass,
                     Level = character.Level,
@@ -67,11 +65,16 @@ namespace MysticLegendsClient
                     if (character is not null)
                     {
                         ResultCharacterName = character;
+                        DialogResult = true;
                         Close();
-                    }    
+                    }
                 }
                 else
+                {
                     ResultCharacterName = banner.CharacterName;
+                    DialogResult = true;
+                    Close();
+                }
             }
         }
 
@@ -96,7 +99,6 @@ namespace MysticLegendsClient
                 {
                     Name = clas.ToString(),
                     CharacterClass = clas,
-                    Image = GetImageForClass(clas)
                 }).ToList(),
                 false);
         }

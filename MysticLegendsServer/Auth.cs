@@ -68,7 +68,7 @@ public class Auth: IDisposable
         if (accessToken is null)
             return false;
 
-        return await ValidateAsync(accessToken, username);
+        return await ValidateUserAsync(accessToken, username);
     }
 
     public async Task<bool> ValidateUserAsync(string accessToken, string username)

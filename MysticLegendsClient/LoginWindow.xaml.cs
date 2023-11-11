@@ -8,18 +8,11 @@ namespace MysticLegendsClient
     /// </summary>
     public partial class LoginWindow : Window
     {
-        private enum ServerConncetionType
-        {
-            OfficialServers,
-            Localhost,
-            Custom
-        }
-
         string[] SplashImages = { "/images/Graphics/LoginScreen.png", "/images/Graphics/LoginScreen2.png", "/images/Graphics/LoginScreen3.png" };
         public LoginWindow()
         {
             InitializeComponent();
-            serverSelect.ItemsSource = Enum.GetValues(typeof(ServerConncetionType));
+            serverSelect.ItemsSource = Enum.GetValues(typeof(ServerConnector.ServerConncetionType));
             ChangeSplashImage(ChooseRandom(SplashImages));
         }
 
@@ -37,38 +30,20 @@ namespace MysticLegendsClient
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            var customConnection = await GameState.Current.ConfigStore.ReadAsync("customConnectionAddress");
-            var connectionTypeString = await GameState.Current.ConfigStore.ReadAsync("connectionType") ?? ServerConncetionType.OfficialServers.ToString();
-            var connectionType = Enum.Parse<ServerConncetionType>(connectionTypeString);
-            var connectionUrl = ConnectionTypeToUrl(connectionType, customConnection);
+            var connectionTypeString = await GameState.Current.ConfigStore.ReadAsync("connectionType") ?? ServerConnector.ServerConncetionType.OfficialServers.ToString();
+            var connectionType = Enum.Parse<ServerConnector.ServerConncetionType>(connectionTypeString);
             serverSelect.SelectedItem = connectionType;
 
-            using var failFastGameState = new GameState(connectionUrl, TimeSpan.FromSeconds(3));
-
-            if (!await failFastGameState.Connection.HealthCheckAsync())
-            {
-                //MessageBox.Show("Can't connect to server", "Connection failed", MessageBoxButton.OK, MessageBoxImage.Error);
-                SwitchLoginInterface(true);
-                return;
-            }
-
-            var gameState = new GameState(connectionUrl);
-            if (await Authenticate(gameState))
-            {
-                GameState.MakeGameStateCurrent(gameState);
-                EnterGame();
-            }
-
-            remember.IsChecked = await failFastGameState.TokenStore.ReadRefreshTokenAsync(failFastGameState.Connection.Host) is not null;
-            username.Text = await failFastGameState.TokenStore.ReadUserNameAsync(failFastGameState.Connection.Host);
+            remember.IsChecked = await GameState.Current.TokenStore.ReadRefreshTokenAsync(GameState.Current.Connection.Host) is not null;
+            username.Text = await GameState.Current.TokenStore.ReadUserNameAsync(GameState.Current.Connection.Host);
 
             SwitchLoginInterface(true);
         }
 
         private async void Login_Click(object sender, RoutedEventArgs e)
         {
-            var connectionType = (ServerConncetionType)serverSelect.SelectedItem;
-            var gameState = new GameState(ConnectionTypeToUrl(connectionType));
+            var connectionType = (ServerConnector.ServerConncetionType)serverSelect.SelectedItem;
+            var gameState = new GameState(ServerConnector.ConnectionTypeToUrl(connectionType));
 
             if (username.Text == "" || password.Password == "")
             {
@@ -87,21 +62,14 @@ namespace MysticLegendsClient
 
             try
             {
-                var refreshToken = await ApiCalls.AuthCall.LoginServerCallAsync(username.Text, password.Password, gameState);
-                var accessToken = await ApiCalls.AuthCall.TokenServerCallAsync(refreshToken, gameState);
+                await ServerConnector.Login(username.Text, password.Password, remember.IsChecked == true, gameState);
 
-                if (remember.IsChecked == true)
-                {
-                    await gameState.TokenStore.SaveRefreshToken(refreshToken, gameState.Connection.Host);
-                    await gameState.TokenStore.SaveUsername(username.Text, gameState.Connection.Host);
-                }
-
-                gameState.ChangeAccessToken(accessToken);
                 await gameState.ConfigStore.WriteAsync("connectionType", connectionType.ToString());
                 await gameState.ConfigStore.WriteAsync("customConnectionAddress", customServerTxt.Text == "" ? null : customServerTxt.Text);
 
                 GameState.MakeGameStateCurrent(gameState);
-                EnterGame();
+                DialogResult = true;
+                Close();
             }
             catch (Exception)
             {
@@ -109,29 +77,6 @@ namespace MysticLegendsClient
                 SwitchLoginInterface(true);
                 return;
             }
-        }
-
-        private async Task<bool> Authenticate(GameState gameState)
-        {
-            var refreshToken = await gameState.TokenStore.ReadRefreshTokenAsync(gameState.Connection.Host);
-            if (refreshToken is null)
-                return false;
-
-            try
-            {
-                var accessToken = await ApiCalls.AuthCall.TokenServerCallAsync(refreshToken, gameState);
-                gameState.ChangeAccessToken(accessToken);
-                return true;
-            }
-            catch (Exception) { }
-
-            return false;
-        }
-
-        private void EnterGame()
-        {
-            new AyreimCity().Show();
-            Close();
         }
 
         private void ServerSelect_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -147,17 +92,6 @@ namespace MysticLegendsClient
             loginButton.IsEnabled = isEnabled;
             registerButton.IsEnabled = isEnabled;
             loggingInLabel.Visibility = isEnabled ? Visibility.Collapsed : Visibility.Visible;
-        }
-
-        private string ConnectionTypeToUrl(ServerConncetionType connectionType, string? customSubstitute = null)
-        {
-            return connectionType switch
-            {
-                ServerConncetionType.OfficialServers => GameState.OfficialServersUrl,
-                ServerConncetionType.Localhost => "http://localhost:5281",
-                ServerConncetionType.Custom => customSubstitute ?? customServerTxt.Text,
-                _ => ""
-            };
         }
     }
 }

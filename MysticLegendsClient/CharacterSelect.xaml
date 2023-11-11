@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MysticLegendsClient"
         mc:Ignorable="d"
-        Loaded="Window_Loaded"
         Title="CharacterSelect" Height="450" Width="800">
     <Grid>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
