@@ -58,6 +58,37 @@ public class Auth: IDisposable
         return trueToken == accessToken;
     }
 
+    public async Task<bool> ValidateUserAsync(IHeaderDictionary headers, string username)
+    {
+        if (!headers.ContainsKey("access-token"))
+            return false;
+
+        var accessToken = headers["access-token"].FirstOrDefault();
+
+        if (accessToken is null)
+            return false;
+
+        return await ValidateAsync(accessToken, username);
+    }
+
+    public async Task<bool> ValidateUserAsync(string accessToken, string username)
+    {
+        ObjectDisposedException.ThrowIf(disposed, this);
+
+        var user = await dbContext.Users
+            .Where(user => user.Username == username)
+            .Include(user => user.AccessToken)
+            .SingleAsync();
+
+        var dbAccessToken = user.AccessToken;
+        if (dbAccessToken is null || dbAccessToken.Expiration < DateTime.Now)
+            return false;
+
+        var trueToken = dbAccessToken.AccessToken1;
+
+        return trueToken == accessToken;
+    }
+
     public async Task<string?> IssueRefreshToken(string username, string password)
     {
         ObjectDisposedException.ThrowIf(disposed, this);

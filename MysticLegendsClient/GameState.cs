@@ -11,6 +11,9 @@ internal class GameState : IDisposable
 
     public const string OfficialServersUrl = "https://servers.mysticlegends.fidifis.com";
 
+    public string Username { get; set; } = "";
+    public string CharacterName { get; set; } = "";
+
     public static void MakeGameStateCurrent(GameState gs)
     {
         ArgumentNullException.ThrowIfNull(gs);

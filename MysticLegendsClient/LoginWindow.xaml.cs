@@ -6,7 +6,7 @@ namespace MysticLegendsClient
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class LoginWindow : Window
     {
         private enum ServerConncetionType
         {
@@ -16,10 +16,10 @@ namespace MysticLegendsClient
         }
 
         string[] SplashImages = { "/images/Graphics/LoginScreen.png", "/images/Graphics/LoginScreen2.png", "/images/Graphics/LoginScreen3.png" };
-        public MainWindow()
+        public LoginWindow()
         {
             InitializeComponent();
-            serverSelect.ItemsSource = Enum.GetValues(typeof (ServerConncetionType));
+            serverSelect.ItemsSource = Enum.GetValues(typeof(ServerConncetionType));
             ChangeSplashImage(ChooseRandom(SplashImages));
         }
 
@@ -124,7 +124,7 @@ namespace MysticLegendsClient
                 return true;
             }
             catch (Exception) { }
-            
+
             return false;
         }
 
