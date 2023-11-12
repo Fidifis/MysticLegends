@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MysticLegendsServer.Models;
+using MysticLegendsShared.Models;
 using MysticLegendsShared.Utilities;
+using System.Reflection.Emit;
+using System.Security.Principal;
 using System.Text.Json;
 
 namespace MysticLegendsServer.Controllers
@@ -38,7 +41,9 @@ namespace MysticLegendsServer.Controllers
                 .Where(invItem => invItem.Price != null)
                 .Take(100)
                 .Include(invItem => invItem.Item)
-                .Include(invItem => invItem.BattleStats).ToListAsync();
+                .Include(invItem => invItem.BattleStats)
+                .ToListAsync();
+            reslut.ForEach((item) => { item.StackCount = item.Price!.QuantityPerPurchase ?? item.StackCount; });
             return Ok(reslut);
         }
 
@@ -117,6 +122,7 @@ namespace MysticLegendsServer.Controllers
                 .Take(1)
                 .Include(item => item.Price)
                 .Include(item => item.Npc)
+                .Include(item => item.BattleStats)
                 .SingleAsync();
             var character = await dbContext.Characters
                 .Include(character => character.CharacterInventory)
@@ -159,13 +165,27 @@ namespace MysticLegendsServer.Controllers
                 return BadRequest("Inventory is full");
             }
 
-            itemToBuy.NpcId = null;
-            itemToBuy.CharacterInventoryCharacterN = character.CharacterName;
-            itemToBuy.Position = (int)newPosition;
+            var battleStatsClone = itemToBuy.BattleStats.ToList();
+
+            var newItem = itemToBuy.Clone();
+
+            var quantified = (itemToBuy.Price.QuantityPerPurchase ?? itemToBuy.StackCount);
+            var buyStackCount = quantified < itemToBuy.StackCount ? quantified : itemToBuy.StackCount;
+
+            newItem.NpcId = null;
+            newItem.CharacterInventoryCharacterN = character.CharacterName;
+            newItem.StackCount = buyStackCount;
+            newItem.Position = (int)newPosition;
 
             character.CurrencyGold -= itemToBuy.Price.PriceGold;
-            itemToBuy.Price = null;
+            itemToBuy.StackCount -= buyStackCount;
 
+            if (itemToBuy.StackCount <= 0)
+            {
+                dbContext.InventoryItems.Remove(itemToBuy);
+            }
+
+            dbContext.InventoryItems.Add(newItem);
             await dbContext.SaveChangesAsync();
 
             return Ok(character.CurrencyGold);

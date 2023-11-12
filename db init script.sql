@@ -274,14 +274,14 @@ VALUES (1, 'zmrdus', NULL, NULL, 1, 1, 1, 0),
        (3, 'zmrdus', NULL, NULL, 1, 1, 1, 2),
        (4, NULL, NULL, 1, 1, 1, 1, 3),
        (5, NULL, NULL, 1, 2, 1, 1, 4),
-       (6, NULL, NULL, 1, 3, NULL, 100, 5),
+       (6, NULL, NULL, 1, 3, NULL, 10, 5),
        (7, NULL, NULL, 1, 3, NULL, 200, 0),
        (8, NULL, NULL, 1, 3, NULL, 150, 0);
 
 INSERT INTO price (invitem_id, price_gold, quantity_per_purchase)
-VALUES (4, 200, 1),
-	   (5, 100, 1),
-	   (6, 50, 5),
+VALUES (4, 200, NULL),
+	   (5, 100, NULL),
+	   (6, 50, NULL),
        (7, 52, 6),
        (8, 50, 5);
 
