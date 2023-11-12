@@ -92,6 +92,7 @@ namespace MysticLegendsClient.Controls
             {
                 slot.ItemSlot.Item = null;
                 slot.Image.Source = null;
+                slot.Root.ToolTip = null;
             }
         }
 
