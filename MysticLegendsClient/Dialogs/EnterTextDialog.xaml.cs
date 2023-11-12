@@ -14,6 +14,7 @@ namespace MysticLegendsClient.Dialogs
             InitializeComponent();
             headLine.Content = headline;
             Title = title;
+            mainTextBox.Focus();
         }
 
         private void Ok_Click(object sender, RoutedEventArgs e)

@@ -3,6 +3,6 @@
 public enum CharacterClass
 {
     Warrior,
-    Assasin,
     Mage,
+    Assasin,
 }

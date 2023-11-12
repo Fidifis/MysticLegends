@@ -49,6 +49,7 @@ namespace MysticLegendsClient
                     CharClass = character.CharacterClass,
                     Level = character.Level,
                     DetailVisibility = detailed,
+                    Margin = new Thickness(10),
                 };
                 characterBanner.ButtonClick += SelectClick;
                 slotsPanel.Children.Add(characterBanner);
@@ -85,8 +86,11 @@ namespace MysticLegendsClient
                 return null;
 
             var name = enterNameDial.EnteredText.Trim();
-            await ApiCalls.UserCall.CreateCharacter(username, name, characterClass);
-            return name;
+            var retunedName = await ErrorCatcher.TryAsync(async () =>
+            {
+                return await ApiCalls.UserCall.CreateCharacter(username, name, characterClass);
+            });
+            return name == retunedName ? name : null;
         }
 
         private void Create_Click(object sender, RoutedEventArgs e)
