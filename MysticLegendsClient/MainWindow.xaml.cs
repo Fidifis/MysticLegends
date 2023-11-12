@@ -27,18 +27,18 @@ namespace MysticLegendsClient
             if (!await failFastGameState.Connection.HealthCheckAsync())
             {
                 MessageBox.Show("Can't connect to server. Try to login again", "Connection failed", MessageBoxButton.OK, MessageBoxImage.Error);
-                EnterLogin(gameState);
+                EnterLogin();
                 return;
             }
 
             GameState.MakeGameStateCurrent(gameState);
             if (await ServerConnector.Authenticate(gameState))
             {
-                EnterCharacterSelect(gameState);
+                await EnterCharacterSelect(gameState);
             }
             else
             {
-                EnterLogin(gameState);
+                EnterLogin();
             }
         }
 
@@ -48,16 +48,16 @@ namespace MysticLegendsClient
             Close();
         }
 
-        private void EnterLogin(GameState gameState)
+        private async void EnterLogin()
         {
             Hide();
             var loginWindow = new LoginWindow();
             if (loginWindow.ShowDialog() == true)
-                EnterCharacterSelect(gameState);
+                await EnterCharacterSelect(GameState.Current);
             Close();
         }
 
-        private async void EnterCharacterSelect(GameState gameState)
+        private async Task EnterCharacterSelect(GameState gameState)
         {
             IEnumerable<CharacterSelect.CharacterDisplayData>? data = null;
             await ErrorCatcher.TryAsync(async () =>
@@ -67,7 +67,7 @@ namespace MysticLegendsClient
             });
             if (data is null)
             {
-                EnterLogin(gameState);
+                EnterLogin();
                 return;
             }
 
