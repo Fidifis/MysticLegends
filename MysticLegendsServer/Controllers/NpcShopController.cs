@@ -72,13 +72,20 @@ namespace MysticLegendsServer.Controllers
             var character = await dbContext.Characters.SingleAsync(character => character.CharacterName == characterString);
             var sellItems = await dbContext.InventoryItems.Where(item => items.Contains(item.InvitemId)).ToListAsync();
 
+            var npcCity = (await dbContext.Npcs.SingleAsync(npc => npc.NpcId == npcId)).CityName;
+
             foreach(var item in sellItems)
             {
-                // TODO: check if the item owner is linked with access token
-                // TODO: check if the character is in the same city as npc
                 if (item.CharacterInventoryCharacterN is null || item.CharacterInventoryCharacterN != characterString)
                 {
                     var msg = "Trying to sell item not owned by the correct character";
+                    logger.LogWarning(msg);
+                    return BadRequest(msg);
+                }
+
+                if (character.CityName != npcCity)
+                {
+                    var msg = "NPC is not in this city";
                     logger.LogWarning(msg);
                     return BadRequest(msg);
                 }
@@ -109,6 +116,7 @@ namespace MysticLegendsServer.Controllers
                 .Where(item => item.InvitemId == invitemId)
                 .Take(1)
                 .Include(item => item.Price)
+                .Include(item => item.Npc)
                 .SingleAsync();
             var character = await dbContext.Characters
                 .Include(character => character.CharacterInventory)
@@ -116,11 +124,16 @@ namespace MysticLegendsServer.Controllers
                 .SingleAsync(character => character.CharacterName == characterString);
 
 
-            // TODO: check if the item owner is linked with access token
-            // TODO: check if the character is in the same city as npc
             if (itemToBuy.NpcId is null || itemToBuy.NpcId != npcId)
             {
                 var msg = "Trying to buy item not owned by the correct npc";
+                logger.LogWarning(msg);
+                return BadRequest(msg);
+            }
+
+            if (character.CityName != itemToBuy.Npc?.CityName)
+            {
+                var msg = "NPC is not in this city";
                 logger.LogWarning(msg);
                 return BadRequest(msg);
             }
