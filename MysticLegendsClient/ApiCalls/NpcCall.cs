@@ -9,7 +9,7 @@ internal static class NpcCall
     {
         var parameters = new Dictionary<string, string>
         {
-            ["characterName"] = "zmrdus"
+            ["characterName"] = GameState.Current.CharacterName,
         };
         return await GameState.Current.Connection.GetAsync<List<InventoryItem>>($"api/NpcShop/{npcId}/offered-items", parameters);
     }
@@ -18,7 +18,7 @@ internal static class NpcCall
     {
         var parameters = new Dictionary<string, string>
         {
-            ["characterName"] = "zmrdus",
+            ["characterName"] = GameState.Current.CharacterName,
             ["items"] = JsonSerializer.Serialize(items.Select(item => item.InvitemId))
         };
         return await GameState.Current.Connection.PostAsync<int>($"api/NpcShop/{npcId}/estimate-sell-price", parameters);
@@ -29,7 +29,7 @@ internal static class NpcCall
         var parameters = new Dictionary<string, string>
         {
             ["items"] = JsonSerializer.Serialize(items.Select(item => item.InvitemId)),
-            ["characterName"] = "zmrdus",
+            ["characterName"] = GameState.Current.CharacterName,
         };
         await ErrorCatcher.TryAsync(async () =>
         {
@@ -43,7 +43,7 @@ internal static class NpcCall
         var parameters = new Dictionary<string, string>
         {
             ["item"] = invitemId.ToString(),
-            ["characterName"] = "zmrdus",
+            ["characterName"] = GameState.Current.CharacterName,
         };
         if (position is not null)
             parameters["position"] = position.ToString()!;

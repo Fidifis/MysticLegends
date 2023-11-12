@@ -54,7 +54,14 @@ namespace MysticLegendsServer.Controllers
                 CurrencyGold = 1000,
             };
 
+            var inventory = new CharacterInventory()
+            {
+                CharacterName = characterName,
+                Capacity = 10,
+            };
+
             dbContext.Characters.Add(character);
+            dbContext.CharacterInventories.Add(inventory);
             await dbContext.SaveChangesAsync();
 
             return Ok(characterName);

@@ -35,7 +35,7 @@ namespace MysticLegendsClient
         {
             await ErrorCatcher.TryAsync(async () =>
             {
-                Character characterData = await ApiCalls.CharacterCall.GetCharacterServerCallAsync("zmrdus");
+                Character characterData = await ApiCalls.CharacterCall.GetCharacterServerCallAsync(GameState.Current.CharacterName);
                 FillData(characterData);
             });
         }

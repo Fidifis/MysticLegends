@@ -36,7 +36,7 @@ internal static class CharacterCall
         };
         await ErrorCatcher.TryAsync(async () =>
         {
-            var newInventory1 = await GameState.Current.Connection.PostAsync<CharacterInventory>("/api/Character/zmrdus/inventory-swap", parameters1);
+            var newInventory1 = await GameState.Current.Connection.PostAsync<CharacterInventory>($"/api/Character/{GameState.Current.CharacterName}/inventory-swap", parameters1);
             GameState.Current.GameEvents.CharacterInventoryUpdate(sender, new(newInventory1.InventoryItems.AsReadOnly()));
         });
     }
@@ -49,7 +49,7 @@ internal static class CharacterCall
         };
         await ErrorCatcher.TryAsync(async() =>
         {
-            var characterData = await GameState.Current.Connection.PostAsync<Character>("/api/Character/zmrdus/equip-item", parameters);
+            var characterData = await GameState.Current.Connection.PostAsync<Character>($"/api/Character/{GameState.Current.CharacterName}/equip-item", parameters);
             GameState.Current.GameEvents.CharacterUpdate(sender, new(characterData));
         });
     }
@@ -64,7 +64,7 @@ internal static class CharacterCall
             parameters["position"] = position.ToString()!;
         await ErrorCatcher.TryAsync(async () =>
         {
-            var characterData = await GameState.Current.Connection.PostAsync<Character>("/api/Character/zmrdus/unequip-item", parameters);
+            var characterData = await GameState.Current.Connection.PostAsync<Character>($"/api/Character/{GameState.Current.CharacterName}/unequip-item", parameters);
             GameState.Current.GameEvents.CharacterUpdate(sender, new(characterData));
         });
     }
@@ -77,7 +77,7 @@ internal static class CharacterCall
         };
         await ErrorCatcher.TryAsync(async () =>
         {
-            var characterData = await GameState.Current.Connection.PostAsync<Character>("/api/Character/zmrdus/swap-equip-item", parameters);
+            var characterData = await GameState.Current.Connection.PostAsync<Character>($"/api/Character/{GameState.Current.CharacterName}/swap-equip-item", parameters);
             GameState.Current.GameEvents.CharacterUpdate(sender, new(characterData));
         });
     }

@@ -89,7 +89,7 @@ namespace MysticLegendsClient
         {
             await ErrorCatcher.TryAsync(async () =>
             {
-                var currency = await ApiCalls.CharacterCall.GetCharacterCurrencyCallAsync("zmrdus");
+                var currency = await ApiCalls.CharacterCall.GetCharacterCurrencyCallAsync(GameState.Current.CharacterName);
                 CurrencyChanged(this, new(currency));
             });
         }

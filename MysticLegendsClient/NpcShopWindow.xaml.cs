@@ -106,7 +106,7 @@ namespace MysticLegendsClient
         protected async void BuyItem(int invitemId, int position)
         {
             await ApiCalls.NpcCall.BuyItemServerCallAsync(this, NpcId, invitemId, position);
-            ApiCalls.CharacterCall.UpdateCharacter(this, "zmrdus");
+            ApiCalls.CharacterCall.UpdateCharacter(this, GameState.Current.CharacterName);
             await RefreshBuyView();
         }
 
@@ -149,7 +149,7 @@ namespace MysticLegendsClient
         private async void MakeSell_Click(object sender, RoutedEventArgs e)
         {
             await ApiCalls.NpcCall.SellItemsServerCallAsync(this, NpcId, sellViewInventory.Items);
-            ApiCalls.CharacterCall.UpdateCharacter(this, "zmrdus");
+            ApiCalls.CharacterCall.UpdateCharacter(this, GameState.Current.CharacterName);
             sellViewInventory.CloseRelations();
             sellViewInventory.Items = new List<InventoryItem>();
             priceTextBox.Text = "0";
