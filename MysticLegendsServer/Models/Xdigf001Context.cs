@@ -268,7 +268,7 @@ public partial class Xdigf001Context : DbContext
             entity.Property(e => e.MaxDurability).HasColumnName("max_durability");
             entity.Property(e => e.MaxStack).HasColumnName("max_stack");
             entity.Property(e => e.Name)
-                .HasMaxLength(32)
+                .HasMaxLength(64)
                 .HasColumnName("name");
         });
 
@@ -342,6 +342,7 @@ public partial class Xdigf001Context : DbContext
                 .HasColumnName("invitem_id");
             entity.Property(e => e.BidGold).HasColumnName("bid_gold");
             entity.Property(e => e.PriceGold).HasColumnName("price_gold");
+            entity.Property(e => e.QuantityPerPurchase).HasColumnName("quantity_per_purchase");
 
             entity.HasOne(d => d.Invitem).WithOne(p => p.Price)
                 .HasForeignKey<Price>(d => d.InvitemId)

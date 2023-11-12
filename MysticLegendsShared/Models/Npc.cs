@@ -11,7 +11,7 @@ public partial class Npc
 
     public int NpcType { get; set; }
 
-    public int CurrencyGold { get; set; }
+    public int? CurrencyGold { get; set; }
 
     public virtual City CityNameNavigation { get; set; } = null!;
 

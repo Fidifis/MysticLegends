@@ -11,5 +11,7 @@ public partial class Price
 
     public int? BidGold { get; set; }
 
+    public int? QuantityPerPurchase { get; set; }
+
     public virtual InventoryItem Invitem { get; set; } = null!;
 }
