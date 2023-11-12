@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="CharacterSelect" Height="600" Width="1000"
-        MinHeight="100" MinWidth="200">
+        MinHeight="500" MinWidth="400">
     <Grid>
         <Label Name="heading" Margin="20 10" FontSize="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">

@@ -19,6 +19,8 @@
 
   <ItemGroup>
 	<Resource Include="images\Characters\Mage.png" />
+	<Resource Include="images\Characters\Warrior.png" />
+	<Resource Include="images\Characters\Assassin.png" />
     <Resource Include="icons\anvil.svg" />
     <Resource Include="icons\coins-solid.svg" />
     <Resource Include="icons\compass-regular.svg" />

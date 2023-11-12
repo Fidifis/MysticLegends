@@ -112,9 +112,9 @@ namespace MysticLegendsClient
         {
             return characterClass switch
             {
-                CharacterClass.Warrior => "/images/Characters/Mage.png",
+                CharacterClass.Warrior => "/images/Characters/Warrior.png",
                 CharacterClass.Mage => "/images/Characters/Mage.png",
-                CharacterClass.Assasin => "/images/Characters/Mage.png",
+                CharacterClass.Assassin => "/images/Characters/Assassin.png",
                 _=>throw new NotImplementedException("unknown class")
             };
         }

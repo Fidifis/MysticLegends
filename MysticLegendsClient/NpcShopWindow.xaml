@@ -8,7 +8,8 @@
         mc:Ignorable="d"
         Loaded="Window_Loaded"
         Closed="Window_Closed"
-        Title="NpcWindow" Height="600" Width="1000">
+        Title="NpcWindow" Height="600" Width="1000"
+        MinHeight="300" MinWidth="500">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" MinWidth="300"/>
