@@ -1,4 +1,5 @@
 ﻿using MysticLegendsClient.Controls;
+using MysticLegendsClient.Dialogs;
 using MysticLegendsClient.NpcWindows;
 using MysticLegendsClient.Resources;
 using System.Windows;
@@ -10,6 +11,13 @@ namespace MysticLegendsClient
     /// </summary>
     public abstract partial class CityWindow : Window
     {
+        public enum CloseReason
+        {
+            Exit,
+            SwitchCharacter,
+            Logout,
+        }
+
         protected enum ButtonType
         {
             Blacksmith,
@@ -98,6 +106,26 @@ namespace MysticLegendsClient
         {
             characterWindow.Dispose();
             potionsWindow.Dispose();
+        }
+
+        private async void Options_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OptionsDialog();
+            if (dialog.ShowDialog() != true)
+                return;
+
+            switch (dialog.Result)
+            {
+                case CloseReason.SwitchCharacter:
+                    new MainWindow().Show();
+                    Close();
+                    break;
+                case CloseReason.Logout:
+                    await ServerConnector.Logout(GameState.Current);
+                    new MainWindow().Show();
+                    Close();
+                    break;
+            }
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace MysticLegendsClient;
+﻿using MysticLegendsShared.Models;
+
+namespace MysticLegendsClient;
 
 class ServerConnector
 {
@@ -51,5 +53,10 @@ class ServerConnector
 
         gameState.ChangeAccessToken(accessToken);
         gameState.Username = username;
+    }
+
+    public static async Task Logout(GameState gameState)
+    {
+        await gameState.TokenStore.SaveRefreshToken(null, gameState.Connection.Host);
     }
 }
