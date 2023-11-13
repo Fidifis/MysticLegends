@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.DirectoryServices.ActiveDirectory;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MysticLegendsClient.Controls
 {
@@ -23,6 +12,36 @@ namespace MysticLegendsClient.Controls
         public QuestButton()
         {
             InitializeComponent();
+            //DataContext = this;
+        }
+
+        private static readonly DependencyProperty title = DependencyProperty.Register("Title", typeof(string), typeof(QuestButton));
+        private static readonly DependencyProperty description = DependencyProperty.Register("Description", typeof(string), typeof(QuestButton));
+        private static readonly DependencyProperty level = DependencyProperty.Register("Level", typeof(string), typeof(QuestButton));
+        private static readonly DependencyProperty acceptance = DependencyProperty.Register("Acceptance", typeof(string), typeof(QuestButton));
+
+        public string Title
+        {
+            get { return (string)GetValue(title); }
+            set { SetValue(title, value); }
+        }
+
+        public string Description
+        {
+            get { return (string)GetValue(description); }
+            set { SetValue(description, value); }
+        }
+
+        public string Level
+        {
+            get { return (string)GetValue(level); }
+            set { SetValue(level, value); }
+        }
+
+        public string Acceptance
+        {
+            get { return (string)GetValue(acceptance); }
+            set { SetValue(acceptance, value); }
         }
     }
 }

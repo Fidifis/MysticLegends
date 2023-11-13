@@ -36,7 +36,7 @@
                 </Grid>
             </Grid>
             <Grid x:Name="questsView" Visibility="Hidden">
-                
+                <controls:QuestButton Title="Lol" Description="lmao" Level="12" Acceptance="Not Accespted"/>
             </Grid>
         </Grid>
         <Grid Grid.Column="1">

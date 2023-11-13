@@ -11,7 +11,7 @@ namespace MysticLegendsClient.Controls
         public CityModuleButton()
         {
             InitializeComponent();
-            DataContext = this;
+            //DataContext = this;
         }
 
         public event RoutedEventHandler? Click;
