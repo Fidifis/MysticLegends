@@ -34,6 +34,11 @@ namespace MysticLegendsClient
             var connectionType = Enum.Parse<ServerConnector.ServerConncetionType>(connectionTypeString);
             serverSelect.SelectedItem = connectionType;
 
+            if (connectionType == ServerConnector.ServerConncetionType.Custom)
+            {
+                customServerTxt.Text = await GameState.Current.ConfigStore.ReadAsync("customConnectionAddress");
+            }
+
             remember.IsChecked = await GameState.Current.TokenStore.ReadRefreshTokenAsync(GameState.Current.Connection.Host) is not null;
             username.Text = await GameState.Current.TokenStore.ReadUserNameAsync(GameState.Current.Connection.Host);
 
@@ -43,7 +48,7 @@ namespace MysticLegendsClient
         private async void Login_Click(object sender, RoutedEventArgs e)
         {
             var connectionType = (ServerConnector.ServerConncetionType)serverSelect.SelectedItem;
-            var gameState = new GameState(ServerConnector.ConnectionTypeToUrl(connectionType));
+            var gameState = new GameState(ServerConnector.ConnectionTypeToUrl(connectionType, customServerTxt.Text));
 
             if (username.Text == "" || password.Password == "")
             {
