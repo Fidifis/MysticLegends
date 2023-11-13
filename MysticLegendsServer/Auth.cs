@@ -138,6 +138,38 @@ public class Auth: IDisposable
         return accessToken;
     }
 
+    public async Task<bool> InvalidateRefreshToken(string refreshToken)
+    {
+        ObjectDisposedException.ThrowIf(disposed, this);
+
+        var tokenRecord = await dbContext.RefreshTokens.SingleAsync(token => token.RefreshToken1 == refreshToken);
+
+        if (tokenRecord is null)
+        {
+            return false;
+        }
+
+        dbContext.RefreshTokens.Remove(tokenRecord);
+        await dbContext.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> InvalidateAccessToken(string accessToken)
+    {
+        ObjectDisposedException.ThrowIf(disposed, this);
+
+        var tokenRecord = await dbContext.AccessTokens.SingleAsync(token => token.AccessToken1 == accessToken);
+
+        if (tokenRecord is null)
+        {
+            return false;
+        }
+
+        dbContext.AccessTokens.Remove(tokenRecord);
+        await dbContext.SaveChangesAsync();
+        return true;
+    }
+
     public static string GenerateToken(RandomNumberGenerator randomInstance, int length)
     {
         var bytes = new byte[length];

@@ -29,6 +29,25 @@ namespace MysticLegendsServer.Controllers
             return Ok(token);
         }
 
+        [HttpPost("logout")]
+        public async Task<ObjectResult> Logout([FromBody] Dictionary<string, string> paramters)
+        {
+            var refreshToken = paramters["refreshToken"];
+
+            var refreshTokenResult = await auth.InvalidateRefreshToken(refreshToken);
+            var accessTokenResult = await auth.InvalidateAccessToken(Request.Headers["access-token"].First()!);
+            if (refreshTokenResult && accessTokenResult)
+            {
+                return Ok("ok");
+            }
+            else
+            {
+                var msg = "Invalidation of tokens failed";
+                logger.LogWarning(msg);
+                return BadRequest(msg);
+            }
+        }
+
         [HttpPost("token")]
         public async Task<ObjectResult> GetAccessToken([FromBody] Dictionary<string, string> paramters)
         {

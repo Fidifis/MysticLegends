@@ -57,6 +57,8 @@ class ServerConnector
 
     public static async Task Logout(GameState gameState)
     {
-        await gameState.TokenStore.SaveRefreshToken(null, gameState.Connection.Host);
+        var refreshToken = await gameState.TokenStore.ReadRefreshTokenAsync(gameState.Connection.Host);
+        if (refreshToken is not null)
+            await ApiCalls.AuthCall.LogoutServerCallAsync(refreshToken);
     }
 }

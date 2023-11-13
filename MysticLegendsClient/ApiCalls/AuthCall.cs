@@ -1,4 +1,6 @@
-﻿namespace MysticLegendsClient.ApiCalls;
+﻿using MysticLegendsShared.Models;
+
+namespace MysticLegendsClient.ApiCalls;
 
 internal static class AuthCall
 {
@@ -10,6 +12,18 @@ internal static class AuthCall
             ["password"] = password,
         };
         return await (gameState ?? GameState.Current).Connection.PostAsync<string>($"api/Auth/login", parameters);
+    }
+
+    public static async Task LogoutServerCallAsync(string refreshToken, GameState? gameState = null)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            ["refreshToken"] = refreshToken,
+        };
+        await ErrorCatcher.TryAsync(async () =>
+        {
+            await (gameState ?? GameState.Current).Connection.PostAsync<string>($"api/Auth/logout", parameters);
+        });
     }
 
     public static async Task<string> TokenServerCallAsync(string refreshToken, GameState? gameState = null)
