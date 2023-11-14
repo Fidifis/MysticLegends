@@ -72,14 +72,14 @@ namespace MysticLegendsClient.Controls
             throw new NotImplementedException();
         }
 
-        private void FillData(IReadOnlyCollection<InventoryItem> items)
+        private void FillData(IEnumerable<InventoryItem> items)
         {
             var battleStats = ComputeBattleStats(items);
             FillBattleStats(battleStats);
             FillEquipedItems(items);
         }
 
-        public void FillData(string characterName, IReadOnlyCollection<InventoryItem> items)
+        public void FillData(string characterName, IEnumerable<InventoryItem> items)
         {
             this.characterName.Content = characterName;
 

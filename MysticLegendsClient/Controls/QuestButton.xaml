@@ -8,7 +8,7 @@
              d:DesignHeight="100" d:DesignWidth="600"
              DataContext='{Binding RelativeSource={RelativeSource Self}}'>
     <Grid>
-        <Button HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+        <Button HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Click="Button_Click">
             <Grid>
                 <Label Content="{Binding Title}" Margin="10" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                 <Label Content="{Binding Description}" Margin="10 30 10 30"/>

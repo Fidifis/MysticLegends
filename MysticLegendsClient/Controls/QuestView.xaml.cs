@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MysticLegendsShared.Models;
+using MysticLegendsShared.Utilities;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MysticLegendsClient.Controls
 {
@@ -20,9 +10,50 @@ namespace MysticLegendsClient.Controls
     /// </summary>
     public partial class QuestView : UserControl
     {
+        private readonly Dictionary<int, Quest> questsDict = new();
+
         public QuestView()
         {
             InitializeComponent();
         }
+
+        public void FillData(IEnumerable<Quest> quests)
+        {
+            foreach(var quest in quests)
+            {
+                questsDict[quest.QuestId] = quest;
+                CreateButton(quest);
+            }
+        }
+
+        private void CreateButton(Quest quest)
+        {
+            var btn = new QuestButton()
+            {
+                Title = quest.Name,
+                Description = quest.Description,
+                // Level = quest.level // TODO: add level
+                Acceptance = GetAcceptanceString(quest.AcceptedQuests.FirstOrDefault()),
+            };
+            btn.Click += ButtonClick;
+            btn.Tag = quest.QuestId;
+            questPanel.Children.Add(btn);
+        }
+
+        private void ButtonClick(object? sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement btn)
+            {
+                new QuestDetails(questsDict[(int)btn.Tag]).ShowDialog();
+            }
+        }
+
+        private static string GetAcceptanceString(AcceptedQuest? quest) => (QuestState)(quest?.QuestState ?? 0) switch
+        {
+            QuestState.NotAccepted => "Not accepted",
+            QuestState.Accepted => "Accepted",
+            QuestState.Completed => "Completed",
+            _ => "Undefined"
+        };
     }
 }

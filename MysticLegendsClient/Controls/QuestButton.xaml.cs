@@ -15,6 +15,8 @@ namespace MysticLegendsClient.Controls
             //DataContext = this;
         }
 
+        public event EventHandler<RoutedEventArgs>? Click;
+
         private static readonly DependencyProperty title = DependencyProperty.Register("Title", typeof(string), typeof(QuestButton));
         private static readonly DependencyProperty description = DependencyProperty.Register("Description", typeof(string), typeof(QuestButton));
         private static readonly DependencyProperty level = DependencyProperty.Register("Level", typeof(string), typeof(QuestButton));
@@ -43,5 +45,7 @@ namespace MysticLegendsClient.Controls
             get { return (string)GetValue(acceptance); }
             set { SetValue(acceptance, value); }
         }
+
+        private void Button_Click(object? sender, RoutedEventArgs e) => Click?.Invoke(sender, e);
     }
 }

@@ -297,6 +297,9 @@ VALUES (1, 1, 10, 1);
 INSERT INTO quest_reward (quest_id, item_id, currency_gold, item_count)
 VALUES (1, 2, 100, 1);
 
+INSERT INTO accepted_quest (character_name, quest_id, quest_state)
+VALUES ('zmrdus', 1, 1);
+
 INSERT INTO battle_stats (stat_type, method, invitem_id, value)
 VALUES (1, 0, 1, 50),  -- Example stat 1
        (1, 1, 2, 3),  -- Example stat 2
