@@ -6,15 +6,15 @@
         xmlns:local="clr-namespace:MysticLegendsClient"
         xmlns:controls="clr-namespace:MysticLegendsClient.Controls"
         mc:Ignorable="d"
-        Title="QuestDetails" Height="450" Width="400"
-        MinHeight="300" MinWidth="300">
+        Title="QuestDetails" Height="500" Width="450"
+        MinHeight="350" MinWidth="300">
     <Grid>
         <TextBlock x:Name="title" Text="Quest Title" FontSize="25" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20"/>
         <controls:StatLabel x:Name="level" StaticContent="Level: " Margin="20 60" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Grid Margin="20,85,20,75">
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*"/>
-                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*" MinHeight="115"/>
             </Grid.RowDefinitions>
 
             <ScrollViewer  Grid.Row="0" VerticalScrollBarVisibility="Auto">

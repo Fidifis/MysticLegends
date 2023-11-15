@@ -76,7 +76,7 @@ namespace MysticLegendsClient
 
             using var response = await client.GetAsync(combined);
             if (!response.IsSuccessStatusCode)
-                throw new NetworkException(await response.Content.ReadAsStringAsync());
+                throw new NetworkException($"Server: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
 
             return await response.Content.ReadFromJsonAsync<T?>() ?? throw new NullReferenceException();
         }
@@ -87,7 +87,7 @@ namespace MysticLegendsClient
 
             using var response = await client.PostAsJsonAsync(path, parameters);
             if (!response.IsSuccessStatusCode)
-                throw new NetworkException($"HTTP code: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+                throw new NetworkException($"Server: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
 
             return await response.Content.ReadFromJsonAsync<T?>() ?? throw new NullReferenceException();
         }

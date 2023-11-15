@@ -30,7 +30,7 @@
                 <Border Padding="10">
                     <svgc:SvgViewbox Source="/icons/coins-solid.svg"/>
                 </Border>
-                <Label x:Name="currencyLabel" Content="n" Margin="5 0" Padding="0" FontSize="20" VerticalContentAlignment="Center"/>
+                <Label x:Name="currencyLabel" Content="n/a" Margin="5 0" Padding="0" FontSize="20" VerticalContentAlignment="Center"/>
             </StackPanel>
         </Grid>
         </ScrollViewer>

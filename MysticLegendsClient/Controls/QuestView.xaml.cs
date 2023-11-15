@@ -46,7 +46,7 @@ namespace MysticLegendsClient.Controls
         {
             if (sender is QuestButton btn)
             {
-                new QuestDetails(questsDict[btn.QuestId]).ShowDialog();
+                new QuestDetails(questsDict[btn.QuestId]) { Owner = Window.GetWindow(this) }.Show();
             }
         }
 

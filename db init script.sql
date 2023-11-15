@@ -287,11 +287,7 @@ VALUES (4, 200, NULL),
 -- Insert data into the "quest" table
 INSERT INTO quest (quest_id, npc_id, name, description, is_repeable, is_offered, level)
 VALUES (1, 1, 'Out of stock',
-'Master Alaric, a highly esteemed potion crafter,
-faces an unprecedented crisis. The demand for his renowned potions has surged,
-leaving his once-teeming shelves barren. Desperate to uphold his reputation,
-Master Alaric urgently seeks the assistance of intrepid adventurers.
-He seeks help with refilling his dwindling potion supplies',
+'Master Alaric, a highly esteemed potion crafter, faces an unprecedented crisis. The demand for his renowned potions has surged, leaving his once-teeming shelves barren. Desperate to uphold his reputation, Master Alaric urgently seeks the assistance of intrepid adventurers. He seeks help with refilling his dwindling potion supplies',
 TRUE, TRUE, 1);
 
 -- Insert data into the "quest_requirement" table

@@ -9,7 +9,7 @@ namespace MysticLegendsClient
     /// </summary>
     public partial class QuestDetails : Window
     {
-        private int questId;
+        private readonly int questId;
         public QuestDetails(Quest quest)
         {
             InitializeComponent();
@@ -19,11 +19,17 @@ namespace MysticLegendsClient
 
         private void FillData(Quest quest)
         {
-            // requirementsView.Items = quest.QuestRequirement // TODO: quest.QuestRequirement by měl být list ne?
+            requirementsView.Items = quest.QuestRequirements.Where(requirement => requirement.Item is not null).Select(requirement => new InventoryItem()
+            {
+                Item = requirement.Item!,
+                ItemId = requirement.Item!.ItemId,
+                StackCount = requirement.Amount,
+            }).ToList();
             ChangeByQuestState(((QuestState?)quest.AcceptedQuests.FirstOrDefault()?.QuestState) ?? QuestState.NotAccepted);
             title.Text = quest.Name;
             description.Text = quest.Description;
             level.VarContent = quest.Level.ToString();
+            reward.VarContent = quest.QuestReward?.CurrencyGold.ToString() ?? "";
         }
 
         private void ChangeByQuestState(QuestState state)
