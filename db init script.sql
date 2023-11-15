@@ -140,25 +140,25 @@ CREATE TABLE quest (
     quest_id SERIAL NOT NULL,
     npc_id INTEGER NOT NULL,
     name VARCHAR(64) NOT NULL,
-    description VARCHAR(256) NOT NULL,
+    description VARCHAR(1024) NOT NULL,
     is_repeable BOOLEAN NOT NULL,
-    is_offered BOOLEAN NOT NULL
+    is_offered BOOLEAN NOT NULL,
+    level INTEGER NOT NULL
 );
 ALTER TABLE quest ADD CONSTRAINT pk_quest PRIMARY KEY (quest_id);
 
 CREATE TABLE quest_requirement (
+    requirement_id SERIAL NOT NULL,
     quest_id INTEGER NOT NULL,
     item_id INTEGER,
     amount INTEGER NOT NULL,
     mob_type INTEGER
 );
-ALTER TABLE quest_requirement ADD CONSTRAINT pk_quest_requirement PRIMARY KEY (quest_id);
+ALTER TABLE quest_requirement ADD CONSTRAINT pk_quest_requirement PRIMARY KEY (requirement_id);
 
 CREATE TABLE quest_reward (
     quest_id INTEGER NOT NULL,
-    item_id INTEGER,
-    currency_gold INTEGER,
-    item_count INTEGER
+    currency_gold INTEGER NOT NULL
 );
 ALTER TABLE quest_reward ADD CONSTRAINT pk_quest_reward PRIMARY KEY (quest_id);
 
@@ -220,7 +220,6 @@ ALTER TABLE quest_requirement ADD CONSTRAINT fk_quest_requirement_quest FOREIGN 
 ALTER TABLE quest_requirement ADD CONSTRAINT fk_quest_requirement_item FOREIGN KEY (item_id) REFERENCES item (item_id) ON DELETE CASCADE;
 
 ALTER TABLE quest_reward ADD CONSTRAINT fk_quest_reward_quest FOREIGN KEY (quest_id) REFERENCES quest (quest_id) ON DELETE CASCADE;
-ALTER TABLE quest_reward ADD CONSTRAINT fk_quest_reward_item FOREIGN KEY (item_id) REFERENCES item (item_id) ON DELETE CASCADE;
 
 ALTER TABLE refresh_token ADD CONSTRAINT fk_refresh_token_users FOREIGN KEY (username) REFERENCES users (username) ON DELETE CASCADE;
 
@@ -286,16 +285,22 @@ VALUES (4, 200, NULL),
        (8, 50, 5);
 
 -- Insert data into the "quest" table
-INSERT INTO quest (quest_id, npc_id, name, description, is_repeable, is_offered)
-VALUES (1, 1, 'Quest1', 'Description of Quest1', TRUE, TRUE);
+INSERT INTO quest (quest_id, npc_id, name, description, is_repeable, is_offered, level)
+VALUES (1, 1, 'Out of stock',
+'In the enchanting realm of Eldoria, Master Alaric, a highly esteemed potion crafter,
+faces an unprecedented crisis. The demand for his renowned potions has surged,
+leaving his once-teeming shelves barren. Desperate to uphold his reputation,
+Master Alaric urgently seeks the assistance of intrepid adventurers.
+He seeks help with refilling his dwindling potion supplies',
+TRUE, TRUE, 1);
 
 -- Insert data into the "quest_requirement" table
 INSERT INTO quest_requirement (quest_id, item_id, amount, mob_type)
-VALUES (1, 1, 10, 1);
+VALUES (1, 3, 10, 1);
 
 -- Insert data into the "quest_reward" table
-INSERT INTO quest_reward (quest_id, item_id, currency_gold, item_count)
-VALUES (1, 2, 100, 1);
+INSERT INTO quest_reward (quest_id, currency_gold)
+VALUES (1, 100);
 
 INSERT INTO accepted_quest (character_name, quest_id, quest_state)
 VALUES ('zmrdus', 1, 1);
@@ -311,3 +316,4 @@ SELECT setval('mob_mob_id_seq', (SELECT max(mob_id) FROM mob));
 SELECT setval('npc_npc_id_seq', (SELECT max(npc_id) FROM npc));
 SELECT setval('quest_quest_id_seq', (SELECT max(quest_id) FROM quest));
 SELECT setval('refresh_token_record_id_seq', (SELECT max(record_id) FROM refresh_token));
+SELECT setval('quest_requirement_requirement_id_seq', (SELECT max(requirement_id) FROM quest_requirement));

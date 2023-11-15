@@ -450,7 +450,7 @@
           "primary": false,
           "unique": false,
           "nullable": false,
-          "type": null
+          "type": "varchar(1024)"
         },
         {
           "name": "is_repeable",
@@ -465,6 +465,13 @@
           "unique": false,
           "nullable": false,
           "type": "boolean"
+        },
+        {
+          "name": "level",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
         }
       ],
       "transform": {
@@ -478,6 +485,13 @@
       "name": "Quest_requirement",
       "parent": null,
       "attr": [
+        {
+          "name": "requirement_id",
+          "primary": true,
+          "unique": false,
+          "nullable": false,
+          "type": null
+        },
         {
           "name": "amount",
           "primary": false,
@@ -508,14 +522,7 @@
           "name": "currency_gold",
           "primary": false,
           "unique": false,
-          "nullable": true,
-          "type": "integer"
-        },
-        {
-          "name": "item_count",
-          "primary": false,
-          "unique": false,
-          "nullable": true,
+          "nullable": false,
           "type": "integer"
         }
       ],
@@ -1393,6 +1400,60 @@
       {
         "entity": "Quest_requirement",
         "identifying": false,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 341.4285697937012,
+            "y": 1143.7856903076172,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 284.85713958740234,
+              "y": 1143.7856903076172
+            },
+            {
+              "x": 284.85713958740234,
+              "y": 1101.718734741211
+            }
+          ],
+          "manual": true
+        }
+      },
+      {
+        "entity": "Quest",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 226.42856979370117,
+            "y": 1056.999984741211,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 284.85713958740234,
+              "y": 1056.999984741211
+            },
+            {
+              "x": 284.85713958740234,
+              "y": 1101.718734741211
+            }
+          ],
+          "manual": true
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Quest_requirement",
+        "identifying": false,
         "optional": true,
         "cardinality": 0,
         "xor": null,
@@ -1410,7 +1471,7 @@
             },
             {
               "x": 540.8571395874023,
-              "y": 1090.999984741211
+              "y": 1080.642837524414
             }
           ],
           "manual": true
@@ -1436,57 +1497,7 @@
             },
             {
               "x": 540.8571395874023,
-              "y": 1090.999984741211
-            }
-          ],
-          "manual": true
-        }
-      }
-    ],
-    [
-      {
-        "entity": "Quest_requirement",
-        "identifying": true,
-        "optional": false,
-        "cardinality": 0,
-        "xor": null,
-        "name": null,
-        "transform": {
-          "anchor": {
-            "x": 341.4285697937012,
-            "y": 1143.7856903076172,
-            "edge": 3
-          },
-          "points": [
-            {
-              "x": 284.85713958740234,
-              "y": 1143.7856903076172
-            }
-          ],
-          "manual": false
-        }
-      },
-      {
-        "entity": "Quest",
-        "identifying": false,
-        "optional": false,
-        "cardinality": 1,
-        "xor": null,
-        "name": null,
-        "transform": {
-          "anchor": {
-            "x": 226.42856979370117,
-            "y": 1056.999984741211,
-            "edge": 1
-          },
-          "points": [
-            {
-              "x": 284.85713958740234,
-              "y": 1056.999984741211
-            },
-            {
-              "x": 284.85713958740234,
-              "y": 1143.7856903076172
+              "y": 1080.642837524414
             }
           ],
           "manual": true
@@ -1496,55 +1507,9 @@
     [
       {
         "entity": "Quest_reward",
-        "identifying": false,
-        "optional": true,
-        "cardinality": 0,
-        "xor": null,
-        "name": null,
-        "transform": {
-          "anchor": {
-            "x": 497.85713958740234,
-            "y": 1006.4999694824219,
-            "edge": 1
-          },
-          "points": [
-            {
-              "x": 538.8571395874023,
-              "y": 1006.4999694824219
-            }
-          ],
-          "manual": true
-        }
-      },
-      {
-        "entity": "Item",
-        "identifying": false,
-        "optional": true,
-        "cardinality": 1,
-        "xor": null,
-        "name": null,
-        "transform": {
-          "anchor": {
-            "x": 566.4285697937012,
-            "y": 1006.4999694824219,
-            "edge": 3
-          },
-          "points": [
-            {
-              "x": 538.8571395874023,
-              "y": 1006.4999694824219
-            }
-          ],
-          "manual": false
-        }
-      }
-    ],
-    [
-      {
-        "entity": "Quest_reward",
         "identifying": true,
         "optional": false,
-        "cardinality": 0,
+        "cardinality": 1,
         "xor": null,
         "name": null,
         "transform": {
@@ -1565,7 +1530,7 @@
       {
         "entity": "Quest",
         "identifying": false,
-        "optional": false,
+        "optional": true,
         "cardinality": 1,
         "xor": null,
         "name": null,
