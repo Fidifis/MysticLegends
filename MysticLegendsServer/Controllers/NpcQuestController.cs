@@ -30,13 +30,13 @@ namespace MysticLegendsServer.Controllers
             var character = await dbContext.Characters.SingleAsync(character => character.CharacterName == characterName);
             var quests = await dbContext.Quests
                 .Where(quest => quest.NpcId == npcId
-                && quest.IsOffered
-                //&& quest.Level == character.Level // TODO: Add level
+                    && quest.IsOffered
+                    && quest.Level <= character.Level
                 )
                 .Include(quest => quest.AcceptedQuests.Where(accQuest => accQuest.CharacterName == characterName))
                 .Include(quest => quest.QuestReward)
-                .Include(quest => quest.QuestRequirement)
-                    .ThenInclude(requirement => requirement.Item) // TODO: accessing nullable - maybe needs to be fixed
+                .Include(quest => quest.QuestRequirements)
+                    .ThenInclude(requirement => requirement.Item)
                 .ToListAsync();
 
             return Ok(quests);

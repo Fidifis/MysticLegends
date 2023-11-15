@@ -10,7 +10,7 @@
         MinHeight="300" MinWidth="300">
     <Grid>
         <TextBlock x:Name="title" Text="Quest Title" FontSize="25" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20"/>
-        <controls:StatLabel StaticContent="Level: " Margin="20 60" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <controls:StatLabel x:Name="level" StaticContent="Level: " Margin="20 60" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <Grid Margin="20,85,20,75">
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*"/>

@@ -34,7 +34,7 @@ namespace MysticLegendsClient.Controls
                 QuestId = quest.QuestId,
                 Title = quest.Name,
                 Description = quest.Description,
-                // Level = quest.level // TODO: add level
+                Level = quest.Level.ToString(),
                 Acceptance = GetAcceptanceString(quest.AcceptedQuests.FirstOrDefault()),
                 Height = 100,
             };

@@ -23,6 +23,7 @@ namespace MysticLegendsClient
             ChangeByQuestState(((QuestState?)quest.AcceptedQuests.FirstOrDefault()?.QuestState) ?? QuestState.NotAccepted);
             title.Text = quest.Name;
             description.Text = quest.Description;
+            level.VarContent = quest.Level.ToString();
         }
 
         private void ChangeByQuestState(QuestState state)
