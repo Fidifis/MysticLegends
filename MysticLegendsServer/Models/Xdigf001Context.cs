@@ -357,10 +357,11 @@ public partial class Xdigf001Context : DbContext
 
             entity.Property(e => e.QuestId).HasColumnName("quest_id");
             entity.Property(e => e.Description)
-                .HasMaxLength(256)
+                .HasMaxLength(1024)
                 .HasColumnName("description");
             entity.Property(e => e.IsOffered).HasColumnName("is_offered");
             entity.Property(e => e.IsRepeable).HasColumnName("is_repeable");
+            entity.Property(e => e.Level).HasColumnName("level");
             entity.Property(e => e.Name)
                 .HasMaxLength(64)
                 .HasColumnName("name");
@@ -373,24 +374,23 @@ public partial class Xdigf001Context : DbContext
 
         modelBuilder.Entity<QuestRequirement>(entity =>
         {
-            entity.HasKey(e => e.QuestId).HasName("pk_quest_requirement");
+            entity.HasKey(e => e.RequirementId).HasName("pk_quest_requirement");
 
             entity.ToTable("quest_requirement");
 
-            entity.Property(e => e.QuestId)
-                .ValueGeneratedNever()
-                .HasColumnName("quest_id");
+            entity.Property(e => e.RequirementId).HasColumnName("requirement_id");
             entity.Property(e => e.Amount).HasColumnName("amount");
             entity.Property(e => e.ItemId).HasColumnName("item_id");
             entity.Property(e => e.MobType).HasColumnName("mob_type");
+            entity.Property(e => e.QuestId).HasColumnName("quest_id");
 
             entity.HasOne(d => d.Item).WithMany(p => p.QuestRequirements)
                 .HasForeignKey(d => d.ItemId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_quest_requirement_item");
 
-            entity.HasOne(d => d.Quest).WithOne(p => p.QuestRequirement)
-                .HasForeignKey<QuestRequirement>(d => d.QuestId)
+            entity.HasOne(d => d.Quest).WithMany(p => p.QuestRequirements)
+                .HasForeignKey(d => d.QuestId)
                 .HasConstraintName("fk_quest_requirement_quest");
         });
 
@@ -404,13 +404,6 @@ public partial class Xdigf001Context : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("quest_id");
             entity.Property(e => e.CurrencyGold).HasColumnName("currency_gold");
-            entity.Property(e => e.ItemCount).HasColumnName("item_count");
-            entity.Property(e => e.ItemId).HasColumnName("item_id");
-
-            entity.HasOne(d => d.Item).WithMany(p => p.QuestRewards)
-                .HasForeignKey(d => d.ItemId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("fk_quest_reward_item");
 
             entity.HasOne(d => d.Quest).WithOne(p => p.QuestReward)
                 .HasForeignKey<QuestReward>(d => d.QuestId)

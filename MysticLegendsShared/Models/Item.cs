@@ -22,6 +22,4 @@ public partial class Item
     public virtual ICollection<MobItemDrop> MobItemDrops { get; set; } = new List<MobItemDrop>();
 
     public virtual ICollection<QuestRequirement> QuestRequirements { get; set; } = new List<QuestRequirement>();
-
-    public virtual ICollection<QuestReward> QuestRewards { get; set; } = new List<QuestReward>();
 }

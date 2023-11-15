@@ -17,11 +17,13 @@ public partial class Quest
 
     public bool IsOffered { get; set; }
 
+    public int Level { get; set; }
+
     public virtual ICollection<AcceptedQuest> AcceptedQuests { get; set; } = new List<AcceptedQuest>();
 
     public virtual Npc Npc { get; set; } = null!;
 
-    public virtual QuestRequirement? QuestRequirement { get; set; }
+    public virtual ICollection<QuestRequirement> QuestRequirements { get; set; } = new List<QuestRequirement>();
 
     public virtual QuestReward? QuestReward { get; set; }
 }

@@ -5,6 +5,8 @@ namespace MysticLegendsShared.Models;
 
 public partial class QuestRequirement
 {
+    public int RequirementId { get; set; }
+
     public int QuestId { get; set; }
 
     public int? ItemId { get; set; }
