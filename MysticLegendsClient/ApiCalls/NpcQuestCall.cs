@@ -22,4 +22,13 @@ internal static class NpcQuestCall
         };
         await GameState.Current.Connection.PostAsync<AcceptedQuest>($"api/NpcQuest/{characterName}/accept-quest", parameters);
     }
+
+    public static async Task AbandonQuestServerCallAsync(string characterName, int questId)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            ["questId"] = questId.ToString(),
+        };
+        await GameState.Current.Connection.PostAsync<AcceptedQuest>($"api/NpcQuest/{characterName}/abandon-quest", parameters);
+    }
 }

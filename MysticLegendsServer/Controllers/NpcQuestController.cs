@@ -27,33 +27,68 @@ namespace MysticLegendsServer.Controllers
             if (!await auth.ValidateAsync(Request.Headers, characterName))
                 return StatusCode(403, "Unauthorized");
 
-            var quests = dbContext.Quests
-                .Where(quest => quest.NpcId == npcId && quest.IsOffered)
-                //.Include(quest => quest.AcceptedQuests)
+            var character = await dbContext.Characters.SingleAsync(character => character.CharacterName == characterName);
+            var quests = await dbContext.Quests
+                .Where(quest => quest.NpcId == npcId
+                && quest.IsOffered
+                //&& quest.Level == character.Level // TODO: Add level
+                )
                 .Include(quest => quest.AcceptedQuests.Where(accQuest => accQuest.CharacterName == characterName))
+                .Include(quest => quest.QuestReward)
+                .Include(quest => quest.QuestRequirement)
+                    .ThenInclude(requirement => requirement.Item) // TODO: accessing nullable - maybe needs to be fixed
                 .ToListAsync();
 
             return Ok(quests);
         }
 
         [HttpPost("{characterName}/accept-quest")]
-        public async Task<ObjectResult> AcceptQuestPrice(string characterName, [FromBody] Dictionary<string, string> paramters)
+        public async Task<ObjectResult> AcceptQuest(string characterName, [FromBody] Dictionary<string, string> paramters)
         {
             var questId = int.Parse(paramters["questId"]);
 
             if (!await auth.ValidateAsync(Request.Headers, characterName))
                 return StatusCode(403, "Unauthorized");
 
-            var quest = await dbContext.Quests.SingleAsync(quest => quest.QuestId == questId);
+            var quest = await dbContext.Quests
+                .Where(quest => quest.QuestId == questId)
+                .Include(quest => quest.AcceptedQuests.Where(accQ => accQ.CharacterName == characterName))
+                .SingleAsync();
 
-            var acceptedQuest = new AcceptedQuest()
+            AcceptedQuest acceptedQuest;
+            if (quest.AcceptedQuests.Any())
             {
-                CharacterName = characterName,
-                Quest = quest,
-                QuestState = (int)QuestState.Accepted,
-            };
+                acceptedQuest = quest.AcceptedQuests.First();
+                acceptedQuest.QuestState = (int)QuestState.Accepted;
+            }
+            else
+            {
+                acceptedQuest = new AcceptedQuest()
+                {
+                    CharacterName = characterName,
+                    Quest = quest,
+                    QuestState = (int)QuestState.Accepted,
+                };
+                dbContext.Add(acceptedQuest);
+            }
 
-            dbContext.Add(acceptedQuest);
+            await dbContext.SaveChangesAsync();
+
+            return Ok(acceptedQuest);
+        }
+
+        [HttpPost("{characterName}/abandon-quest")]
+        public async Task<ObjectResult> AbandonQuest(string characterName, [FromBody] Dictionary<string, string> paramters)
+        {
+            var questId = int.Parse(paramters["questId"]);
+
+            if (!await auth.ValidateAsync(Request.Headers, characterName))
+                return StatusCode(403, "Unauthorized");
+
+            var acceptedQuest = await dbContext.AcceptedQuests
+                .SingleAsync(quest => quest.QuestId == questId && quest.CharacterName == characterName);
+            acceptedQuest.QuestState = (int)QuestState.NotAccepted;
+
             await dbContext.SaveChangesAsync();
 
             return Ok(acceptedQuest);

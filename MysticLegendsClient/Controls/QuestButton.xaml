@@ -11,7 +11,7 @@
         <Button HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Click="Button_Click">
             <Grid>
                 <Label Content="{Binding Title}" Margin="10" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                <Label Content="{Binding Description}" Margin="10 30 10 30"/>
+                <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Margin="15 35 10 30"/>
                 <local:StatLabel StaticContent="Level: " VarContent="{Binding Level, RelativeSource={RelativeSource AncestorType=UserControl}}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10"/>
                 <Label Content="{Binding Acceptance}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10"/>
             </Grid>

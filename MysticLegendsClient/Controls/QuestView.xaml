@@ -7,6 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <StackPanel x:Name="questPanel"/>
+        <ScrollViewer>
+            <StackPanel x:Name="questPanel"/>
+        </ScrollViewer>
     </Grid>
 </UserControl>

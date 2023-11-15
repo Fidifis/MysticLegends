@@ -35,9 +35,7 @@
                     <Button Content="SELL" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="100" Height="25" Margin="0,0,0,20" Click="MakeSell_Click"/>
                 </Grid>
             </Grid>
-            <Grid x:Name="questsView" Visibility="Hidden">
-                
-            </Grid>
+            <controls:QuestView x:Name="questsView" Visibility="Hidden" Margin="0 50 0 0"/>
         </Grid>
         <Grid Grid.Column="1">
             <Image x:Name="splashImage" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center"/>

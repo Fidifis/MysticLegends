@@ -19,7 +19,8 @@ namespace MysticLegendsClient.Controls
 
         public void FillData(IEnumerable<Quest> quests)
         {
-            foreach(var quest in quests)
+            questPanel.Children.Clear();
+            foreach (var quest in quests)
             {
                 questsDict[quest.QuestId] = quest;
                 CreateButton(quest);
@@ -30,21 +31,22 @@ namespace MysticLegendsClient.Controls
         {
             var btn = new QuestButton()
             {
+                QuestId = quest.QuestId,
                 Title = quest.Name,
                 Description = quest.Description,
                 // Level = quest.level // TODO: add level
                 Acceptance = GetAcceptanceString(quest.AcceptedQuests.FirstOrDefault()),
+                Height = 100,
             };
             btn.Click += ButtonClick;
-            btn.Tag = quest.QuestId;
             questPanel.Children.Add(btn);
         }
 
         private void ButtonClick(object? sender, RoutedEventArgs e)
         {
-            if (sender is FrameworkElement btn)
+            if (sender is QuestButton btn)
             {
-                new QuestDetails(questsDict[(int)btn.Tag]).ShowDialog();
+                new QuestDetails(questsDict[btn.QuestId]).ShowDialog();
             }
         }
 

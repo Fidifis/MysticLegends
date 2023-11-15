@@ -123,6 +123,15 @@ namespace MysticLegendsClient
             });
         }
 
+        protected async Task RefreshQuestView()
+        {
+            await ErrorCatcher.TryAsync(async () =>
+            {
+                var quests = await ApiCalls.NpcQuestCall.GetOfferedQuestsServerCallAsync(NpcId);
+                questsView.FillData(quests);
+            });
+        }
+
         protected async void BuyButton_Click(object? sender, RoutedEventArgs? e)
         {
             ChangeToView(buyView);
@@ -136,9 +145,10 @@ namespace MysticLegendsClient
             sellViewInventory.FillData(new List<InventoryItem>(), 20);
         }
 
-        protected void QuestsButton_Click(object sender, RoutedEventArgs e)
+        protected async void QuestsButton_Click(object sender, RoutedEventArgs e)
         {
             ChangeToView(questsView);
+            await RefreshQuestView();
         }
 
         protected virtual void Window_Closed(object sender, EventArgs e)

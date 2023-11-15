@@ -4,9 +4,27 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MysticLegendsClient"
+        xmlns:controls="clr-namespace:MysticLegendsClient.Controls"
         mc:Ignorable="d"
-        Title="QuestDetails" Height="450" Width="800">
+        Title="QuestDetails" Height="450" Width="400"
+        MinHeight="300" MinWidth="300">
     <Grid>
-        
+        <TextBlock x:Name="title" Text="Quest Title" FontSize="25" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20"/>
+        <controls:StatLabel StaticContent="Level: " Margin="20 60" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Grid Margin="20,85,20,75">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <ScrollViewer  Grid.Row="0" VerticalScrollBarVisibility="Auto">
+                <TextBlock x:Name="description" TextWrapping="Wrap"/>
+            </ScrollViewer>
+
+            <controls:InventoryView Grid.Row="1" x:Name="requirementsView" CounterVisibility="Collapsed"/>
+        </Grid>
+        <controls:StatLabel x:Name="reward" StaticContent="Reward in golds: " VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="40 30"/>
+        <Button Content="Accept" x:Name="acceptButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="60" Height="25" Margin="0,0,40,30" Click="acceptButton_Click"/>
+        <Button Content="Abandon" x:Name="abandonButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="60" Height="25" Margin="0,0,40,30" Click="abandonButton_Click"/>
     </Grid>
 </Window>
