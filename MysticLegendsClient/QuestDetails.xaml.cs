@@ -9,6 +9,8 @@ namespace MysticLegendsClient
     /// </summary>
     public partial class QuestDetails : Window
     {
+        public event EventHandler<UpdateEventArgs<QuestState>>? QuestStateUpdatedEvent;
+
         private readonly int questId;
         public QuestDetails(Quest quest)
         {
@@ -57,6 +59,7 @@ namespace MysticLegendsClient
             {
                 await ApiCalls.NpcQuestCall.AcceptQuestServerCallAsync(GameState.Current.CharacterName, questId);
                 ChangeByQuestState(QuestState.Accepted);
+                QuestStateUpdatedEvent?.Invoke(this, new(QuestState.Accepted));
             });
         }
 
@@ -66,6 +69,7 @@ namespace MysticLegendsClient
             {
                 await ApiCalls.NpcQuestCall.AbandonQuestServerCallAsync(GameState.Current.CharacterName, questId);
                 ChangeByQuestState(QuestState.NotAccepted);
+                QuestStateUpdatedEvent?.Invoke(this, new(QuestState.NotAccepted));
             });
         }
     }

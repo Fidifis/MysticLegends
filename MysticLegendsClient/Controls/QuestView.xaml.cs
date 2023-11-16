@@ -46,11 +46,14 @@ namespace MysticLegendsClient.Controls
         {
             if (sender is QuestButton btn)
             {
-                new QuestDetails(questsDict[btn.QuestId]) { Owner = Window.GetWindow(this) }.Show();
+                var lol = new QuestDetails(questsDict[btn.QuestId]) { Owner = Window.GetWindow(this) };
+                lol.QuestStateUpdatedEvent += (object? sender2, UpdateEventArgs<QuestState> e2) => { btn.Acceptance = GetAcceptanceString(e2.Value); };
+                lol.Show();
             }
         }
 
-        private static string GetAcceptanceString(AcceptedQuest? quest) => (QuestState)(quest?.QuestState ?? 0) switch
+        private static string GetAcceptanceString(AcceptedQuest? quest) => GetAcceptanceString((QuestState)(quest?.QuestState ?? 0));
+        private static string GetAcceptanceString(QuestState state) => state switch
         {
             QuestState.NotAccepted => "Not accepted",
             QuestState.Accepted => "Accepted",

@@ -1,6 +1,6 @@
 ﻿namespace MysticLegendsClient;
 
-internal class UpdateEventArgs<T> : EventArgs
+public class UpdateEventArgs<T> : EventArgs
 {
     public T Value { get; init; }
 

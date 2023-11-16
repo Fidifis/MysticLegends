@@ -21,6 +21,11 @@ namespace MysticLegendsServer.Controllers
             this.auth = auth;
         }
 
+        //private async Task<bool> CheckQuestCompleteable(int questId, string characterName)
+        //{
+            // TODO
+        //}
+
         [HttpGet("{npcId}/offered-quests")]
         public async Task<ObjectResult> GetOfferedQuests(int npcId, string characterName)
         {
@@ -41,6 +46,12 @@ namespace MysticLegendsServer.Controllers
 
             return Ok(quests);
         }
+
+        //[HttpGet("{characterName}/quest-completeable")]
+        //public async Task<ObjectResult> GetQuestCompleteable(int npcId, string characterName)
+        //{
+            // TODO
+        //}
 
         [HttpPost("{characterName}/accept-quest")]
         public async Task<ObjectResult> AcceptQuest(string characterName, [FromBody] Dictionary<string, string> paramters)
@@ -93,5 +104,11 @@ namespace MysticLegendsServer.Controllers
 
             return Ok(acceptedQuest);
         }
+
+        //[HttpPost("{characterName}/complete-quest")]
+        //public async Task<ObjectResult> CompleteQuest(string characterName, [FromBody] Dictionary<string, string> paramters)
+        //{
+            // TODO
+        //}
     }
 }
