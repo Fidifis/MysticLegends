@@ -1,5 +1,4 @@
-ARG postgres_version=latest
-FROM postgres:${postgres_version}
+FROM postgres:16.1
 
 ENV POSTGRES_USER xdigf001
 ENV POSTGRES_PASSWORD docker

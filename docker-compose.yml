@@ -4,8 +4,6 @@ services:
     network_mode: "host"
     build:
       context: Postgres
-      args:
-        postgres_version: 16.1
     volumes:
       - ml-postgres-data:/var/lib/postgresql/data
 
