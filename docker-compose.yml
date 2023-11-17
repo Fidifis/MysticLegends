@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: ml-postgres
+    network_mode: "host"
+    build:
+      context: Postgres
+      args:
+        postgres_version: 16.1
+    volumes:
+      - ml-postgres-data:/var/lib/postgresql/data
+
+  server:
+    image: ml-server
+    network_mode: "host"
+    build:
+      context: .
+      dockerfile: MysticLegendsServer/Dockerfile
+    environment:
+      CONNECTIONSTRING: Server=localhost;Port=5432;Database=xdigf001;User Id=xdigf001;Password=docker;Pooling=true;MaxPoolSize=3
+    depends_on:
+      - postgres
+
+volumes:
+  ml-postgres-data:

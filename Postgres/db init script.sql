@@ -238,8 +238,8 @@ INSERT INTO "users" (username, password_hash) VALUES ('demo', 'fe01ce2a7fbac8faf
 INSERT INTO city (city_name) VALUES ('Ayreim');
 
 -- Insert data into the "character" table
-INSERT INTO character (character_name, username, character_class, level, currency_gold, city_name)
-VALUES ('zmrdus', 'demo', 1, 1, 1000, 'Ayreim');
+INSERT INTO character (character_name, username, character_class, level, currency_gold, city_name, xp)
+VALUES ('zmrdus', 'demo', 1, 1, 1000, 'Ayreim', 0);
 
 -- Insert data into the "city_inventory" table
 INSERT INTO city_inventory (city_name, character_name, capacity)
@@ -296,12 +296,12 @@ FALSE, TRUE, 1);
 -- Insert data into the "quest_requirement" table
 INSERT INTO quest_requirement (quest_id, item_id, amount)
 VALUES (1, 3, 10),
-VALUES (2, 3, 1);
+       (2, 3, 1);
 
 -- Insert data into the "quest_reward" table
 INSERT INTO quest_reward (quest_id, currency_gold, xp)
 VALUES (1, 100, 10),
-VALUES (2, 500, 1000);
+       (2, 500, 1000);
 
 INSERT INTO accepted_quest (character_name, quest_id, quest_state)
 VALUES ('zmrdus', 1, 1);
