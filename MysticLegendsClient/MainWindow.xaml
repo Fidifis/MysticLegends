@@ -9,6 +9,7 @@
         Height="200" Width="400"
         MinHeight="100" MinWidth="250"
         WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
         Loaded="Window_Loaded">
     <Grid>
         <Label Content="Mystic Legends" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center"/>

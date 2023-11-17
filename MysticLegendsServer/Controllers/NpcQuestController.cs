@@ -21,10 +21,15 @@ namespace MysticLegendsServer.Controllers
             this.auth = auth;
         }
 
-        //private async Task<bool> CheckQuestCompleteable(int questId, string characterName)
-        //{
-            // TODO
-        //}
+        private async Task<bool> CheckQuestCompletable(int questId, string characterName)
+        {
+            var items = dbContext.InventoryItems
+                .Where(item => item.CharacterInventoryCharacterN == characterName);
+
+            
+
+            return true;
+        }
 
         [HttpGet("{npcId}/offered-quests")]
         public async Task<ObjectResult> GetOfferedQuests(int npcId, string characterName)
@@ -47,11 +52,11 @@ namespace MysticLegendsServer.Controllers
             return Ok(quests);
         }
 
-        //[HttpGet("{characterName}/quest-completeable")]
-        //public async Task<ObjectResult> GetQuestCompleteable(int npcId, string characterName)
-        //{
-            // TODO
-        //}
+        [HttpGet("{characterName}/quest-completable")]
+        public async Task<ObjectResult> GetQuestCompleteable(string characterName, int questId)
+        {
+            return Ok(await CheckQuestCompletable(questId, characterName));
+        }
 
         [HttpPost("{characterName}/accept-quest")]
         public async Task<ObjectResult> AcceptQuest(string characterName, [FromBody] Dictionary<string, string> paramters)

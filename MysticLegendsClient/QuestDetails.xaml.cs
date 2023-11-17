@@ -27,13 +27,27 @@ namespace MysticLegendsClient
                 ItemId = requirement.Item!.ItemId,
                 StackCount = requirement.Amount,
             }).ToList();
-            ChangeByQuestState(((QuestState?)quest.AcceptedQuests.FirstOrDefault()?.QuestState) ?? QuestState.NotAccepted);
             title.Text = quest.Name;
             description.Text = quest.Description;
             level.VarContent = quest.Level.ToString();
             reward.VarContent = quest.QuestReward?.CurrencyGold.ToString() ?? "";
+
+            ChangeAllButtonsState(quest);
         }
 
+        private void ChangeAllButtonsState(Quest quest)
+        {
+            var questState = GetQuestState(quest);
+            ChangeAllButtonsState(questState);
+        }
+
+        private void ChangeAllButtonsState(QuestState questState)
+        {
+            ChangeByQuestState(questState);
+            CompletableButton(questState);
+        }
+
+        private QuestState GetQuestState(Quest quest) => ((QuestState?)quest.AcceptedQuests.FirstOrDefault()?.QuestState) ?? QuestState.NotAccepted;
         private void ChangeByQuestState(QuestState state)
         {
             switch (state)
@@ -53,12 +67,27 @@ namespace MysticLegendsClient
             }
         }
 
+        private async void CompletableButton(QuestState questState)
+        {
+            if (questState != QuestState.Accepted)
+            {
+                completeButton.Visibility = Visibility.Hidden;
+                return;
+            }
+
+            await ErrorCatcher.TryAsync(async () =>
+            {
+                var vis = await ApiCalls.NpcQuestCall.GetQuestCompletableCallAsync(questId);
+                completeButton.Visibility = vis ? Visibility.Visible : Visibility.Hidden;
+            });
+        }
+
         private void acceptButton_Click(object sender, RoutedEventArgs e)
         {
             _=ErrorCatcher.TryAsync(async () =>
             {
                 await ApiCalls.NpcQuestCall.AcceptQuestServerCallAsync(GameState.Current.CharacterName, questId);
-                ChangeByQuestState(QuestState.Accepted);
+                ChangeAllButtonsState(QuestState.Accepted);
                 QuestStateUpdatedEvent?.Invoke(this, new(QuestState.Accepted));
             });
         }
@@ -68,7 +97,7 @@ namespace MysticLegendsClient
             _ = ErrorCatcher.TryAsync(async () =>
             {
                 await ApiCalls.NpcQuestCall.AbandonQuestServerCallAsync(GameState.Current.CharacterName, questId);
-                ChangeByQuestState(QuestState.NotAccepted);
+                ChangeAllButtonsState(QuestState.NotAccepted);
                 QuestStateUpdatedEvent?.Invoke(this, new(QuestState.NotAccepted));
             });
         }

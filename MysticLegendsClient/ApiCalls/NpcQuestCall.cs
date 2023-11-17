@@ -1,5 +1,4 @@
 ﻿using MysticLegendsShared.Models;
-using System.Text.Json;
 
 namespace MysticLegendsClient.ApiCalls;
 
@@ -12,6 +11,15 @@ internal static class NpcQuestCall
             ["characterName"] = GameState.Current.CharacterName,
         };
         return await GameState.Current.Connection.GetAsync<List<Quest>>($"api/NpcQuest/{npcId}/offered-quests", parameters);
+    }
+
+    public static async Task<bool> GetQuestCompletableCallAsync(int questId)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            ["characterName"] = GameState.Current.CharacterName,
+        };
+        return await GameState.Current.Connection.GetAsync<bool>($"api/NpcQuest/{questId}/quest-completable", parameters);
     }
 
     public static async Task AcceptQuestServerCallAsync(string characterName, int questId)

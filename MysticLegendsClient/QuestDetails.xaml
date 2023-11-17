@@ -23,8 +23,11 @@
 
             <controls:InventoryView Grid.Row="1" x:Name="requirementsView" CounterVisibility="Collapsed"/>
         </Grid>
-        <controls:StatLabel x:Name="reward" StaticContent="Reward in golds: " VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="40 30"/>
-        <Button Content="Accept" x:Name="acceptButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="60" Height="25" Margin="0,0,40,30" Click="acceptButton_Click"/>
-        <Button Content="Abandon" x:Name="abandonButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="60" Height="25" Margin="0,0,40,30" Click="abandonButton_Click"/>
+        <controls:StatLabel x:Name="reward" StaticContent="Reward in golds: " VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="30 40"/>
+        <controls:StatLabel x:Name="xps" StaticContent="XPs: " VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="30 20"/>
+        
+        <Button Content="Accept" x:Name="acceptButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="90" Height="30" Margin="0,0,40,30" Click="acceptButton_Click"/>
+        <Button Content="Abandon" x:Name="abandonButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="90" Height="30" Margin="0,0,40,30" Click="abandonButton_Click"/>
+        <Button Content="Complete" x:Name="completeButton" Visibility="Hidden" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="90" Height="30" Margin="0,0,140,30" />
     </Grid>
 </Window>
