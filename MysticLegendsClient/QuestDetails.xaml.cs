@@ -31,6 +31,7 @@ namespace MysticLegendsClient
             description.Text = quest.Description;
             level.VarContent = quest.Level.ToString();
             reward.VarContent = quest.QuestReward?.CurrencyGold.ToString() ?? "";
+            xps.VarContent = quest.QuestReward?.Xp.ToString() ?? "";
 
             ChangeAllButtonsState(quest);
         }
