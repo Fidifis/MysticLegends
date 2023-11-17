@@ -9,5 +9,7 @@ public partial class QuestReward
 
     public int CurrencyGold { get; set; }
 
+    public int Xp { get; set; }
+
     public virtual Quest Quest { get; set; } = null!;
 }

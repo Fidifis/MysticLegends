@@ -143,6 +143,7 @@ public partial class Xdigf001Context : DbContext
             entity.Property(e => e.Username)
                 .HasMaxLength(32)
                 .HasColumnName("username");
+            entity.Property(e => e.Xp).HasColumnName("xp");
 
             entity.HasOne(d => d.CityNameNavigation).WithMany(p => p.Characters)
                 .HasForeignKey(d => d.CityName)
@@ -374,19 +375,16 @@ public partial class Xdigf001Context : DbContext
 
         modelBuilder.Entity<QuestRequirement>(entity =>
         {
-            entity.HasKey(e => e.RequirementId).HasName("pk_quest_requirement");
+            entity.HasKey(e => new { e.QuestId, e.ItemId }).HasName("pk_quest_requirement");
 
             entity.ToTable("quest_requirement");
 
-            entity.Property(e => e.RequirementId).HasColumnName("requirement_id");
-            entity.Property(e => e.Amount).HasColumnName("amount");
-            entity.Property(e => e.ItemId).HasColumnName("item_id");
-            entity.Property(e => e.MobType).HasColumnName("mob_type");
             entity.Property(e => e.QuestId).HasColumnName("quest_id");
+            entity.Property(e => e.ItemId).HasColumnName("item_id");
+            entity.Property(e => e.Amount).HasColumnName("amount");
 
             entity.HasOne(d => d.Item).WithMany(p => p.QuestRequirements)
                 .HasForeignKey(d => d.ItemId)
-                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_quest_requirement_item");
 
             entity.HasOne(d => d.Quest).WithMany(p => p.QuestRequirements)
@@ -404,6 +402,7 @@ public partial class Xdigf001Context : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("quest_id");
             entity.Property(e => e.CurrencyGold).HasColumnName("currency_gold");
+            entity.Property(e => e.Xp).HasColumnName("xp");
 
             entity.HasOne(d => d.Quest).WithOne(p => p.QuestReward)
                 .HasForeignKey<QuestReward>(d => d.QuestId)

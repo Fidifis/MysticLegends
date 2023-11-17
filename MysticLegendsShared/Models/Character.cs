@@ -17,6 +17,8 @@ public partial class Character
 
     public int CurrencyGold { get; set; }
 
+    public int Xp { get; set; }
+
     public virtual ICollection<AcceptedQuest> AcceptedQuests { get; set; } = new List<AcceptedQuest>();
 
     public virtual CharacterInventory? CharacterInventory { get; set; }
