@@ -42,7 +42,7 @@ namespace MysticLegendsClient
 
         private void FillData(Character characterData)
         {
-            characterView.FillData(characterData.CharacterName, characterData.InventoryItems.AsReadOnly());
+            characterView.FillData(characterData.CharacterName, characterData.Level, characterData.InventoryItems.AsReadOnly());
             if (characterData.CharacterInventory is not null)
                 inventoryView.FillData(characterData.CharacterInventory.InventoryItems.AsReadOnly(), characterData.CharacterInventory.Capacity);
         }

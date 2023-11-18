@@ -79,9 +79,10 @@ namespace MysticLegendsClient.Controls
             FillEquipedItems(items);
         }
 
-        public void FillData(string characterName, IEnumerable<InventoryItem> items)
+        public void FillData(string characterName, int level, IEnumerable<InventoryItem> items)
         {
             this.characterName.Content = characterName;
+            characterLevel.VarContent = level.ToString();
 
             FillData(items);
         }
