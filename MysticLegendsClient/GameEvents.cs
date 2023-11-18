@@ -12,4 +12,7 @@ internal class GameEvents
 
     public event EventHandler<UpdateEventArgs<Character>>? CharacterUpdateEvent;
     public void CharacterUpdate(object? sender, UpdateEventArgs<Character> e) => CharacterUpdateEvent?.Invoke(sender, e);
+
+    public event EventHandler<UpdateEventArgs<Character>>? CharacterWithItemsUpdateEvent;
+    public void CharacterWithItemsUpdate(object? sender, UpdateEventArgs<Character> e) => CharacterWithItemsUpdateEvent?.Invoke(sender, e);
 }

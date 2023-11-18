@@ -38,14 +38,18 @@ namespace MysticLegendsClient
         {
             InitializeComponent();
             RefreshCharStats();
-            GameState.Current.GameEvents.CurrencyUpdateEvent += CurrencyChanged;
-            GameState.Current.GameEvents.CharacterUpdateEvent += CharacterStatsChanged;
         }
 
         public CityWindow(string title): this()
         {
             Title = $"Mystic Legends - {title} (City)";
             cityNameLabel.Content = title;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            GameState.Current.GameEvents.CurrencyUpdateEvent += CurrencyChanged;
+            GameState.Current.GameEvents.CharacterUpdateEvent += CharacterStatsChanged;
         }
 
         protected void ShowButtons(IEnumerable<ButtonType> buttons)
@@ -116,6 +120,9 @@ namespace MysticLegendsClient
 
         protected virtual void Window_Closed(object sender, EventArgs e)
         {
+            GameState.Current.GameEvents.CurrencyUpdateEvent -= CurrencyChanged;
+            GameState.Current.GameEvents.CharacterUpdateEvent -= CharacterStatsChanged;
+
             characterWindow.Dispose();
             potionsWindow.Dispose();
         }

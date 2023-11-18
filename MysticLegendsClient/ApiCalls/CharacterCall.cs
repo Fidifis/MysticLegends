@@ -12,7 +12,7 @@ internal static class CharacterCall
         await ErrorCatcher.TryAsync(async () =>
         {
             var result = await GetCharacterServerCallAsync(characterName);
-            GameState.Current.GameEvents.CharacterUpdate(sender, new(result));
+            GameState.Current.GameEvents.CharacterWithItemsUpdate(sender, new(result));
         });
     }
 
@@ -50,7 +50,7 @@ internal static class CharacterCall
         await ErrorCatcher.TryAsync(async() =>
         {
             var characterData = await GameState.Current.Connection.PostAsync<Character>($"/api/Character/{GameState.Current.CharacterName}/equip-item", parameters);
-            GameState.Current.GameEvents.CharacterUpdate(sender, new(characterData));
+            GameState.Current.GameEvents.CharacterWithItemsUpdate(sender, new(characterData));
         });
     }
 
@@ -65,7 +65,7 @@ internal static class CharacterCall
         await ErrorCatcher.TryAsync(async () =>
         {
             var characterData = await GameState.Current.Connection.PostAsync<Character>($"/api/Character/{GameState.Current.CharacterName}/unequip-item", parameters);
-            GameState.Current.GameEvents.CharacterUpdate(sender, new(characterData));
+            GameState.Current.GameEvents.CharacterWithItemsUpdate(sender, new(characterData));
         });
     }
 
@@ -78,7 +78,7 @@ internal static class CharacterCall
         await ErrorCatcher.TryAsync(async () =>
         {
             var characterData = await GameState.Current.Connection.PostAsync<Character>($"/api/Character/{GameState.Current.CharacterName}/swap-equip-item", parameters);
-            GameState.Current.GameEvents.CharacterUpdate(sender, new(characterData));
+            GameState.Current.GameEvents.CharacterWithItemsUpdate(sender, new(characterData));
         });
     }
 }

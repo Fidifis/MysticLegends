@@ -24,11 +24,15 @@ namespace MysticLegendsClient
 
             inventoryView.CanTransitItems = true;
 
+           // TODO: Unsubscribe events - data being rerendered even when window is closed. Also the lambda captures ref to this or characterView and it cannot be garbage collected.
             GameState.Current.GameEvents.CharacterInventoryUpdateEvent += (object? sender, UpdateEventArgs<IReadOnlyCollection<InventoryItem>> e) =>
                 inventoryView.Items = e.Value;
 
-            GameState.Current.GameEvents.CharacterUpdateEvent += (object? sender, UpdateEventArgs<Character> e) =>
+            GameState.Current.GameEvents.CharacterWithItemsUpdateEvent += (object? sender, UpdateEventArgs<Character> e) =>
                 FillData(e.Value);
+
+            GameState.Current.GameEvents.CharacterUpdateEvent += (object? sender, UpdateEventArgs<Character> e) =>
+                characterView.UpdateLevel(e.Value.Level);
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
