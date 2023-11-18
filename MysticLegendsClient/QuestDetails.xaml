@@ -28,6 +28,6 @@
         
         <Button Content="Accept" x:Name="acceptButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="90" Height="30" Margin="0,0,40,30" Click="acceptButton_Click"/>
         <Button Content="Abandon" x:Name="abandonButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="90" Height="30" Margin="0,0,40,30" Click="abandonButton_Click"/>
-        <Button Content="Complete" x:Name="completeButton" Visibility="Hidden" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="90" Height="30" Margin="0,0,140,30" />
+        <Button Content="Complete" x:Name="completeButton" Visibility="Hidden" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="90" Height="30" Margin="0,0,140,30" Click="completeButton_Click" />
     </Grid>
 </Window>

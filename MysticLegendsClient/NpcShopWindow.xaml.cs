@@ -127,7 +127,7 @@ namespace MysticLegendsClient
         {
             await ErrorCatcher.TryAsync(async () =>
             {
-                var quests = await ApiCalls.NpcQuestCall.GetOfferedQuestsServerCallAsync(NpcId);
+                var quests = await ApiCalls.NpcQuestCall.GetOfferedQuestsServerCallAsync(NpcId, GameState.Current.CharacterName);
                 questsView.FillData(quests);
             });
         }

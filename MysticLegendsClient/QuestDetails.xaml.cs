@@ -78,7 +78,7 @@ namespace MysticLegendsClient
 
             await ErrorCatcher.TryAsync(async () =>
             {
-                var vis = await ApiCalls.NpcQuestCall.GetQuestCompletableCallAsync(questId);
+                var vis = await ApiCalls.NpcQuestCall.GetQuestCompletableCallAsync(questId, GameState.Current.CharacterName);
                 completeButton.Visibility = vis ? Visibility.Visible : Visibility.Hidden;
             });
         }
@@ -100,6 +100,18 @@ namespace MysticLegendsClient
                 await ApiCalls.NpcQuestCall.AbandonQuestServerCallAsync(GameState.Current.CharacterName, questId);
                 ChangeAllButtonsState(QuestState.NotAccepted);
                 QuestStateUpdatedEvent?.Invoke(this, new(QuestState.NotAccepted));
+            });
+        }
+
+        private void completeButton_Click(object sender, RoutedEventArgs e)
+        {
+            _ = ErrorCatcher.TryAsync(async () =>
+            {
+                if (await ApiCalls.NpcQuestCall.CompleteQuestServerCallAsync(GameState.Current.CharacterName, questId))
+                {
+                    ChangeAllButtonsState(QuestState.Completed);
+                    QuestStateUpdatedEvent?.Invoke(this, new(QuestState.Completed));
+                }
             });
         }
     }

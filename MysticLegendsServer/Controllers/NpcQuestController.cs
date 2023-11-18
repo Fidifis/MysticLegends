@@ -21,14 +21,53 @@ namespace MysticLegendsServer.Controllers
             this.auth = auth;
         }
 
-        private async Task<bool> CheckQuestCompletable(int questId, string characterName)
+        private async Task<List<InventoryItem>> RequestItems(string characterName) => await dbContext.InventoryItems
+                .Where(item => item.CharacterInventoryCharacterN == characterName)
+                .ToListAsync();
+
+        private async Task<List<QuestRequirement>> RequestRequirements(int questId) => await dbContext.QuestRequirements
+                .Where(req => req.QuestId == questId)
+                .Include(req => req.Item)
+                .ToListAsync();
+
+        private Dictionary<int, int> RequirementsToDict(IEnumerable<QuestRequirement> requirements)
         {
-            var items = dbContext.InventoryItems
-                .Where(item => item.CharacterInventoryCharacterN == characterName);
+            var dict = new Dictionary<int, int>();
+            foreach (var req in requirements)
+            {
+                dict[req.ItemId] = req.Amount;
+            }
+            return dict;
+        }
 
-            
+        private bool ConsumeStacks(IEnumerable<InventoryItem> items, IDictionary<int, int> requirements, bool canConsume)
+        {
+            foreach (var item in items)
+            {
+                if (!requirements.ContainsKey(item.ItemId))
+                    continue;
 
-            return true;
+                var sub = Math.Min(requirements[item.ItemId], item.StackCount);
+                requirements[item.ItemId] -= sub;
+
+                if (requirements[item.ItemId] <= 0)
+                    requirements.Remove(item.ItemId);
+
+                if (canConsume)
+                {
+                    item.StackCount -= sub;
+                    if (item.StackCount == 0)
+                    {
+                        dbContext.InventoryItems.Remove(item);
+                    }
+                    else if (item.StackCount < 0)
+                        throw new Exception("Consuming stack made a negative stack count");
+                }
+
+                if (requirements.Count == 0)
+                    return true;
+            }
+            return false;
         }
 
         [HttpGet("{npcId}/offered-quests")]
@@ -55,7 +94,9 @@ namespace MysticLegendsServer.Controllers
         [HttpGet("{characterName}/quest-completable")]
         public async Task<ObjectResult> GetQuestCompleteable(string characterName, int questId)
         {
-            return Ok(await CheckQuestCompletable(questId, characterName));
+            var items = await RequestItems(characterName);
+            var required = await RequestRequirements(questId);
+            return Ok(ConsumeStacks(items, RequirementsToDict(required), false));
         }
 
         [HttpPost("{characterName}/accept-quest")]
@@ -110,10 +151,25 @@ namespace MysticLegendsServer.Controllers
             return Ok(acceptedQuest);
         }
 
-        //[HttpPost("{characterName}/complete-quest")]
-        //public async Task<ObjectResult> CompleteQuest(string characterName, [FromBody] Dictionary<string, string> paramters)
-        //{
-            // TODO
-        //}
+        [HttpPost("{characterName}/complete-quest")]
+        public async Task<ObjectResult> CompleteQuest(string characterName, [FromBody] Dictionary<string, string> paramters)
+        {
+            var questId = int.Parse(paramters["questId"]);
+
+            var items = await RequestItems(characterName);
+            var required = await RequestRequirements(questId);
+
+            if (ConsumeStacks(items, RequirementsToDict(required), true))
+            {
+                var acceptedQuest = await dbContext.AcceptedQuests
+                    .SingleAsync(quest => quest.QuestId == questId && quest.CharacterName == characterName);
+                acceptedQuest.QuestState = (int)QuestState.Completed;
+
+                await dbContext.SaveChangesAsync();
+                return Ok(items);
+            }
+            else
+                return Ok(null);
+        }
     }
 }
