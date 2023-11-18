@@ -9,6 +9,7 @@ namespace MysticLegendsClient.CityWindows
 
         public AyreimCity(): base("Ayreim")
         {
+            SetSplashImage("/images/Cities/Ayreim.png");
             ShowButtons(new ButtonType[] {
                 ButtonType.Blacksmith,
                 ButtonType.Potions,

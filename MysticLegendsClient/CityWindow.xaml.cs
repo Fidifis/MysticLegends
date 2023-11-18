@@ -118,6 +118,11 @@ namespace MysticLegendsClient
             xpProgress.Maximum = Leveling.GetXpToLevelUp(e.Value.Level);
         }
 
+        protected void SetSplashImage(string image)
+        {
+            splashImage.Source = BitmapTools.ImageFromResource(image);
+        }
+
         protected virtual void Window_Closed(object sender, EventArgs e)
         {
             GameState.Current.GameEvents.CurrencyUpdateEvent -= CurrencyChanged;

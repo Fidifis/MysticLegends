@@ -64,7 +64,7 @@
             </ScrollViewer>
             
             <Grid Grid.Column="1">
-                <Image Stretch="UniformToFill" Source="/images/Cities/Eldoria.png" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <Image x:Name="splashImage" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center" />
             </Grid>
         </Grid>
     </Grid>

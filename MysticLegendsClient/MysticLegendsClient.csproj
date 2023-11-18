@@ -30,7 +30,7 @@
     <Resource Include="icons\rebel.svg" />
     <Resource Include="icons\scale-balanced-solid.svg" />
     <Resource Include="icons\user-solid.svg" />
-    <Resource Include="images\Cities\Eldoria.png" />
+    <Resource Include="images\Cities\Ayreim.png" />
     <Resource Include="images\Graphics\LoginScreen.png" />
     <Resource Include="images\Graphics\LoginScreen2.png" />
     <Resource Include="images\Graphics\LoginScreen3.png" />
