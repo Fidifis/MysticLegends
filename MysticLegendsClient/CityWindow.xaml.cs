@@ -2,6 +2,8 @@
 using MysticLegendsClient.Dialogs;
 using MysticLegendsClient.NpcWindows;
 using MysticLegendsClient.Resources;
+using MysticLegendsShared.Models;
+using MysticLegendsShared.Utilities;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -35,8 +37,9 @@ namespace MysticLegendsClient
         public CityWindow()
         {
             InitializeComponent();
-            RefreshCurrency();
+            RefreshCharStats();
             GameState.Current.GameEvents.CurrencyUpdateEvent += CurrencyChanged;
+            GameState.Current.GameEvents.CharacterUpdateEvent += CharacterStatsChanged;
         }
 
         public CityWindow(string title): this()
@@ -93,13 +96,22 @@ namespace MysticLegendsClient
             currencyLabel.Content = e.Value;
         }
 
-        private async void RefreshCurrency()
+        private async void RefreshCharStats()
         {
             await ErrorCatcher.TryAsync(async () =>
             {
-                var currency = await ApiCalls.CharacterCall.GetCharacterCurrencyCallAsync(GameState.Current.CharacterName);
-                CurrencyChanged(this, new(currency));
+                var character = await ApiCalls.CharacterCall.GetCharacterServerCallAsync(GameState.Current.CharacterName);
+                CharacterStatsChanged(this, new(character));
             });
+        }
+
+        private void CharacterStatsChanged(object? sender, UpdateEventArgs<Character> e)
+        {
+            CurrencyChanged(this, new(e.Value.CurrencyGold));
+            currentLevel.Content = e.Value.Level;
+            nextLevel.Content = e.Value.Level + 1;
+            xpProgress.Value = e.Value.Xp;
+            xpProgress.Maximum = Leveling.GetXpToLevelUp(e.Value.Level);
         }
 
         protected virtual void Window_Closed(object sender, EventArgs e)

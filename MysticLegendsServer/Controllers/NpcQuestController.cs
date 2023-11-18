@@ -107,10 +107,18 @@ namespace MysticLegendsServer.Controllers
             if (!await auth.ValidateAsync(Request.Headers, characterName))
                 return StatusCode(403, "Unauthorized");
 
+            var character = await dbContext.Characters.SingleAsync(character => character.CharacterName == characterName);
             var quest = await dbContext.Quests
                 .Where(quest => quest.QuestId == questId)
                 .Include(quest => quest.AcceptedQuests.Where(accQ => accQ.CharacterName == characterName))
                 .SingleAsync();
+
+            if (character.Level < quest.Level)
+            {
+                var msg = "Character level too low";
+                logger.LogWarning(msg);
+                BadRequest(msg);
+            }
 
             AcceptedQuest acceptedQuest;
             if (quest.AcceptedQuests.Any())
@@ -161,15 +169,30 @@ namespace MysticLegendsServer.Controllers
 
             if (ConsumeStacks(items, RequirementsToDict(required), true))
             {
+                var character = await dbContext.Characters.SingleAsync(character => character.CharacterName == characterName);
                 var acceptedQuest = await dbContext.AcceptedQuests
-                    .SingleAsync(quest => quest.QuestId == questId && quest.CharacterName == characterName);
+                    .Where(quest => quest.QuestId == questId && quest.CharacterName == characterName)
+                    .Include(quest => quest.Quest)
+                    .ThenInclude(quest => quest.QuestReward)
+                    .SingleAsync();
                 acceptedQuest.QuestState = (int)QuestState.Completed;
 
+                var xp = character.Xp;
+                var level = character.Level;
+
+                xp += acceptedQuest.Quest.QuestReward?.Xp ?? 0;
+                Leveling.LevelUpIfPossible(ref level, ref xp);
+
+                character.Xp = xp;
+                character.Level = level;
+
+                character.CurrencyGold += acceptedQuest.Quest.QuestReward?.CurrencyGold ?? 0;
+
                 await dbContext.SaveChangesAsync();
-                return Ok(items);
+                return Ok(character);
             }
             else
-                return Ok(null);
+                return BadRequest("Quest cannot be completed");
         }
     }
 }

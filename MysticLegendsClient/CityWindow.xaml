@@ -24,7 +24,7 @@
             <StackPanel Grid.Column="2" Orientation="Horizontal" FlowDirection="RightToLeft">
                 <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" InnerPadding="5" SvgSource="/icons/gear-solid.svg" Click="Options_Click"/>
                 <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" TextGap = "7" InnerPadding="5" SvgSource="{x:Static resources:Icons.bar_worldMap}" LabelText="World"/>
-                <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" TextGap = "7" InnerPadding="5" SvgSource="{x:Static resources:Icons.bar_character}" LabelText="Charcter" Click="CharacterButton_Click"/>
+                <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" TextGap = "7" InnerPadding="5" SvgSource="{x:Static resources:Icons.bar_character}" LabelText="Character" Click="CharacterButton_Click"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Border Padding="10">
@@ -32,6 +32,18 @@
                 </Border>
                 <Label x:Name="currencyLabel" Content="n/a" Margin="5 0" Padding="0" FontSize="20" VerticalContentAlignment="Center"/>
             </StackPanel>
+            <Grid Grid.Column="0" Margin="20 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="*" MinWidth="50"/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="Level" Margin="5 0" Padding="0" FontSize="20" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+                <Label x:Name="currentLevel" Content="n/a" Margin="5 0" Padding="0" FontSize="20" VerticalContentAlignment="Center" HorizontalContentAlignment="Right"/>
+                <ProgressBar x:Name="xpProgress" Grid.Column="1" Margin="10"/>
+                <Label Grid.Column="2" x:Name="nextLevel" Content="n/a" Margin="5 0" Padding="0" FontSize="20" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"/>
+            </Grid>
         </Grid>
         </ScrollViewer>
         

@@ -11,13 +11,13 @@ public static class Leveling
     {
         var xpRequiredForLevelUp = GetXpToLevelUp(level);
 
-        if (xp >= xpRequiredForLevelUp)
+        var loopLooped = xp >= xpRequiredForLevelUp;
+        while (xp >= xpRequiredForLevelUp)
         {
             level++;
             xp -= xpRequiredForLevelUp;
-
-            return true;
+            xpRequiredForLevelUp = GetXpToLevelUp(level);
         }
-        return false;
+        return loopLooped;
     }
 }

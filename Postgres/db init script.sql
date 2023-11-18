@@ -291,7 +291,7 @@ VALUES (1, 1, 'Out of stock',
 TRUE, TRUE, 1),
 (2, 1, 'The Cursed Fang',
 'Master Alarics alchemical prowess faces a dire challenge. The cure for a potent ailment lies within the venomous fang of the elusive Shadow Serpent, a creature rumored to haunt the forbidden Mistwood Forest. The demand for this rare potion is urgent, and Master Alaric implores the bravest of adventurers to embark on a perilous quest.',
-FALSE, TRUE, 1);
+FALSE, TRUE, 2);
 
 -- Insert data into the "quest_requirement" table
 INSERT INTO quest_requirement (quest_id, item_id, amount)
@@ -300,7 +300,7 @@ VALUES (1, 3, 10),
 
 -- Insert data into the "quest_reward" table
 INSERT INTO quest_reward (quest_id, currency_gold, xp)
-VALUES (1, 100, 10),
+VALUES (1, 100, 20),
        (2, 500, 1000);
 
 INSERT INTO accepted_quest (character_name, quest_id, quest_state)

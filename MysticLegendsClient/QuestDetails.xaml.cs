@@ -107,11 +107,9 @@ namespace MysticLegendsClient
         {
             _ = ErrorCatcher.TryAsync(async () =>
             {
-                if (await ApiCalls.NpcQuestCall.CompleteQuestServerCallAsync(GameState.Current.CharacterName, questId))
-                {
-                    ChangeAllButtonsState(QuestState.Completed);
-                    QuestStateUpdatedEvent?.Invoke(this, new(QuestState.Completed));
-                }
+                await ApiCalls.NpcQuestCall.CompleteQuestServerCallAsync(this, GameState.Current.CharacterName, questId);
+                ChangeAllButtonsState(QuestState.Completed);
+                QuestStateUpdatedEvent?.Invoke(this, new(QuestState.Completed));
             });
         }
     }

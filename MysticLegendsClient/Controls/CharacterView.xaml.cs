@@ -84,7 +84,8 @@ namespace MysticLegendsClient.Controls
             this.characterName.Content = characterName;
             characterLevel.VarContent = level.ToString();
 
-            FillData(items);
+            if (items.Any())
+                FillData(items);
         }
 
         private void ClearEquipedItems()

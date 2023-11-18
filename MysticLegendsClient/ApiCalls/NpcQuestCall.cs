@@ -40,12 +40,13 @@ internal static class NpcQuestCall
         await GameState.Current.Connection.PostAsync<AcceptedQuest>($"api/NpcQuest/{characterName}/abandon-quest", parameters);
     }
 
-    public static async Task<bool> CompleteQuestServerCallAsync(string characterName, int questId)
+    public static async Task CompleteQuestServerCallAsync(object? sender, string characterName, int questId)
     {
         var parameters = new Dictionary<string, string>
         {
             ["questId"] = questId.ToString(),
         };
-        return await GameState.Current.Connection.PostAsync<bool>($"api/NpcQuest/{characterName}/complete-quest", parameters);
+        var response = await GameState.Current.Connection.PostAsync<Character>($"api/NpcQuest/{characterName}/complete-quest", parameters);
+        GameState.Current.GameEvents.CharacterUpdate(sender, new(response));
     }
 }
