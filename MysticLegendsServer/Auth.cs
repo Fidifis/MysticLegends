@@ -142,7 +142,7 @@ public class Auth: IDisposable
     {
         ObjectDisposedException.ThrowIf(disposed, this);
 
-        var tokenRecord = await dbContext.RefreshTokens.SingleAsync(token => token.RefreshToken1 == refreshToken);
+        var tokenRecord = await dbContext.RefreshTokens.SingleOrDefaultAsync(token => token.RefreshToken1 == refreshToken);
 
         if (tokenRecord is null)
         {
@@ -158,7 +158,7 @@ public class Auth: IDisposable
     {
         ObjectDisposedException.ThrowIf(disposed, this);
 
-        var tokenRecord = await dbContext.AccessTokens.SingleAsync(token => token.AccessToken1 == accessToken);
+        var tokenRecord = await dbContext.AccessTokens.SingleOrDefaultAsync(token => token.AccessToken1 == accessToken);
 
         if (tokenRecord is null)
         {
@@ -178,7 +178,7 @@ public class Auth: IDisposable
         return new string(chars);
     }
 
-    public string GetPasswordHash(string plaintext) => Convert.ToHexString(md5.ComputeHash(Encoding.UTF8.GetBytes(plaintext))).ToLower();
+    private string GetPasswordHash(string plaintext) => Convert.ToHexString(md5.ComputeHash(Encoding.UTF8.GetBytes(plaintext))).ToLower();
 
     public void Dispose()
     {

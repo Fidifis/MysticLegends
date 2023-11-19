@@ -22,7 +22,6 @@ namespace MysticLegendsClient
             var connectionUrl = ServerConnector.ConnectionTypeToUrl(connectionType, customConnection);
 
             using var failFastGameState = new GameState(connectionUrl, TimeSpan.FromSeconds(3));
-            var gameState = new GameState(connectionUrl);
 
             if (!await failFastGameState.Connection.HealthCheckAsync())
             {
@@ -31,15 +30,21 @@ namespace MysticLegendsClient
                 return;
             }
 
+            if (GameState.Current.TokenStore.AccessToken is not null)
+            {
+                await EnterCharacterSelect(GameState.Current);
+                return;
+            }
+
+            var gameState = new GameState(connectionUrl);
             GameState.MakeGameStateCurrent(gameState);
             if (await ServerConnector.Authenticate(gameState))
             {
                 await EnterCharacterSelect(gameState);
+                return;
             }
-            else
-            {
-                EnterLogin();
-            }
+
+            EnterLogin();
         }
 
         private void EnterGame()

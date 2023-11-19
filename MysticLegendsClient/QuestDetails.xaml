@@ -20,7 +20,7 @@
             <ScrollViewer  Grid.Row="0" VerticalScrollBarVisibility="Auto">
                 <TextBlock x:Name="description" TextWrapping="Wrap"/>
             </ScrollViewer>
-
+            <Label Grid.Row="1" Content="Requirements:" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <controls:InventoryView Grid.Row="1" x:Name="requirementsView" CounterVisibility="Collapsed"/>
         </Grid>
         <controls:StatLabel x:Name="reward" StaticContent="Reward in golds: " VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="30 40"/>

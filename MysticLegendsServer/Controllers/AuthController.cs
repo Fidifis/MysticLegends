@@ -32,10 +32,11 @@ namespace MysticLegendsServer.Controllers
         [HttpPost("logout")]
         public async Task<ObjectResult> Logout([FromBody] Dictionary<string, string> paramters)
         {
+            var accessToken = paramters["accessToken"];
             var refreshToken = paramters["refreshToken"];
 
+            var accessTokenResult = await auth.InvalidateAccessToken(accessToken);
             var refreshTokenResult = await auth.InvalidateRefreshToken(refreshToken);
-            var accessTokenResult = await auth.InvalidateAccessToken(Request.Headers["access-token"].First()!);
             if (refreshTokenResult && accessTokenResult)
             {
                 return Ok("ok");
@@ -60,5 +61,14 @@ namespace MysticLegendsServer.Controllers
 
             return Ok(token);
         }
+
+        //[HttpPost("validate")]
+        //public async Task<ObjectResult> ValidateAccessToken([FromBody] Dictionary<string, string> paramters)
+        //{
+        //    var accessToken = paramters["accessToken"];
+        //    var username = paramters["username"];
+
+        //    return Ok(await auth.ValidateUserAsync(accessToken, username));
+        //}
     }
 }
