@@ -14,13 +14,14 @@ internal static class AuthCall
         return await (gameState ?? GameState.Current).Connection.PostAsync<string>($"api/Auth/login", parameters);
     }
 
-    public static async Task LogoutServerCallAsync(string refreshToken, string accessToken, GameState? gameState = null)
+    public static async Task LogoutServerCallAsync(string? refreshToken, string? accessToken, GameState? gameState = null)
     {
-        var parameters = new Dictionary<string, string>
-        {
-            ["refreshToken"] = refreshToken,
-            ["accessToken"] = accessToken,
-        };
+        var parameters = new Dictionary<string, string>();
+        if (refreshToken is not null)
+            parameters["refreshToken"] = refreshToken;
+        if (accessToken is not null)
+            parameters["accessToken"] = accessToken;
+        
         await ErrorCatcher.TryAsync(async () =>
         {
             await (gameState ?? GameState.Current).Connection.PostAsync<string>($"api/Auth/logout", parameters);

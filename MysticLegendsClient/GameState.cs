@@ -34,10 +34,10 @@ internal class GameState : IDisposable
         Connection = new(serverAddress, HttpTimeout);
     }
 
-    public void ChangeAccessToken(string accessToken)
+    public void ChangeAccessToken(string? accessToken)
     {
         TokenStore.AccessToken = accessToken;
-        Connection.AccessToken = accessToken;
+        Connection.AccessToken = accessToken ?? "";
     }
 
     public void Dispose()

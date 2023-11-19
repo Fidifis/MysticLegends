@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MysticLegendsShared.Utilities;
 
 namespace MysticLegendsServer.Controllers
 {
@@ -32,11 +33,16 @@ namespace MysticLegendsServer.Controllers
         [HttpPost("logout")]
         public async Task<ObjectResult> Logout([FromBody] Dictionary<string, string> paramters)
         {
-            var accessToken = paramters["accessToken"];
-            var refreshToken = paramters["refreshToken"];
+            var accessToken = paramters.Get("accessToken");
+            var refreshToken = paramters.Get("refreshToken");
 
-            var accessTokenResult = await auth.InvalidateAccessToken(accessToken);
-            var refreshTokenResult = await auth.InvalidateRefreshToken(refreshToken);
+            bool accessTokenResult = true, refreshTokenResult = true;
+            if (accessToken is not null)
+                accessTokenResult = await auth.InvalidateAccessToken(accessToken);
+
+            if (refreshToken is not null)
+                refreshTokenResult = await auth.InvalidateRefreshToken(refreshToken);
+
             if (refreshTokenResult && accessTokenResult)
             {
                 return Ok("ok");

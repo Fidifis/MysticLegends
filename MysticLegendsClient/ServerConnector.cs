@@ -59,10 +59,10 @@ class ServerConnector
     {
         var refreshToken = await gameState.TokenStore.ReadRefreshTokenAsync(gameState.Connection.Host);
         var accessToken = gameState.TokenStore.AccessToken;
-        if (refreshToken is not null && accessToken is not null)
-        {
+
             await ApiCalls.AuthCall.LogoutServerCallAsync(refreshToken, accessToken);
-            gameState.TokenStore.AccessToken = null;
-        }
+            gameState.ChangeAccessToken(null);
+            await gameState.TokenStore.SaveRefreshToken(null, gameState.Connection.Host);
+        
     }
 }
