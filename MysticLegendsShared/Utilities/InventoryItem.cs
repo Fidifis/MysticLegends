@@ -17,7 +17,7 @@ public partial class InventoryItem
             Position = Position,
             Level = Level,
             Durability = Durability,
-            BattleStats = new List<BattleStat>(BattleStats),
+            BattleStats = new List<BattleStat>(BattleStats), // TODO - there may be bug, because we keep invitemId of original, not the id of copied item. The stats may be attached to original.
         };
     }
 }
