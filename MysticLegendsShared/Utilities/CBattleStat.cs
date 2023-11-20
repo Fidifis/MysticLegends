@@ -2,7 +2,7 @@
 
 namespace MysticLegendsShared.Utilities;
 
-public struct CBattleStat
+public record CBattleStat
 {
     public enum Method
     {
@@ -57,7 +57,7 @@ public struct CBattleStat
 
     public static IEnumerable<CBattleStat> ConvertFromBattleStat(IEnumerable<BattleStat> battleStats) => from bs in battleStats select new CBattleStat(bs);
 
-    public override readonly string ToString() => StatMethod switch
+    public override string ToString() => StatMethod switch
     {
         Method.Add => $"Adds {Value} {StatType}",
         Method.Multiply => $"Multiplies {StatType} by {Value}",
