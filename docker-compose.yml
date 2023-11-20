@@ -4,8 +4,6 @@ services:
     network_mode: "host"
     build:
       context: Postgres
-    volumes:
-      - ml-postgres-data:/var/lib/postgresql/data
 
   server:
     image: ml-server
@@ -17,6 +15,3 @@ services:
       CONNECTIONSTRING: Server=localhost;Port=5432;Database=xdigf001;User Id=xdigf001;Password=docker;Pooling=true;MaxPoolSize=3
     depends_on:
       - postgres
-
-volumes:
-  ml-postgres-data:
