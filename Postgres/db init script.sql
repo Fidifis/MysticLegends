@@ -228,8 +228,30 @@ ALTER TABLE trade_market ADD CONSTRAINT fk_trade_market_inventory_item FOREIGN K
 ALTER TABLE inventory_item ADD CONSTRAINT xc_inventory_item_city_name_cha CHECK ((city_name IS NOT NULL AND character_name IS NULL AND character_inventory_character_n IS NULL AND npc_id IS NULL) OR (city_name IS NULL AND character_name IS NOT NULL AND character_inventory_character_n IS NULL AND npc_id IS NULL) OR (city_name IS NULL AND character_name IS NULL AND character_inventory_character_n IS NOT NULL AND npc_id IS NULL) OR (city_name IS NULL AND character_name IS NULL AND character_inventory_character_n IS NULL AND npc_id IS NOT NULL));
 
 
--- BEGINING OF ISERTIONS --
+-- INDEXES --
 
+-- Drop existing indexes --
+DROP INDEX IF EXISTS ix_access_token;
+DROP INDEX IF EXISTS ix_refresh_token;
+DROP INDEX IF EXISTS ix_inventory_item_inv_char_name;
+DROP INDEX IF EXISTS ix_inventory_item_char_name;
+DROP INDEX IF EXISTS ix_inventory_item_city_inv_name;
+DROP INDEX IF EXISTS ix_quest_npc_id;
+
+-- tokens
+CREATE INDEX ix_access_token ON access_token USING HASH (access_token);
+CREATE INDEX ix_refresh_token ON refresh_token USING HASH (refresh_token);
+
+-- inventory item
+CREATE INDEX ix_inventory_item_inv_char_name ON inventory_item USING HASH (character_inventory_character_n);
+CREATE INDEX ix_inventory_item_char_name ON inventory_item USING HASH (character_name);
+CREATE INDEX ix_inventory_item_city_inv_name ON inventory_item USING btree (city_name, city_inventory_character_name);
+
+-- quest
+CREATE INDEX ix_quest_npc_id ON quest USING btree (npc_id);
+
+
+-- BEGINING OF ISERTIONS --
 
 -- Insert data into the "users" table
 INSERT INTO "users" (username, password_hash) VALUES ('demo', 'fe01ce2a7fbac8fafaed7c982a04e229');
@@ -311,9 +333,12 @@ VALUES (1, 0, 1, 50),  -- Example stat 1
        (1, 1, 2, 3),  -- Example stat 2
        (1, 0, 3, 60);  -- Example stat 3
 
-SELECT setval('inventory_item_invitem_id_seq', (SELECT max(invitem_id) FROM inventory_item));
-SELECT setval('item_item_id_seq', (SELECT max(item_id) FROM item));
-SELECT setval('mob_mob_id_seq', (SELECT max(mob_id) FROM mob));
-SELECT setval('npc_npc_id_seq', (SELECT max(npc_id) FROM npc));
-SELECT setval('quest_quest_id_seq', (SELECT max(quest_id) FROM quest));
-SELECT setval('refresh_token_record_id_seq', (SELECT max(record_id) FROM refresh_token));
+DO $$
+BEGIN
+PERFORM setval('inventory_item_invitem_id_seq', (SELECT max(invitem_id) FROM inventory_item));
+PERFORM setval('item_item_id_seq', (SELECT max(item_id) FROM item));
+PERFORM setval('mob_mob_id_seq', (SELECT max(mob_id) FROM mob));
+PERFORM setval('npc_npc_id_seq', (SELECT max(npc_id) FROM npc));
+PERFORM setval('quest_quest_id_seq', (SELECT max(quest_id) FROM quest));
+PERFORM setval('refresh_token_record_id_seq', (SELECT max(record_id) FROM refresh_token));
+END $$;

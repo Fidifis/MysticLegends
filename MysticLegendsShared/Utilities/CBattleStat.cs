@@ -2,7 +2,7 @@
 
 namespace MysticLegendsShared.Utilities;
 
-public record CBattleStat
+public record struct CBattleStat
 {
     public enum Method
     {

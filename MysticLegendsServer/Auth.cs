@@ -43,13 +43,14 @@ public class Auth: IDisposable
     {
         ObjectDisposedException.ThrowIf(disposed, this);
 
-        var character = await dbContext.Characters
+        var dbAccessToken = await dbContext.Characters
             .Where(character => character.CharacterName == characterName)
             .Include(character => character.UsernameNavigation)
             .ThenInclude(user => user.AccessToken)
+            .Select(character => character.UsernameNavigation.AccessToken)
             .SingleAsync();
 
-        var dbAccessToken = character.UsernameNavigation.AccessToken;
+        //var dbAccessToken = character.UsernameNavigation.AccessToken;
         if (dbAccessToken is null || dbAccessToken.Expiration < DateTime.Now)
             return false;
 
@@ -75,12 +76,13 @@ public class Auth: IDisposable
     {
         ObjectDisposedException.ThrowIf(disposed, this);
 
-        var user = await dbContext.Users
+        var dbAccessToken = await dbContext.Users
             .Where(user => user.Username == username)
             .Include(user => user.AccessToken)
+            .Select(user => user.AccessToken)
             .SingleAsync();
 
-        var dbAccessToken = user.AccessToken;
+        //var dbAccessToken = user.AccessToken;
         if (dbAccessToken is null || dbAccessToken.Expiration < DateTime.Now)
             return false;
 
