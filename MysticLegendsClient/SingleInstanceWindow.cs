@@ -11,11 +11,13 @@ public interface ISingleInstanceWindow
 
 public sealed class SingleInstanceWindow<T> : IDisposable where T : ISingleInstanceWindow, new()
 {
+    private bool disposed = false;
     private ISingleInstanceWindow? instance;
     public ISingleInstanceWindow Instance
     {
         get
         {
+            ObjectDisposedException.ThrowIf(disposed, this);
             instance ??= new T();
             instance.Closed += (object? s, EventArgs e) => { instance = null; };
             return instance;
@@ -25,6 +27,7 @@ public sealed class SingleInstanceWindow<T> : IDisposable where T : ISingleInsta
     public void Dispose()
     {
         instance?.Close();
+        disposed = true;
     }
 }
 
@@ -37,6 +40,7 @@ public sealed class SingleInstanceWindow : IDisposable
         this.args = args;
     }
 
+    private bool disposed = false;
     private readonly Type instatiationType;
     private readonly object?[]? args;
 
@@ -45,6 +49,7 @@ public sealed class SingleInstanceWindow : IDisposable
     {
         get
         {
+            ObjectDisposedException.ThrowIf(disposed, this);
             instance ??= (ISingleInstanceWindow)(Activator.CreateInstance(instatiationType, args) ?? throw new NullReferenceException());
             instance.Closed += (object? s, EventArgs e) => { instance = null; };
             return instance;
@@ -54,5 +59,6 @@ public sealed class SingleInstanceWindow : IDisposable
     public void Dispose()
     {
         instance?.Close();
+        disposed = true;
     }
 }

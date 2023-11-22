@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MysticLegendsServer;
 
-public class Auth: IDisposable
+public sealed class Auth: IDisposable
 {
     private static readonly char[] alphaNumericChars = Enumerable.Range('0', '9' - '0').Union(Enumerable.Range('A', 'Z' - 'A')).Union(Enumerable.Range('a', 'z' - 'a')).Select(i => (char)i).ToArray();
 
