@@ -12,6 +12,6 @@ services:
       context: .
       dockerfile: MysticLegendsServer/Dockerfile
     environment:
-      CONNECTIONSTRING: Server=localhost;Port=5432;Database=xdigf001;User Id=xdigf001;Password=docker;Pooling=true;MaxPoolSize=3
+      CONNECTIONSTRING: Server=localhost;Port=5432;Database=xdigf001;User Id=xdigf001;Password=docker;Pooling=true;MaxPoolSize=50
     depends_on:
       - postgres
