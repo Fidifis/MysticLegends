@@ -17,7 +17,6 @@ namespace MysticLegendsClient.CityWindows
                 ButtonType.Potions,
                 ButtonType.TradeMarket,
                 ButtonType.Scout,
-                ButtonType.DarkAlley,
             });
             AddButton("Queen of Ayreim", Icons.city_crown, (object? s, RoutedEventArgs e) => { queenOfAyreimWindow.Instance.ShowWindow(); });
         }

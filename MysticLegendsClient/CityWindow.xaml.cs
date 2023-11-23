@@ -34,7 +34,6 @@ namespace MysticLegendsClient
         private readonly SingleInstanceWindow<CharacterWindow> characterWindow = new();
         private readonly SingleInstanceWindow blacksmithWindow = new(typeof(BlacksmithNpc), 2);
         private readonly SingleInstanceWindow potionsWindow = new(typeof (PotionsNpc), 1);
-        private readonly SingleInstanceWindow darkAlleyWindow = new(typeof(DarkAlleyNpc), 3);
 
         public CityWindow()
         {
@@ -76,7 +75,7 @@ namespace MysticLegendsClient
                         AddButton("Scout", Icons.city_scout, (_, _) => { });
                         break;
                     case ButtonType.DarkAlley:
-                        AddButton("Dark Alley", Icons.city_darkAlley, (_, _) => { darkAlleyWindow.Instance.ShowWindow(); });
+                        AddButton("Dark Alley", Icons.city_darkAlley, (_, _) => { });
                         break;
                     case ButtonType.RebelsHideout:
                         AddButton("Rebels Hideout", Icons.city_hideout, (_, _) => { });
@@ -133,7 +132,6 @@ namespace MysticLegendsClient
             characterWindow.Dispose();
             blacksmithWindow.Dispose();
             potionsWindow.Dispose();
-            darkAlleyWindow.Dispose();
         }
 
         private async void Options_Click(object sender, RoutedEventArgs e)
