@@ -106,6 +106,15 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
+        ///   Vyhledá lokalizovaný řetězec podobný /icons/crown-solid.svg.
+        /// </summary>
+        public static string city_crown {
+            get {
+                return ResourceManager.GetString("city/crown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Vyhledá lokalizovaný řetězec podobný /icons/rebel.svg.
         /// </summary>
         public static string city_darkAlley {

@@ -32,7 +32,9 @@ namespace MysticLegendsClient
         }
 
         private readonly SingleInstanceWindow<CharacterWindow> characterWindow = new();
+        private readonly SingleInstanceWindow blacksmithWindow = new(typeof(BlacksmithNpc), 2);
         private readonly SingleInstanceWindow potionsWindow = new(typeof (PotionsNpc), 1);
+        private readonly SingleInstanceWindow darkAlleyWindow = new(typeof(DarkAlleyNpc), 3);
 
         public CityWindow()
         {
@@ -59,7 +61,7 @@ namespace MysticLegendsClient
                 switch (button)
                 {
                     case ButtonType.Blacksmith:
-                        AddButton("Blacksmith", Icons.city_blacksmith, (_, _) => { });
+                        AddButton("Blacksmith", Icons.city_blacksmith, (_, _) => { blacksmithWindow.Instance.ShowWindow(); });
                         break;
                     case ButtonType.Potions:
                         AddButton("Potions", Icons.city_potions, (_, _) => { potionsWindow.Instance.ShowWindow(); });
@@ -74,7 +76,7 @@ namespace MysticLegendsClient
                         AddButton("Scout", Icons.city_scout, (_, _) => { });
                         break;
                     case ButtonType.DarkAlley:
-                        AddButton("Dark Alley", Icons.city_darkAlley, (_, _) => { });
+                        AddButton("Dark Alley", Icons.city_darkAlley, (_, _) => { darkAlleyWindow.Instance.ShowWindow(); });
                         break;
                     case ButtonType.RebelsHideout:
                         AddButton("Rebels Hideout", Icons.city_hideout, (_, _) => { });
@@ -129,7 +131,9 @@ namespace MysticLegendsClient
             GameState.Current.GameEvents.CharacterUpdateEvent -= CharacterStatsChanged;
 
             characterWindow.Dispose();
+            blacksmithWindow.Dispose();
             potionsWindow.Dispose();
+            darkAlleyWindow.Dispose();
         }
 
         private async void Options_Click(object sender, RoutedEventArgs e)

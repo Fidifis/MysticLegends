@@ -132,6 +132,9 @@
   <data name="city/coins" xml:space="preserve">
     <value>/icons/coins-solid.svg</value>
   </data>
+  <data name="city/crown" xml:space="preserve">
+    <value>/icons/crown-solid.svg</value>
+  </data>
   <data name="city/darkAlley" xml:space="preserve">
     <value>/icons/rebel.svg</value>
   </data>
