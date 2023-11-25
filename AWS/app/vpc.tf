@@ -1,3 +1,5 @@
+data "aws_availability_zones" "this" {}
+
 module "vpc" {
   source = "../modules/vpc"
   meta = var.meta
@@ -5,8 +7,6 @@ module "vpc" {
   supernet = "10.0.0.0"
   prefix = "16"
   public_subnets = {
-    0 = "eu-west-1a"
-    1 = "eu-west-1b"
-    2 = "eu-west-1c"
+    for i, zone in data.aws_availability_zones.this.names: i => zone
   }
 }
