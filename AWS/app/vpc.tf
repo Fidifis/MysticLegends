@@ -1,6 +1,6 @@
 module "vpc" {
   source = "../modules/vpc"
-  global = var.global
+  meta = var.meta
 
   supernet = "10.0.0.0"
   prefix = "16"

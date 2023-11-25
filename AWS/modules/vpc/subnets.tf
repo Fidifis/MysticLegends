@@ -9,7 +9,7 @@ resource "aws_subnet" "public" {
 
   tags = merge(
     local.module_tags, {
-      "Name" = "${var.global.project}-public-${each.value}-${each.key}"
+      "Name" = "${var.meta.project}-public-${each.value}-${each.key}"
   })
 }
 
@@ -22,7 +22,7 @@ resource "aws_subnet" "nat" {
 
   tags = merge(
     local.module_tags, {
-      "Name" = "${var.global.project}-nat-${each.value}-${each.key}"
+      "Name" = "${var.meta.project}-nat-${each.value}-${each.key}"
   })
 }
 
@@ -35,6 +35,6 @@ resource "aws_subnet" "private" {
 
   tags = merge(
     local.module_tags, {
-      "Name" = "${var.global.project}-private-${each.value}-${each.key}"
+      "Name" = "${var.meta.project}-private-${each.value}-${each.key}"
   })
 }

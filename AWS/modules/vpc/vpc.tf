@@ -6,6 +6,6 @@ resource "aws_vpc" "this" {
 
   tags = merge(
     local.module_tags, {
-      Name = "${var.global.project}"
+      Name = "${var.meta.project}"
   })
 }

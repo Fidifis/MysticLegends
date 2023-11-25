@@ -1,4 +1,4 @@
-variable "global" {
+variable "meta" {
   type = object({
     account = string
     project = string
