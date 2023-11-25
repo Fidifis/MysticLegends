@@ -5,7 +5,3 @@ variable "bucket_name" {
 variable "table_name" {
   type = string
 }
-
-variable "encrypt" {
-  type = bool
-}

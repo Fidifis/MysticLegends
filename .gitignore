@@ -2,3 +2,7 @@
 bin
 obj
 *.csproj.user
+
+.terraform
+*.tfstate*
+build

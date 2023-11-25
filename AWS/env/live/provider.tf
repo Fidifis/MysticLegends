@@ -8,23 +8,23 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "isha-hub-dev-eu-west-1-terraform-state"
-    key            = "isha-login.tfstate"
-    dynamodb_table = "isha-hub-dev-terraform-state"
+    bucket         = "mysticlegends-eu-west-1-terraform"
+    key            = "mysticlegends-live-app.tfstate"
+    dynamodb_table = "mysticlegends-terraform"
     region         = "eu-west-1"
     encrypt        = true
-    profile        = "isha-hub"
+    profile        = "mysticlegends"
   }
 }
 
 provider "aws" {
-  profile             = "isha-hub"
+  profile             = "mysticlegends"
   region              = local.meta.region
   allowed_account_ids = [local.meta.account]
 
   default_tags {
     tags = {
-      Group       = "isha-hub"
+      Group       = "mysticlegends"
       Project     = local.meta.project
       Environment = local.meta.env
       IaC         = "terraform"
