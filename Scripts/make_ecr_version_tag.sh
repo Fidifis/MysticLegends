@@ -2,7 +2,7 @@
 
 # Usage: ./increment_version.sh <VERSION> <OUTPUT>
 
-set -euo pipefail
+set -exuo pipefail
 
 # Check if the correct number of arguments is provided
 if [ "$#" -ne 2 ]; then
