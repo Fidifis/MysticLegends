@@ -2,9 +2,10 @@
 
 locals {
   ecs_cluster_name = "${local.common_prefix}-cluster"
+  container_name   = "mysticlegends-server-container"
 }
 
-data "aws_iam_policy_document" "ecs_agent" {
+data "aws_iam_policy_document" "ecs_node" {
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -15,20 +16,20 @@ data "aws_iam_policy_document" "ecs_agent" {
   }
 }
 
-resource "aws_iam_role" "ecs_agent" {
+resource "aws_iam_role" "ecs_node" {
   name               = "${local.common_prefix}-ecs-agent"
-  assume_role_policy = data.aws_iam_policy_document.ecs_agent.json
+  assume_role_policy = data.aws_iam_policy_document.ecs_node.json
   tags               = { Module = "ecs" }
 }
 
-resource "aws_iam_role_policy_attachment" "ecs_agent" {
-  role       = aws_iam_role.ecs_agent.name
+resource "aws_iam_role_policy_attachment" "ecs_node" {
+  role       = aws_iam_role.ecs_node.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
 
-resource "aws_iam_instance_profile" "ecs_agent" {
+resource "aws_iam_instance_profile" "ecs_node" {
   name = "${local.common_prefix}-ecs-agent"
-  role = aws_iam_role.ecs_agent.name
+  role = aws_iam_role.ecs_node.name
 }
 
 data "aws_ami" "ec2_amz23_ami" {
@@ -77,24 +78,13 @@ module "ecs_node_segr" {
 }
 
 resource "aws_launch_configuration" "ecs_launch_config" {
+  instance_type               = "t3a.nano"
   associate_public_ip_address = false
   image_id                    = data.aws_ami.ec2_amz23_ami.image_id
-  iam_instance_profile        = aws_iam_instance_profile.ecs_agent.name
-  security_groups             = [module.ecs_node_segr.security_groups_ids.ecs_node]
-  user_data                   = "#!/bin/bash\necho ECS_CLUSTER='${local.ecs_cluster_name}' >> /etc/ecs/ecs.config"
-  instance_type               = "t3a.nano"
-}
 
-resource "aws_autoscaling_group" "ecs_asg" {
-  name                 = "asg"
-  vpc_zone_identifier  = module.vpc.subnet_ids.public
-  launch_configuration = aws_launch_configuration.ecs_launch_config.name
-
-  desired_capacity          = 1
-  min_size                  = 1
-  max_size                  = 3
-  health_check_grace_period = 300
-  health_check_type         = "EC2"
+  iam_instance_profile = aws_iam_instance_profile.ecs_node.name
+  security_groups      = [module.ecs_node_segr.security_groups_ids.ecs_node]
+  user_data            = "#!/bin/bash\necho ECS_CLUSTER='${local.ecs_cluster_name}' >> /etc/ecs/ecs.config"
 }
 
 resource "aws_ecs_cluster" "ecs_cluster" {
@@ -103,120 +93,155 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 }
 
 resource "aws_ecs_task_definition" "task_definition" {
-  family                = "worker"
-  network_mode          = "awsvpc"
+  family                   = "mysticlegends-server"
+  requires_compatibilities = [ "EC2" ]
+  network_mode             = "awsvpc"
   container_definitions = jsonencode(
     [
       {
-        "memory": 512,
-        "portMappings": [
-            {
-               "containerPort": 80,
-               "hostPort": 80,
-               "protocol": "tcp"
-            }
-         ]
-        "memoryReservation": 256,
-        "name": "worker",
-        "cpu": 1024,
-        "image": "956941652442.dkr.ecr.eu-west-1.amazonaws.com/mysticlegends-server",
-        "environment": []
+        "name" : "${local.container_name}",
+        "cpu" : 1024,
+        "memory" : 512,
+        "memoryReservation" : 256,
+        "essential" : true,
+        "portMappings" : [
+          {
+            "containerPort" : 80,
+            "hostPort" : 80,
+            "protocol" : "tcp"
+          },
+          {
+            "containerPort" : 443,
+            "hostPort" : 443,
+            "protocol" : "tcp"
+          }
+        ],
+        "image" : "956941652442.dkr.ecr.eu-west-1.amazonaws.com/mysticlegends-server",
+        "environment" : [
+          {
+            name : "ConnectionStrings:GameDB",
+            value : "Server=db.kii.pef.czu.cz;Port=5432;Database=xdigf001;User Id=xdigf001;Password=nbs0e2;Pooling=true;MaxPoolSize=6"
+          }
+        ]
       }
     ]
   )
   tags = { Module = "ecs" }
 }
 
+resource "aws_autoscaling_group" "ecs_asg" {
+  name                 = "asg"
+  vpc_zone_identifier  = module.vpc.subnet_ids.public
+  launch_configuration = aws_launch_configuration.ecs_launch_config.name
+
+  min_size                  = 0
+  max_size                  = 2
+  desired_capacity          = 0
+  health_check_grace_period = 300
+  health_check_type         = "EC2"
+
+  tag {
+    key                 = "AmazonECSManaged"
+    value               = true
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Module"
+    value               = "ecs"
+    propagate_at_launch = true
+  }
+}
+
 resource "aws_ecs_capacity_provider" "ecs_capacity_provider" {
-  name = "test1"
+  name = "ec2-capacitator"
 
   auto_scaling_group_provider {
     auto_scaling_group_arn = aws_autoscaling_group.ecs_asg.arn
 
     managed_scaling {
-      maximum_scaling_step_size = 1000
+      instance_warmup_period    = 120
+      maximum_scaling_step_size = 2
       minimum_scaling_step_size = 1
       status                    = "ENABLED"
-      target_capacity           = 1
+      target_capacity           = 100
     }
   }
+  tags = { Module = "ecs" }
 }
 
-resource "aws_ecs_cluster_capacity_providers" "example" {
+resource "aws_ecs_cluster_capacity_providers" "ecs_cluster_capacity" {
   cluster_name = aws_ecs_cluster.ecs_cluster.name
 
   capacity_providers = [aws_ecs_capacity_provider.ecs_capacity_provider.name]
 
   default_capacity_provider_strategy {
     base              = 1
-    weight            = 100
+    weight            = 1
     capacity_provider = aws_ecs_capacity_provider.ecs_capacity_provider.name
   }
 }
 
 resource "aws_ecs_service" "ecs_service" {
- name            = "my-ecs-service"
- cluster         = aws_ecs_cluster.ecs_cluster.id
- task_definition = aws_ecs_task_definition.task_definition.arn
- desired_count   = 1
+  name            = "mysticlegends-server"
+  cluster         = aws_ecs_cluster.ecs_cluster.id
+  task_definition = aws_ecs_task_definition.task_definition.arn
+  desired_count   = 1
 
- network_configuration {
-   subnets         = module.vpc.subnet_ids.public
-   security_groups = [module.ecs_node_segr.security_groups_ids.ecs_node]
- }
+  network_configuration {
+    subnets          = module.vpc.subnet_ids.public
+    security_groups  = [module.ecs_node_segr.security_groups_ids.ecs_node]
+    assign_public_ip = false
+  }
 
- force_new_deployment = true
- placement_constraints {
-   type = "distinctInstance"
- }
+  force_new_deployment = true
+  placement_constraints {
+    type = "distinctInstance"
+  }
 
- triggers = {
-   redeployment = timestamp()
- }
+  triggers = {
+    redeployment = timestamp()
+  }
 
- capacity_provider_strategy {
-   capacity_provider = aws_ecs_capacity_provider.ecs_capacity_provider.name
-   weight            = 100
- }
-
- load_balancer {
-   target_group_arn = aws_lb_target_group.ecs_tg.arn
-   container_name   = "worker"
-   container_port   = 80
- }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.server_target.arn
+    container_name   = local.container_name
+    container_port   = 80
+  }
+  tags = { Module = "ecs" }
 }
 
 resource "aws_lb" "ecs_alb" {
- name               = "ecs-alb"
- internal           = false
- load_balancer_type = "application"
- security_groups    = [module.ec_alb_segr.security_groups_ids.ecs_alb]
- subnets            = module.vpc.subnet_ids.public
+  name               = "ecs-alb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [module.ec_alb_segr.security_groups_ids.ecs_alb]
+  subnets            = module.vpc.subnet_ids.public
 
- tags = {
-   Name = "ecs-alb"
- }
+  tags = {
+    Name = "ecs-alb"
+  }
 }
 
 resource "aws_lb_listener" "ecs_alb_listener" {
- load_balancer_arn = aws_lb.ecs_alb.arn
- port              = 80
- protocol          = "HTTP"
+  load_balancer_arn = aws_lb.ecs_alb.arn
+  port              = 80
+  protocol          = "HTTP"
 
- default_action {
-   type             = "forward"
-   target_group_arn = aws_lb_target_group.ecs_tg.arn
- }
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.server_target.arn
+  }
 }
 
-resource "aws_lb_target_group" "ecs_tg" {
- name        = "ecs-target-group"
- port        = 80
- protocol    = "HTTP"
- target_type = "ip"
- vpc_id      = module.vpc.vpc_id
+resource "aws_lb_target_group" "server_target" {
+  name        = "ecs-target-group"
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = module.vpc.vpc_id
 
- health_check {
-   path = "/api/health"
- }
+  health_check {
+    path = "/api/health"
+  }
 }
