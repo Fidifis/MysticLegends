@@ -157,7 +157,7 @@ resource "aws_ecs_task_definition" "task_definition" {
             "protocol" : "tcp"
           }
         ],
-        "image" : "956941652442.dkr.ecr.eu-west-1.amazonaws.com/mysticlegends-server:v0.0.1",
+        "image" : "956941652442.dkr.ecr.eu-west-1.amazonaws.com/mysticlegends-server:latest",
         "environment" : [
           {
             "name" : "CONNECTIONSTRING",

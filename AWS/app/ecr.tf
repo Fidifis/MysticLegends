@@ -3,6 +3,7 @@ module "ecr" {
   meta = var.meta
 
   default_config = {
+    immutable = false
     lifecycle = [
       {
         tagStatus = "untagged"
