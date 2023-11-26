@@ -121,6 +121,10 @@ resource "aws_ecs_cluster" "ecs_cluster" {
   tags = { Module = "ecs" }
 }
 
+data "aws_ssm_parameter" "connectionstring" {
+  name = aws_ssm_parameter.connectionstring.name
+}
+
 resource "aws_ecs_task_definition" "task_definition" {
   family                   = "mysticlegends-server"
   requires_compatibilities = ["EC2"]
@@ -157,7 +161,7 @@ resource "aws_ecs_task_definition" "task_definition" {
         "environment" : [
           {
             "name" : "CONNECTIONSTRING",
-            "value" : "Server=db.kii.pef.czu.cz;Port=5432;Database=xdigf001;User Id=xdigf001;Password=nbs0e2;Pooling=true;MaxPoolSize=6"
+            "value" : "${data.aws_ssm_parameter.connectionstring.value}"
           }
         ]
       }
