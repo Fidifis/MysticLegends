@@ -27,7 +27,6 @@ Actions:
     Configuration:
       # Required - Steps are sequential instructions that run shell commands
       Steps:
-        - Run: echo "Hello, World!"
         - Run: CONTAINER_NAME="mysticlegends-server"
         - Run: REPOSITORY="956941652442.dkr.ecr.eu-west-1.amazonaws.com"
         - Run: VERSION=$(grep '<AssemblyVersion>'
