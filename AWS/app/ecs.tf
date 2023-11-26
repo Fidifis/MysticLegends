@@ -16,10 +16,29 @@ data "aws_iam_policy_document" "ecs_node" {
   }
 }
 
+data "aws_iam_policy_document" "logging" {
+  statement {
+    actions = [
+      "logs:CreateLogStream",
+      "logs:DescribeLogStreams",
+      "logs:PutLogEvents",
+      "logs:GetLogEvents"
+    ]
+    effect    = "Allow"
+    resources = ["*"]
+  }
+}
+
 resource "aws_iam_role" "ecs_node" {
   name               = "${local.common_prefix}-ecs-agent"
   assume_role_policy = data.aws_iam_policy_document.ecs_node.json
-  tags               = { Module = "ecs" }
+
+  inline_policy {
+    name   = "cloudwatchlogs"
+    policy = data.aws_iam_policy_document.logging.json
+  }
+
+  tags = { Module = "ecs" }
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_node_container_service" {
@@ -114,6 +133,14 @@ resource "aws_ecs_task_definition" "task_definition" {
         "memory" : 512,
         "memoryReservation" : 256,
         "essential" : true,
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+               "awslogs-group" : "${aws_cloudwatch_log_group.container_logs.name}",
+               "awslogs-region": "${var.meta.region}",
+               "awslogs-stream-prefix": "ecs"
+            }
+         },
         "portMappings" : [
           {
             "containerPort" : 80,
@@ -129,8 +156,8 @@ resource "aws_ecs_task_definition" "task_definition" {
         "image" : "956941652442.dkr.ecr.eu-west-1.amazonaws.com/mysticlegends-server:v0.0.1",
         "environment" : [
           {
-            name : "ConnectionStrings:GameDB",
-            value : "Server=db.kii.pef.czu.cz;Port=5432;Database=xdigf001;User Id=xdigf001;Password=nbs0e2;Pooling=true;MaxPoolSize=6"
+            "name" : "CONNECTIONSTRING",
+            "value" : "Server=db.kii.pef.czu.cz;Port=5432;Database=xdigf001;User Id=xdigf001;Password=nbs0e2;Pooling=true;MaxPoolSize=6"
           }
         ]
       }
@@ -150,7 +177,7 @@ resource "aws_autoscaling_group" "ecs_asg" {
   health_check_type         = "EC2"
 
   launch_template {
-    id      = aws_launch_template.ecs.id
+    id = aws_launch_template.ecs.id
     #version = "$Latest"
   }
 
@@ -211,8 +238,8 @@ resource "aws_ecs_service" "ecs_service" {
   health_check_grace_period_seconds = 300
 
   network_configuration {
-    subnets          = module.vpc.subnet_ids.public
-    security_groups  = [module.ecs_node_segr.security_groups_ids.ecs_node]
+    subnets         = module.vpc.subnet_ids.public
+    security_groups = [module.ecs_node_segr.security_groups_ids.ecs_node]
   }
 
   force_new_deployment = true
@@ -280,5 +307,13 @@ resource "aws_lb_target_group" "server_target" {
 
   health_check {
     path = "/api/health"
+  }
+}
+
+resource "aws_cloudwatch_log_group" "container_logs" {
+  name = "/mysticlegends/server"
+
+  tags = {
+    Module = "ecs"
   }
 }
