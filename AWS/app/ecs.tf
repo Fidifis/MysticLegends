@@ -171,7 +171,7 @@ resource "aws_ecs_task_definition" "task_definition" {
 }
 
 resource "aws_autoscaling_group" "ecs_asg" {
-  name                = "asg"
+  name                = "${var.meta.project}-${var.meta.env}-asg"
   vpc_zone_identifier = module.vpc.subnet_ids.public
 
   min_size                  = 0

@@ -10,3 +10,10 @@ resource "aws_ssm_parameter" "connectionstring" {
     ]
   }
 }
+
+resource "aws_ssm_parameter" "refresh_on_push" {
+  name        = "/${var.meta.project}/${var.meta.env}/refresh_on_push"
+  description = "Defines if instance refresh should execute when new image is pushed to ecr"
+  type        = "String"
+  value       = "true"
+}
