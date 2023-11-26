@@ -39,7 +39,7 @@ Actions:
             ${REPOSITORY}
         - Run: docker build -f MysticLegendsServer/Dockerfile -t
             ${REPOSITORY}/${CONTAINER_NAME}:latest -t
-            ${REPOSITORY}/${CONTAINER_NAME}:${TAG}
+            ${REPOSITORY}/${CONTAINER_NAME}:${TAG} .
         - Run: docker push ${REPOSITORY}/${CONTAINER_NAME} --all-tags
         - Run: docker logout ${REPOSITORY}
     Compute:
