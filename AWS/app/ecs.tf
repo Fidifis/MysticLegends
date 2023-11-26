@@ -22,9 +22,14 @@ resource "aws_iam_role" "ecs_node" {
   tags               = { Module = "ecs" }
 }
 
-resource "aws_iam_role_policy_attachment" "ecs_node" {
+resource "aws_iam_role_policy_attachment" "ecs_node_container_service" {
   role       = aws_iam_role.ecs_node.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_node_ssm_instance" {
+  role       = aws_iam_role.ecs_node.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_iam_instance_profile" "ecs_node" {
@@ -77,14 +82,19 @@ module "ecs_node_segr" {
   }
 }
 
-resource "aws_launch_configuration" "ecs_launch_config" {
-  instance_type               = "t3a.nano"
-  associate_public_ip_address = false
-  image_id                    = data.aws_ami.ec2_amz23_ami.image_id
+resource "aws_launch_template" "ecs" {
+  instance_type          = "t3a.nano"
+  image_id               = data.aws_ami.ec2_amz23_ami.image_id
+  user_data              = base64encode("#!/bin/bash\necho ECS_CLUSTER='${local.ecs_cluster_name}' >> /etc/ecs/ecs.config")
+  update_default_version = true
 
-  iam_instance_profile = aws_iam_instance_profile.ecs_node.name
-  security_groups      = [module.ecs_node_segr.security_groups_ids.ecs_node]
-  user_data            = "#!/bin/bash\necho ECS_CLUSTER='${local.ecs_cluster_name}' >> /etc/ecs/ecs.config"
+  iam_instance_profile {
+    arn = aws_iam_instance_profile.ecs_node.arn
+  }
+
+  network_interfaces {
+    security_groups = [module.ecs_node_segr.security_groups_ids.ecs_node]
+  }
 }
 
 resource "aws_ecs_cluster" "ecs_cluster" {
@@ -94,7 +104,7 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 
 resource "aws_ecs_task_definition" "task_definition" {
   family                   = "mysticlegends-server"
-  requires_compatibilities = [ "EC2" ]
+  requires_compatibilities = ["EC2"]
   network_mode             = "awsvpc"
   container_definitions = jsonencode(
     [
@@ -116,7 +126,7 @@ resource "aws_ecs_task_definition" "task_definition" {
             "protocol" : "tcp"
           }
         ],
-        "image" : "956941652442.dkr.ecr.eu-west-1.amazonaws.com/mysticlegends-server",
+        "image" : "956941652442.dkr.ecr.eu-west-1.amazonaws.com/mysticlegends-server:v0.0.1",
         "environment" : [
           {
             name : "ConnectionStrings:GameDB",
@@ -130,15 +140,25 @@ resource "aws_ecs_task_definition" "task_definition" {
 }
 
 resource "aws_autoscaling_group" "ecs_asg" {
-  name                 = "asg"
-  vpc_zone_identifier  = module.vpc.subnet_ids.public
-  launch_configuration = aws_launch_configuration.ecs_launch_config.name
+  name                = "asg"
+  vpc_zone_identifier = module.vpc.subnet_ids.public
 
   min_size                  = 0
-  max_size                  = 2
+  max_size                  = 1
   desired_capacity          = 0
   health_check_grace_period = 300
   health_check_type         = "EC2"
+
+  launch_template {
+    id      = aws_launch_template.ecs.id
+    #version = "$Latest"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      desired_capacity,
+    ]
+  }
 
   tag {
     key                 = "AmazonECSManaged"
@@ -186,12 +206,13 @@ resource "aws_ecs_service" "ecs_service" {
   name            = "mysticlegends-server"
   cluster         = aws_ecs_cluster.ecs_cluster.id
   task_definition = aws_ecs_task_definition.task_definition.arn
-  desired_count   = 1
+
+  desired_count                     = 1
+  health_check_grace_period_seconds = 300
 
   network_configuration {
     subnets          = module.vpc.subnet_ids.public
     security_groups  = [module.ecs_node_segr.security_groups_ids.ecs_node]
-    assign_public_ip = false
   }
 
   force_new_deployment = true
@@ -199,15 +220,31 @@ resource "aws_ecs_service" "ecs_service" {
     type = "distinctInstance"
   }
 
-  triggers = {
-    redeployment = timestamp()
-  }
+  # triggers = {
+  #   redeployment = timestamp()
+  # }
 
   load_balancer {
     target_group_arn = aws_lb_target_group.server_target.arn
     container_name   = local.container_name
     container_port   = 80
   }
+
+  capacity_provider_strategy {
+    capacity_provider = aws_ecs_capacity_provider.ecs_capacity_provider.name
+    base              = 1
+    weight            = 1
+  }
+
+  deployment_circuit_breaker {
+    enable   = false
+    rollback = false
+  }
+
+  deployment_controller {
+    type = "ECS"
+  }
+
   tags = { Module = "ecs" }
 }
 
