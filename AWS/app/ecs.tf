@@ -93,8 +93,8 @@ module "ecs_node_segr" {
   vpc_id = module.vpc.vpc_id
   open_ports = {
     ecs_node = {
-      ingress         = [80, 443]
-      protocol        = "tcp"
+      ingress         = [ 0 ]
+      protocol        = "-1"
       open_egress     = true
       security_groups = [module.ec_alb_segr.security_groups_ids.ecs_alb]
     }
@@ -102,7 +102,7 @@ module "ecs_node_segr" {
 }
 
 resource "aws_launch_template" "ecs" {
-  instance_type          = "t3a.nano"
+  instance_type          = "t3a.micro"
   image_id               = data.aws_ami.ec2_amz23_ami.image_id
   user_data              = base64encode("#!/bin/bash\necho ECS_CLUSTER='${local.ecs_cluster_name}' >> /etc/ecs/ecs.config")
   update_default_version = true
@@ -124,7 +124,7 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 resource "aws_ecs_task_definition" "task_definition" {
   family                   = "mysticlegends-server"
   requires_compatibilities = ["EC2"]
-  network_mode             = "awsvpc"
+  network_mode             = "bridge"
   container_definitions = jsonencode(
     [
       {
@@ -144,12 +144,12 @@ resource "aws_ecs_task_definition" "task_definition" {
         "portMappings" : [
           {
             "containerPort" : 80,
-            "hostPort" : 80,
+            "hostPort" : 0,
             "protocol" : "tcp"
           },
           {
             "containerPort" : 443,
-            "hostPort" : 443,
+            "hostPort" : 0,
             "protocol" : "tcp"
           }
         ],
@@ -171,7 +171,7 @@ resource "aws_autoscaling_group" "ecs_asg" {
   vpc_zone_identifier = module.vpc.subnet_ids.public
 
   min_size                  = 0
-  max_size                  = 1
+  max_size                  = 2
   desired_capacity          = 0
   health_check_grace_period = 300
   health_check_type         = "EC2"
@@ -207,7 +207,7 @@ resource "aws_ecs_capacity_provider" "ecs_capacity_provider" {
     auto_scaling_group_arn = aws_autoscaling_group.ecs_asg.arn
 
     managed_scaling {
-      instance_warmup_period    = 120
+      instance_warmup_period    = 300
       maximum_scaling_step_size = 2
       minimum_scaling_step_size = 1
       status                    = "ENABLED"
@@ -237,12 +237,13 @@ resource "aws_ecs_service" "ecs_service" {
   desired_count                     = 1
   health_check_grace_period_seconds = 300
 
-  network_configuration {
-    subnets         = module.vpc.subnet_ids.public
-    security_groups = [module.ecs_node_segr.security_groups_ids.ecs_node]
-  }
+  # network_configuration {
+  #   subnets         = module.vpc.subnet_ids.public
+  #   security_groups = [module.ecs_node_segr.security_groups_ids.ecs_node]
+  # }
 
   force_new_deployment = true
+
   placement_constraints {
     type = "distinctInstance"
   }
@@ -302,7 +303,7 @@ resource "aws_lb_target_group" "server_target" {
   name        = "ecs-target-group"
   port        = 80
   protocol    = "HTTP"
-  target_type = "ip"
+  target_type = "instance"
   vpc_id      = module.vpc.vpc_id
 
   health_check {
