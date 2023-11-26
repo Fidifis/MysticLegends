@@ -34,8 +34,7 @@ Actions:
             MysticLegendsServer/MysticLegendsServer.csproj | awk -F'[><]'
             '{print $3}')
         - Run: chmod +x Scripts/make_ecr_version_tag.sh
-        - Run: TAG=$(Scripts/make_ecr_version_tag.sh ${VERSION} $(aws ecr list-images
-            --repository-name ${CONTAINER_NAME}))
+        - Run: TAG=$(Scripts/make_ecr_version_tag.sh ${VERSION} "$(aws ecr list-images --repository-name ${CONTAINER_NAME}))"
         - Run: aws ecr get-login-password | docker login --username AWS --password-stdin
             ${REPOSITORY}
         - Run: docker build -f MysticLegendsServer/Dockerfile -t
