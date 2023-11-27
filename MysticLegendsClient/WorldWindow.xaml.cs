@@ -10,9 +10,15 @@ namespace MysticLegendsClient
     /// </summary>
     public partial class WorldWindow : Window
     {
+        private readonly string? filterCity = null;
         public WorldWindow()
         {
             InitializeComponent();
+        }
+
+        public WorldWindow(string filterCity):this()
+        {
+            this.filterCity = filterCity;
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -28,6 +34,8 @@ namespace MysticLegendsClient
 
             foreach (var city in cities)
             {
+                if (city.CityName == filterCity)
+                    continue;
                 AddCityButton(city.CityName);
             }
         }
@@ -48,6 +56,10 @@ namespace MysticLegendsClient
 
         private void ButtonClick(object? sender, RoutedEventArgs e)
         {
+            var city = ((FrameworkElement?)sender)?.Tag as string;
+            if (MessageBox.Show($"Do you really want to travel to {city}?", "travel", MessageBoxButton.YesNoCancel) != MessageBoxResult.Yes)
+                return;
+
             new TravelWindow(10, () => {
                 new AyreimCity().Show();
             }).Show();

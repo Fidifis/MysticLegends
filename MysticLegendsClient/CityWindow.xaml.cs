@@ -31,20 +31,20 @@ namespace MysticLegendsClient
             RebelsHideout,
         }
 
+        private readonly string cityName;
+
         private readonly SingleInstanceWindow<CharacterWindow> characterWindow = new();
         private readonly SingleInstanceWindow blacksmithWindow = new(typeof(BlacksmithNpc), 2);
         private readonly SingleInstanceWindow potionsWindow = new(typeof (PotionsNpc), 1);
 
-        public CityWindow()
+        public CityWindow(string cityName)
         {
             InitializeComponent();
             RefreshCharStats();
-        }
 
-        public CityWindow(string title): this()
-        {
-            Title = $"Mystic Legends - {title} (City)";
-            cityNameLabel.Content = title;
+            this.cityName = cityName;
+            Title = $"Mystic Legends - {cityName} (City)";
+            cityNameLabel.Content = cityName;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -156,7 +156,7 @@ namespace MysticLegendsClient
 
         private void CityModuleButton_Click(object sender, RoutedEventArgs e)
         {
-            if (new WorldWindow().ShowDialog() == true)
+            if (new WorldWindow(cityName).ShowDialog() == true)
             {
                 Close();
             }
