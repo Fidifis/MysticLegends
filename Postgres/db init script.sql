@@ -268,7 +268,12 @@ CREATE INDEX ix_quest_npc_id ON quest USING btree (npc_id);
 INSERT INTO "users" (username, password_hash) VALUES ('demo', 'fe01ce2a7fbac8fafaed7c982a04e229');
 
 -- Insert data into the "city" table
-INSERT INTO city (city_name) VALUES ('Ayreim');
+INSERT INTO city (city_name)
+VALUES ('Ayreim'),
+       ('Tisling'),
+       ('Dagos'),
+       ('Soria');
+
 
 -- Insert data into the "character" table
 INSERT INTO character (character_name, username, character_class, level, currency_gold, city_name, xp)
