@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MysticLegendsShared.Models;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MysticLegendsClient
 {
@@ -27,6 +16,20 @@ namespace MysticLegendsClient
         public void ShowWindow()
         {
             SingleInstanceWindow.CommonShowWindowTasks(this);
+        }
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            City[]? cities = null;
+            await ErrorCatcher.TryAsync(async () =>
+            {
+                cities = await ApiCalls.WorldCall.GetCitiesAsync();
+            });
+
+            if (cities is null)
+                return;
+
+            // TODO add
         }
     }
 }
