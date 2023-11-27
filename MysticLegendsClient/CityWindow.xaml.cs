@@ -31,7 +31,6 @@ namespace MysticLegendsClient
             RebelsHideout,
         }
 
-        private readonly SingleInstanceWindow<WorldWindow> worldWindow = new();
         private readonly SingleInstanceWindow<CharacterWindow> characterWindow = new();
         private readonly SingleInstanceWindow blacksmithWindow = new(typeof(BlacksmithNpc), 2);
         private readonly SingleInstanceWindow potionsWindow = new(typeof (PotionsNpc), 1);
@@ -130,7 +129,6 @@ namespace MysticLegendsClient
             GameState.Current.GameEvents.CurrencyUpdateEvent -= CurrencyChanged;
             GameState.Current.GameEvents.CharacterUpdateEvent -= CharacterStatsChanged;
 
-            worldWindow.Dispose();
             characterWindow.Dispose();
             blacksmithWindow.Dispose();
             potionsWindow.Dispose();
@@ -158,7 +156,10 @@ namespace MysticLegendsClient
 
         private void CityModuleButton_Click(object sender, RoutedEventArgs e)
         {
-            worldWindow.Instance.ShowWindow();
+            if (new WorldWindow().ShowDialog() == true)
+            {
+                Close();
+            }
         }
     }
 }
