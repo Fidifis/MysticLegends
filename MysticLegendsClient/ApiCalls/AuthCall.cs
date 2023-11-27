@@ -1,17 +1,15 @@
-﻿using MysticLegendsShared.Models;
-
-namespace MysticLegendsClient.ApiCalls;
+﻿namespace MysticLegendsClient.ApiCalls;
 
 internal static class AuthCall
 {
-    public static async Task<string> LoginServerCallAsync(string username, string password, GameState? gameState = null)
+    public static Task<string> LoginServerCallAsync(string username, string password, GameState? gameState = null)
     {
         var parameters = new Dictionary<string, string>
         {
             ["username"] = username,
             ["password"] = password,
         };
-        return await (gameState ?? GameState.Current).Connection.PostAsync<string>($"api/Auth/login", parameters);
+        return (gameState ?? GameState.Current).Connection.PostAsync<string>($"api/Auth/login", parameters);
     }
 
     public static async Task LogoutServerCallAsync(string? refreshToken, string? accessToken, GameState? gameState = null)
@@ -28,13 +26,13 @@ internal static class AuthCall
         });
     }
 
-    public static async Task<string> TokenServerCallAsync(string refreshToken, GameState? gameState = null)
+    public static Task<string> TokenServerCallAsync(string refreshToken, GameState? gameState = null)
     {
         var parameters = new Dictionary<string, string>
         {
             ["refreshToken"] = refreshToken,
         };
-        return await (gameState ?? GameState.Current).Connection.PostAsync<string>($"api/Auth/token", parameters);
+        return (gameState ?? GameState.Current).Connection.PostAsync<string>($"api/Auth/token", parameters);
     }
 
     //public static async Task<bool> ValidateServerCallAsync(string accessToken, string username, GameState? gameState = null)

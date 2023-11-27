@@ -5,9 +5,9 @@ namespace MysticLegendsClient.ApiCalls;
 
 internal static class UserCall
 {
-    public static async Task<List<Character>> GetUserCharactersServerCallAsync(string username) => await GameState.Current.Connection.GetAsync<List<Character>>($"/api/User/{username}/characters");
+    public static Task<List<Character>> GetUserCharactersServerCallAsync(string username) => GameState.Current.Connection.GetAsync<List<Character>>($"/api/User/{username}/characters");
 
-    public static async Task<string> CreateCharacter(string username, string characterName, CharacterClass characterClass)
+    public static Task<string> CreateCharacter(string username, string characterName, CharacterClass characterClass)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -15,7 +15,7 @@ internal static class UserCall
             ["characterClass"] = ((int)characterClass).ToString(),
         };
 
-        return await GameState.Current.Connection.PostAsync<string>($"/api/User/{username}/create-character", parameters);
+        return GameState.Current.Connection.PostAsync<string>($"/api/User/{username}/create-character", parameters);
 
     }
 }

@@ -5,7 +5,7 @@ namespace MysticLegendsClient.ApiCalls;
 
 internal static class CharacterCall
 {
-    public static async Task<Character> GetCharacterServerCallAsync(string characterName) => await GameState.Current.Connection.GetAsync<Character>($"/api/Character/{characterName}");
+    public static Task<Character> GetCharacterServerCallAsync(string characterName) => GameState.Current.Connection.GetAsync<Character>($"/api/Character/{characterName}");
 
     public static async void UpdateCharacter(object? sender, string characterName)
     {
@@ -16,7 +16,7 @@ internal static class CharacterCall
         });
     }
 
-    public static async Task<int> GetCharacterCurrencyCallAsync(string characterName) => await GameState.Current.Connection.GetAsync<int>($"/api/Character/{characterName}/currency");
+    public static Task<int> GetCharacterCurrencyCallAsync(string characterName) => GameState.Current.Connection.GetAsync<int>($"/api/Character/{characterName}/currency");
 
     public static async void UpdateCurrency(object? sender, string characterName)
     {
