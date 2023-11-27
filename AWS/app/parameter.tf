@@ -16,4 +16,10 @@ resource "aws_ssm_parameter" "refresh_on_push" {
   description = "Defines if instance refresh should execute when new image is pushed to ecr"
   type        = "String"
   value       = "true"
+
+  lifecycle {
+    ignore_changes = [
+      value,
+    ]
+  }
 }
