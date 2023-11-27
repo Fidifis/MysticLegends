@@ -70,7 +70,7 @@ Actions:
       # Required - Steps are sequential instructions that run shell commands
       Steps:
         - Run: aws ssm get-parameter --name /mysticlegends/live/refresh_on_push | jq -r '.Parameter.Value'
-        - Run: echo hello && [ $(aws ssm get-parameter --name /mysticlegends/live/refresh_on_push | jq -r '.Parameter.Value') = 'true' ] && aws autoscaling start-instance-refresh --auto-scaling-group-name mysticlegends-live-asg
+        - Run: echo hello && [ $(aws ssm get-parameter --name /mysticlegends/live/refresh_on_push | jq -r '.Parameter.Value') = 'true' ] && aws autoscaling start-instance-refresh --auto-scaling-group-name mysticlegends-live-asg || true
     Compute:
       Type: EC2
       Fleet: Linux.x86-64.Large
