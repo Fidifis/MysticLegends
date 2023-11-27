@@ -13,9 +13,7 @@ public abstract class NpcWindow : Window, ISingleInstanceWindow
 
     public virtual void ShowWindow()
     {
-        Show();
-        if (WindowState == WindowState.Minimized) WindowState = WindowState.Normal;
-        Activate();
+        SingleInstanceWindow.CommonShowWindowTasks(this);
     }
 
     protected abstract void SetSplashImage(string image);

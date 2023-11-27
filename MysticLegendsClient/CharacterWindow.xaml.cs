@@ -11,9 +11,7 @@ namespace MysticLegendsClient
     {
         public void ShowWindow()
         {
-            Show();
-            if (WindowState == WindowState.Minimized) WindowState = WindowState.Normal;
-            Activate();
+            SingleInstanceWindow.CommonShowWindowTasks(this);
         }
 
         public CharacterWindow()

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Windows;
 
 namespace MysticLegendsClient;
 
@@ -33,6 +34,13 @@ public sealed class SingleInstanceWindow<T> : IDisposable where T : ISingleInsta
 
 public sealed class SingleInstanceWindow : IDisposable
 {
+    public static void CommonShowWindowTasks(Window window)
+    {
+        window.Show();
+        if (window.WindowState == WindowState.Minimized) window.WindowState = WindowState.Normal;
+        window.Activate();
+    }
+
     public SingleInstanceWindow(Type instatiationType, params object?[]? args)
     {
         Debug.Assert(typeof(ISingleInstanceWindow).IsAssignableFrom(instatiationType), "the Type must implement ISingleInstanceWindow");

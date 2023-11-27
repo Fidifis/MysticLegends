@@ -32,6 +32,7 @@
     <Resource Include="icons\user-solid.svg" />
 	<Resource Include="icons\crown-solid.svg" />
     <Resource Include="images\Cities\Ayreim.png" />
+	<Resource Include="images\World\World1.png" />
     <Resource Include="images\Graphics\LoginScreen.png" />
     <Resource Include="images\Graphics\LoginScreen2.png" />
     <Resource Include="images\Graphics\LoginScreen3.png" />
