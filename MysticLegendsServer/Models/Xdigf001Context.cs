@@ -50,6 +50,8 @@ public partial class Xdigf001Context : DbContext
 
     public virtual DbSet<TradeMarket> TradeMarkets { get; set; }
 
+    public virtual DbSet<Travel> Travels { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -80,6 +82,8 @@ public partial class Xdigf001Context : DbContext
             entity.HasKey(e => e.Username).HasName("pk_access_token");
 
             entity.ToTable("access_token");
+
+            entity.HasIndex(e => e.AccessToken1, "ix_access_token").HasMethod("hash");
 
             entity.HasIndex(e => e.AccessToken1, "uc_access_token_access_token").IsUnique();
 
@@ -209,6 +213,12 @@ public partial class Xdigf001Context : DbContext
             entity.HasKey(e => e.InvitemId).HasName("pk_inventory_item");
 
             entity.ToTable("inventory_item");
+
+            entity.HasIndex(e => e.CharacterName, "ix_inventory_item_char_name").HasMethod("hash");
+
+            entity.HasIndex(e => new { e.CityName, e.CityInventoryCharacterName }, "ix_inventory_item_city_inv_name");
+
+            entity.HasIndex(e => e.CharacterInventoryCharacterN, "ix_inventory_item_inv_char_name").HasMethod("hash");
 
             entity.Property(e => e.InvitemId).HasColumnName("invitem_id");
             entity.Property(e => e.CharacterInventoryCharacterN)
@@ -356,6 +366,8 @@ public partial class Xdigf001Context : DbContext
 
             entity.ToTable("quest");
 
+            entity.HasIndex(e => e.NpcId, "ix_quest_npc_id");
+
             entity.Property(e => e.QuestId).HasColumnName("quest_id");
             entity.Property(e => e.Description)
                 .HasMaxLength(1024)
@@ -415,6 +427,8 @@ public partial class Xdigf001Context : DbContext
 
             entity.ToTable("refresh_token");
 
+            entity.HasIndex(e => e.RefreshToken1, "ix_refresh_token").HasMethod("hash");
+
             entity.HasIndex(e => e.RefreshToken1, "uc_refresh_token_refresh_token").IsUnique();
 
             entity.Property(e => e.RecordId).HasColumnName("record_id");
@@ -452,6 +466,32 @@ public partial class Xdigf001Context : DbContext
             entity.HasOne(d => d.Invitem).WithOne(p => p.TradeMarket)
                 .HasForeignKey<TradeMarket>(d => d.InvitemId)
                 .HasConstraintName("fk_trade_market_inventory_item");
+        });
+
+        modelBuilder.Entity<Travel>(entity =>
+        {
+            entity.HasKey(e => e.CharacterName).HasName("pk_travel");
+
+            entity.ToTable("travel");
+
+            entity.Property(e => e.CharacterName)
+                .HasMaxLength(32)
+                .HasColumnName("character_name");
+            entity.Property(e => e.AreaName)
+                .HasMaxLength(32)
+                .HasColumnName("area_name");
+            entity.Property(e => e.Arrival)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("arrival");
+
+            entity.HasOne(d => d.AreaNameNavigation).WithMany(p => p.Travels)
+                .HasForeignKey(d => d.AreaName)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_travel_area");
+
+            entity.HasOne(d => d.CharacterNameNavigation).WithOne(p => p.Travel)
+                .HasForeignKey<Travel>(d => d.CharacterName)
+                .HasConstraintName("fk_travel_character");
         });
 
         modelBuilder.Entity<User>(entity =>

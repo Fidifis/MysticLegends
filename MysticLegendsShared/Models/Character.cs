@@ -29,5 +29,7 @@ public partial class Character
 
     public virtual ICollection<InventoryItem> InventoryItems { get; set; } = new List<InventoryItem>();
 
+    public virtual Travel? Travel { get; set; }
+
     public virtual User UsernameNavigation { get; set; } = null!;
 }

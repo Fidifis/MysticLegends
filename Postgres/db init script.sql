@@ -18,6 +18,7 @@ DROP TABLE IF EXISTS quest_requirement CASCADE;
 DROP TABLE IF EXISTS quest_reward CASCADE;
 DROP TABLE IF EXISTS refresh_token CASCADE;
 DROP TABLE IF EXISTS trade_market CASCADE;
+DROP TABLE IF EXISTS travel CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 -- End of removing
 
@@ -178,6 +179,13 @@ CREATE TABLE trade_market (
 );
 ALTER TABLE trade_market ADD CONSTRAINT pk_trade_market PRIMARY KEY (invitem_id);
 
+CREATE TABLE travel (
+    character_name VARCHAR(32) NOT NULL,
+    area_name VARCHAR(32),
+    arrival TIMESTAMP NOT NULL
+);
+ALTER TABLE travel ADD CONSTRAINT pk_travel PRIMARY KEY (character_name);
+
 CREATE TABLE users (
     username VARCHAR(32) NOT NULL,
     password_hash VARCHAR(32) NOT NULL
@@ -224,6 +232,9 @@ ALTER TABLE quest_reward ADD CONSTRAINT fk_quest_reward_quest FOREIGN KEY (quest
 ALTER TABLE refresh_token ADD CONSTRAINT fk_refresh_token_users FOREIGN KEY (username) REFERENCES users (username) ON DELETE CASCADE;
 
 ALTER TABLE trade_market ADD CONSTRAINT fk_trade_market_inventory_item FOREIGN KEY (invitem_id) REFERENCES inventory_item (invitem_id) ON DELETE CASCADE;
+
+ALTER TABLE travel ADD CONSTRAINT fk_travel_character FOREIGN KEY (character_name) REFERENCES character (character_name) ON DELETE CASCADE;
+ALTER TABLE travel ADD CONSTRAINT fk_travel_area FOREIGN KEY (area_name) REFERENCES area (area_name) ON DELETE CASCADE;
 
 ALTER TABLE inventory_item ADD CONSTRAINT xc_inventory_item_city_name_cha CHECK ((city_name IS NOT NULL AND character_name IS NULL AND character_inventory_character_n IS NULL AND npc_id IS NULL) OR (city_name IS NULL AND character_name IS NOT NULL AND character_inventory_character_n IS NULL AND npc_id IS NULL) OR (city_name IS NULL AND character_name IS NULL AND character_inventory_character_n IS NOT NULL AND npc_id IS NULL) OR (city_name IS NULL AND character_name IS NULL AND character_inventory_character_n IS NULL AND npc_id IS NOT NULL));
 
