@@ -1,5 +1,5 @@
 #!/bin/sh
-set -euo pipefail
+set -eu
 
 CONTEXT_FILE_NAME="Xdigf001Context.cs"
 
