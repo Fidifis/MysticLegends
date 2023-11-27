@@ -179,7 +179,7 @@
         "x": 553.4285707473755,
         "y": 435.49998474121094,
         "width": 192.99999904632568,
-        "height": 108.00001525878906
+        "height": 127.5
       }
     },
     {
@@ -593,6 +593,25 @@
       }
     },
     {
+      "name": "Travel",
+      "parent": null,
+      "attr": [
+        {
+          "name": "arrival",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "timestamp"
+        }
+      ],
+      "transform": {
+        "x": 783.2857093811035,
+        "y": 324.99998474121094,
+        "width": 155,
+        "height": 82
+      }
+    },
+    {
       "name": "Users",
       "parent": null,
       "attr": [
@@ -933,7 +952,7 @@
           "points": [
             {
               "x": 653.4285697937012,
-              "y": 648
+              "y": 657.7499923706055
             }
           ],
           "manual": false
@@ -949,13 +968,13 @@
         "transform": {
           "anchor": {
             "x": 653.4285697937012,
-            "y": 543.5,
+            "y": 562.9999847412109,
             "edge": 2
           },
           "points": [
             {
               "x": 653.4285697937012,
-              "y": 648
+              "y": 657.7499923706055
             }
           ],
           "manual": true
@@ -1689,6 +1708,106 @@
             }
           ],
           "manual": true
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Travel",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 938.2857093811035,
+            "y": 365.99998474121094,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 1142.2857093811035,
+              "y": 365.99998474121094
+            },
+            {
+              "x": 1142.2857093811035,
+              "y": 1277.999984741211
+            }
+          ],
+          "manual": true
+        }
+      },
+      {
+        "entity": "Area",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 680.2857093811035,
+            "y": 1213.999984741211,
+            "edge": 2
+          },
+          "points": [
+            {
+              "x": 680.2857093811035,
+              "y": 1277.999984741211
+            },
+            {
+              "x": 1142.2857093811035,
+              "y": 1277.999984741211
+            }
+          ],
+          "manual": true
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Travel",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 783.2857093811035,
+            "y": 365.99998474121094,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 693.1785700321198,
+              "y": 365.99998474121094
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Character",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 693.1785700321198,
+            "y": 435.49998474121094,
+            "edge": 0
+          },
+          "points": [
+            {
+              "x": 693.1785700321198,
+              "y": 365.99998474121094
+            }
+          ],
+          "manual": false
         }
       }
     ],
