@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MysticLegendsServer.Models;
-using MysticLegendsShared.Models;
 using MysticLegendsShared.Utilities;
-using System.Reflection.Emit;
-using System.Security.Principal;
 using System.Text.Json;
 
 namespace MysticLegendsServer.Controllers
