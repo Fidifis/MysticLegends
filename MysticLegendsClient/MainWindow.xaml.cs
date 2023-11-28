@@ -47,9 +47,18 @@ namespace MysticLegendsClient
             EnterLogin();
         }
 
-        private void EnterGame()
+        private async Task EnterGame()
         {
-            new AyreimCity().Show();
+            await ErrorCatcher.TryAsync(async () =>
+            {
+                var data = await ApiCalls.CharacterCall.GetCharacterCityCallAsync(GameState.Current.CharacterName);
+                var city = data["city"];
+
+                if (data.TryGetValue("travel", out string? travelTime))
+                    TravelWindow.DoTravel(int.Parse(travelTime), city);
+                else
+                    CityWindow.MakeCity(city).Show();
+            });
             Close();
         }
 
@@ -81,7 +90,7 @@ namespace MysticLegendsClient
             if (charSelect.ShowDialog() == true)
             {
                 gameState.CharacterName = charSelect.ResultCharacterName!;
-                EnterGame();
+                await EnterGame();
             }
             Close();
         }

@@ -20,6 +20,9 @@ internal static class CharacterCall
         });
     }
 
+    public static Task<Dictionary<string, string>> GetCharacterCityCallAsync(string characterName) => 
+        GameState.Current.Connection.GetAsync<Dictionary<string, string>>($"/api/Character/{characterName}/city");
+
     public static Task<int> GetCharacterCurrencyCallAsync(string characterName) => GameState.Current.Connection.GetAsync<int>($"/api/Character/{characterName}/currency");
 
     public static async void UpdateCurrency(object? sender, string characterName)

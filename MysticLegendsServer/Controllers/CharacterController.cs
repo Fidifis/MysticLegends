@@ -264,9 +264,9 @@ namespace MysticLegendsServer.Controllers
 
             if (character.Travel is not null)
             {
-                if (character.Travel.Arrival < DateTime.Now)
+                if (character.Travel.Arrival > DateTime.Now)
                 {
-                    var msg = "Already traveling";
+                    var msg = "Cannot travel, Character already traveling";
                     logger.LogWarning(msg);
                     return BadRequest(msg);
                 }
@@ -284,6 +284,30 @@ namespace MysticLegendsServer.Controllers
             await dbContext.SaveChangesAsync();
 
             return Ok(travelWaitTime);
+        }
+
+        [HttpGet("{characterName}/city")]
+        public async Task<ObjectResult> GetCity(string characterName)
+        {
+            if (!await auth.ValidateAsync(Request.Headers, characterName))
+                return StatusCode(403, "Unauthorized");
+
+            var character = await dbContext.Characters
+                .Where(character => character.CharacterName == characterName)
+                .Include(character => character.Travel)
+                .SingleAsync();
+
+            var response = new Dictionary<string, string>();
+
+            response["city"] = character.CityName;
+            if (character.Travel is not null)
+            {
+                var diff = (int)(character.Travel.Arrival - DateTime.Now).TotalSeconds;
+                if (diff > 0)
+                    response["travel"] = (diff + 1).ToString();
+            }
+
+            return Ok(response);
         }
     }
 }

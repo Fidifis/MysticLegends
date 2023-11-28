@@ -7,6 +7,13 @@ namespace MysticLegendsClient;
 /// </summary>
 public partial class TravelWindow : Window
 {
+    public static void DoTravel(int seconds, string city)
+    {
+        new TravelWindow(seconds, () => {
+            CityWindow.MakeCity(city).Show();
+        }).Show();
+    }
+
     private readonly Action onCompletion;
     public TravelWindow(int seconds, Action onCompletion)
     {

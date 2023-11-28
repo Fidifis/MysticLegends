@@ -1,4 +1,5 @@
-﻿using MysticLegendsClient.Controls;
+﻿using MysticLegendsClient.CityWindows;
+using MysticLegendsClient.Controls;
 using MysticLegendsClient.Dialogs;
 using MysticLegendsClient.NpcWindows;
 using MysticLegendsClient.Resources;
@@ -30,6 +31,15 @@ namespace MysticLegendsClient
             DarkAlley,
             RebelsHideout,
         }
+
+        public static CityWindow MakeCity(string cityName) => cityName switch
+        {
+            "Ayreim" => new AyreimCity(),
+            "Tisling" => new TislingCity(),
+            "Dagos" => new DagosCity(),
+            "Soria" => new SoriaCity(),
+            _ => throw new NotImplementedException()
+        };
 
         private readonly string cityName;
 

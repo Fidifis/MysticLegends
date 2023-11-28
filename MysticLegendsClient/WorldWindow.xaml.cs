@@ -64,15 +64,16 @@ namespace MysticLegendsClient
             if (MessageBox.Show($"Do you really want to travel to {city}?", "travel", MessageBoxButton.YesNoCancel) != MessageBoxResult.Yes)
                 return;
 
-            int time = 0;
+            int time = -1;
             await ErrorCatcher.TryAsync(async () =>
             {
                 time = await ApiCalls.CharacterCall.TravelToCity(city);
             });
 
-            new TravelWindow(time, () => {
-                new AyreimCity().Show();
-            }).Show();
+            if (time == -1)
+                return;
+
+            TravelWindow.DoTravel(time, city);
 
             DialogResult = true;
             Close();
