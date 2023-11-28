@@ -71,7 +71,7 @@ Actions:
       Steps:
         - Run: aws ssm get-parameter --name /mysticlegends/live/refresh_on_push | jq -r '.Parameter.Value'
         - Run: echo hello && [ $(aws ssm get-parameter --name /mysticlegends/live/refresh_on_push | jq -r '.Parameter.Value') = 'true' ] &&
-        aws ecs update-service --cluster mysticlegends-live-cluster --service mysticlegends-server --force-new-deployment || true
+          aws ecs update-service --cluster mysticlegends-live-cluster --service mysticlegends-server --force-new-deployment || true
     Compute:
       Type: EC2
       Fleet: Linux.x86-64.Large
