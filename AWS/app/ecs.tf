@@ -134,7 +134,7 @@ resource "aws_ecs_task_definition" "task_definition" {
       {
         "name" : "${local.container_name}",
         "cpu" : 1024,
-        "memory" : 512,
+        "memory" : 452,
         "memoryReservation" : 256,
         "essential" : true,
         "logConfiguration": {
@@ -177,7 +177,7 @@ resource "aws_autoscaling_group" "ecs_asg" {
   min_size                  = 0
   max_size                  = 2
   desired_capacity          = 0
-  health_check_grace_period = 300
+  health_check_grace_period = 240
   health_check_type         = "EC2"
 
   launch_template {
@@ -211,7 +211,7 @@ resource "aws_ecs_capacity_provider" "ecs_capacity_provider" {
     auto_scaling_group_arn = aws_autoscaling_group.ecs_asg.arn
 
     managed_scaling {
-      instance_warmup_period    = 300
+      instance_warmup_period    = 300 # After warmup loadbalancer start sending traffic
       maximum_scaling_step_size = 1
       minimum_scaling_step_size = 1
       status                    = "ENABLED"
@@ -239,7 +239,7 @@ resource "aws_ecs_service" "ecs_service" {
   task_definition = aws_ecs_task_definition.task_definition.arn
 
   desired_count                     = 1
-  health_check_grace_period_seconds = 300
+  health_check_grace_period_seconds = 240 # Is lower than warmup, to kill unhealthy instance before it gets traffic from loadbalancer
 
   # network_configuration {
   #   subnets         = module.vpc.subnet_ids.public
