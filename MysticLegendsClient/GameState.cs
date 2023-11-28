@@ -9,7 +9,7 @@ internal class GameState : IDisposable
 
     public GameEvents GameEvents { get; private init; } = new();
 
-    public const string OfficialServersUrl = "https://servers.mysticlegends.fidifis.com";
+    public const string OfficialServersUrl = "http://mysticlegends.fidifis.com";
 
     public string Username { get; set; } = "";
     public string CharacterName { get; set; } = "";

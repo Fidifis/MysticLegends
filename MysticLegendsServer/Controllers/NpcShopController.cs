@@ -30,11 +30,8 @@ namespace MysticLegendsServer.Controllers
         }
 
         [HttpGet("{npcId}/offered-items")]
-        public async Task<ObjectResult> GetOfferedItems(int npcId, string characterName)
+        public async Task<ObjectResult> GetOfferedItems(int npcId)
         {
-            if (!await auth.ValidateAsync(Request.Headers, characterName))
-                return StatusCode(403, "Unauthorized");
-
             var reslut = await dbContext.InventoryItems
                 .Where(item => item.NpcId == npcId)
                 .Include(invItem => invItem.Price)
