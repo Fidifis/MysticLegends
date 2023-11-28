@@ -254,9 +254,36 @@ namespace MysticLegendsServer.Controllers
             if (!await auth.ValidateAsync(Request.Headers, characterName))
                 return StatusCode(403, "Unauthorized");
 
+            const int travelWaitTime = 10;
             var city = paramters["city"];
 
-            return Ok(10);
+            var character = await dbContext.Characters
+                .Where(character => character.CharacterName == characterName)
+                .Include(character => character.Travel)
+                .SingleAsync();
+
+            if (character.Travel is not null)
+            {
+                if (character.Travel.Arrival < DateTime.Now)
+                {
+                    var msg = "Already traveling";
+                    logger.LogWarning(msg);
+                    return BadRequest(msg);
+                }
+                else
+                    character.Travel = null;
+            }
+
+            character.Travel = new Travel()
+            {
+                CharacterName = characterName,
+                Arrival = DateTime.Now.AddSeconds(travelWaitTime),
+            };
+            character.CityName = city;
+
+            await dbContext.SaveChangesAsync();
+
+            return Ok(travelWaitTime);
         }
     }
 }
