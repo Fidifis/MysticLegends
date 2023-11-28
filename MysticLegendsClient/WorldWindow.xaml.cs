@@ -47,20 +47,30 @@ namespace MysticLegendsClient
                 Margin = new Thickness(5), 
                 FontSize = 20,
                 Height = 50,
-                Content = city, // in future should display city name as human readable string - Name with spaces
-                Tag = city, // tag holds a city's db primary key - name in PsacalCase
+                Content = city,
             };
             btn.Click += ButtonClick;
             citiesStack.Children.Add(btn);
         }
 
-        private void ButtonClick(object? sender, RoutedEventArgs e)
+        private async void ButtonClick(object? sender, RoutedEventArgs e)
         {
-            var city = ((FrameworkElement?)sender)?.Tag as string;
+            var city = ((Button?)sender)?.Content as string;
+            if (city is null)
+            {
+                MessageBox.Show("Error in reading city name", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             if (MessageBox.Show($"Do you really want to travel to {city}?", "travel", MessageBoxButton.YesNoCancel) != MessageBoxResult.Yes)
                 return;
 
-            new TravelWindow(10, () => {
+            int time = 0;
+            await ErrorCatcher.TryAsync(async () =>
+            {
+                time = await ApiCalls.CharacterCall.TravelToCity(city);
+            });
+
+            new TravelWindow(time, () => {
                 new AyreimCity().Show();
             }).Show();
 

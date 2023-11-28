@@ -5,6 +5,10 @@ namespace MysticLegendsClient.ApiCalls;
 
 internal static class CharacterCall
 {
+    // TODO: Review API Calls
+    // Do i want return void and event invoke or return task<result>
+    // do it unified accross all api calls
+
     public static Task<Character> GetCharacterServerCallAsync(string characterName) => GameState.Current.Connection.GetAsync<Character>($"/api/Character/{characterName}");
 
     public static async void UpdateCharacter(object? sender, string characterName)
@@ -80,5 +84,14 @@ internal static class CharacterCall
             var characterData = await GameState.Current.Connection.PostAsync<Character>($"/api/Character/{GameState.Current.CharacterName}/swap-equip-item", parameters);
             GameState.Current.GameEvents.CharacterWithItemsUpdate(sender, new(characterData));
         });
+    }
+
+    public static Task<int> TravelToCity(string city)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            ["city"] = city,
+        };
+        return GameState.Current.Connection.PostAsync<int>($"/api/Character/{GameState.Current.CharacterName}/travel", parameters);
     }
 }

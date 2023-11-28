@@ -247,5 +247,16 @@ namespace MysticLegendsServer.Controllers
             await dbContext.SaveChangesAsync();
             return Ok(character);
         }
+
+        [HttpPost("{characterName}/travel")]
+        public async Task<ObjectResult> Travel(string characterName, [FromBody] Dictionary<string, string> paramters)
+        {
+            if (!await auth.ValidateAsync(Request.Headers, characterName))
+                return StatusCode(403, "Unauthorized");
+
+            var city = paramters["city"];
+
+            return Ok(10);
+        }
     }
 }
