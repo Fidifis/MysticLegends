@@ -1,5 +1,4 @@
-﻿using MysticLegendsClient.CityWindows;
-using MysticLegendsShared.Models;
+﻿using MysticLegendsShared.Models;
 using System.Windows;
 using System.Windows.Controls;
 

@@ -8,4 +8,9 @@ public enum NpcType
     StorageKeeper,
     Scout,
     Rebel,
+
+
+    // City specific NPCs //
+
+    AyreimQueen = 100,
 }

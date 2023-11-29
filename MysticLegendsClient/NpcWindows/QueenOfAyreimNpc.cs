@@ -1,7 +1,7 @@
 ﻿namespace MysticLegendsClient.NpcWindows;
 
 // TODO: Maybe use different base class
-internal sealed class QueenOfAyreimNpc : NpcShopWindow
+internal sealed class QueenOfAyreimNpc : NpcQuestWindow
 {
     public QueenOfAyreimNpc(int npcId) : base(npcId)
     {

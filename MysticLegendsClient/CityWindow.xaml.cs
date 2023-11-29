@@ -1,5 +1,4 @@
-﻿using MysticLegendsClient.CityWindows;
-using MysticLegendsClient.Controls;
+﻿using MysticLegendsClient.Controls;
 using MysticLegendsClient.Dialogs;
 using MysticLegendsClient.NpcWindows;
 using MysticLegendsClient.Resources;
@@ -12,7 +11,7 @@ namespace MysticLegendsClient
     /// <summary>
     /// Interakční logika pro CityWindow.xaml
     /// </summary>
-    public abstract partial class CityWindow : Window
+    public partial class CityWindow : Window
     {
         public enum CloseReason
         {
@@ -21,36 +20,29 @@ namespace MysticLegendsClient
             Logout,
         }
 
-        protected enum ButtonType
+        private static string CityNameToSplash(string cityName) => cityName switch
         {
-            Blacksmith,
-            Potions,
-            TradeMarket,
-            Storage,
-            Scout,
-            DarkAlley,
-            RebelsHideout,
-        }
-
-        public static CityWindow MakeCity(string cityName) => cityName switch
-        {
-            "Ayreim" => new AyreimCity(),
-            "Tisling" => new TislingCity(),
-            "Dagos" => new DagosCity(),
-            "Soria" => new SoriaCity(),
+            "Ayreim" => "/images/Cities/Ayreim.png",
+            "Tisling" => "/images/Cities/Tisling.png",
+            "Dagos" => "/images/Cities/Dagos.png",
+            "Soria" => "/images/Cities/Soria.png",
             _ => throw new NotImplementedException()
         };
 
         private readonly string cityName;
 
+        private readonly List<SingleInstanceWindow> singletonWindows = new(15);
         private readonly SingleInstanceWindow<CharacterWindow> characterWindow = new();
-        private readonly SingleInstanceWindow blacksmithWindow = new(typeof(BlacksmithNpc), 2);
-        private readonly SingleInstanceWindow potionsWindow = new(typeof (PotionsNpc), 1);
 
-        public CityWindow(string cityName)
+        public CityWindow(string cityName): this(cityName, CityNameToSplash(cityName))
+        { }
+
+        private CityWindow(string cityName, string splashImage)
         {
             InitializeComponent();
             RefreshCharStats();
+            FillButtons(cityName);
+            SetSplashImage(splashImage);
 
             this.cityName = cityName;
             Title = $"Mystic Legends - {cityName} (City)";
@@ -63,6 +55,63 @@ namespace MysticLegendsClient
             GameState.Current.GameEvents.CharacterUpdateEvent += CharacterStatsChanged;
         }
 
+        private async void FillButtons(string city)
+        {
+            Npc[]? npcs = null;
+            await ErrorCatcher.TryAsync(async () =>
+            {
+                npcs = await ApiCalls.WorldCall.GetNpcsInCity(city);
+            });
+            if (npcs is null)
+                return;
+
+            foreach (var npc in npcs)
+            {
+                var window = ShowButton(npc.NpcId, (NpcType)npc.NpcType);
+                singletonWindows.Add(window);
+            }
+        }
+
+        private SingleInstanceWindow ShowButton(int npcId, NpcType button)
+        {
+            SingleInstanceWindow window;
+            switch (button)
+            {
+                case NpcType.Blacksmith:
+                    window = new(typeof(BlacksmithNpc), npcId);
+                    AddButton("Blacksmith", Icons.city_blacksmith, (_, _) => { window.Instance.ShowWindow(); });
+                    break;
+                case NpcType.PotionsCrafter:
+                    window = new(typeof(PotionsNpc), npcId);
+                    AddButton("Potions", Icons.city_potions, (_, _) => { window.Instance.ShowWindow(); });
+                    break;
+                case NpcType.Trader:
+                    window = new(typeof(BlacksmithNpc), npcId);
+                    AddButton("Trade Market", Icons.city_tradeMarket, (_, _) => { window.Instance.ShowWindow(); });
+                    break;
+                case NpcType.StorageKeeper:
+                    window = new(typeof(BlacksmithNpc), npcId);
+                    AddButton("Storage", Icons.city_storage, (_, _) => { window.Instance.ShowWindow(); });
+                    break;
+                case NpcType.Scout:
+                    window = new(typeof(BlacksmithNpc), npcId);
+                    AddButton("Scout", Icons.city_scout, (_, _) => { window.Instance.ShowWindow(); });
+                    break;
+                case NpcType.Rebel:
+                    window = new(typeof(BlacksmithNpc), npcId);
+                    AddButton("Dark Alley", Icons.city_darkAlley, (_, _) => { window.Instance.ShowWindow(); });
+                    break;
+                case NpcType.AyreimQueen:
+                    window = new(typeof(QueenOfAyreimNpc), npcId);
+                    AddButton("Queen of Ayreim", Icons.city_crown, (_, _) => { window.Instance.ShowWindow(); });
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            return window;
+        }
+
+        /*
         protected void ShowButtons(IEnumerable<ButtonType> buttons)
         {
             foreach (var button in buttons)
@@ -93,6 +142,7 @@ namespace MysticLegendsClient
                 }
             }
         }
+        */
 
         protected void AddButton(string title, string icon, RoutedEventHandler onClick)
         {
@@ -139,9 +189,8 @@ namespace MysticLegendsClient
             GameState.Current.GameEvents.CurrencyUpdateEvent -= CurrencyChanged;
             GameState.Current.GameEvents.CharacterUpdateEvent -= CharacterStatsChanged;
 
+            singletonWindows.ForEach(window => window.Dispose());
             characterWindow.Dispose();
-            blacksmithWindow.Dispose();
-            potionsWindow.Dispose();
         }
 
         private async void Options_Click(object sender, RoutedEventArgs e)

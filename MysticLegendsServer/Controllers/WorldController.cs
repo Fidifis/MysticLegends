@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MysticLegendsServer.Models;
-using MysticLegendsShared.Models;
 
 namespace MysticLegendsServer.Controllers;
 
@@ -20,4 +19,12 @@ public class WorldController : Controller
 
     [HttpGet("cities")]
     public async Task<ObjectResult> GetCities() => Ok(await dbContext.Cities.ToListAsync());
+
+    [HttpGet("{city}/npcs")]
+    public async Task<ObjectResult> GetNpcsInCity(string city) =>
+        Ok(
+            await dbContext.Npcs
+            .Where(npc => npc.CityName == city)
+            .ToListAsync()
+        );
 }

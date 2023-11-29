@@ -1,5 +1,4 @@
-﻿using MysticLegendsClient.CityWindows;
-using System.Windows;
+﻿using System.Windows;
 
 namespace MysticLegendsClient
 {

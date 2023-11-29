@@ -10,7 +10,7 @@ public partial class TravelWindow : Window
     public static void DoTravel(int seconds, string city)
     {
         new TravelWindow(seconds, () => {
-            CityWindow.MakeCity(city).Show();
+            new CityWindow(city).Show();
         }).Show();
     }
 

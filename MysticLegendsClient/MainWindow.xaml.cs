@@ -1,5 +1,4 @@
-﻿using MysticLegendsClient.CityWindows;
-using MysticLegendsShared.Utilities;
+﻿using MysticLegendsShared.Utilities;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -57,7 +56,7 @@ namespace MysticLegendsClient
                 if (data.TryGetValue("travel", out string? travelTime))
                     TravelWindow.DoTravel(int.Parse(travelTime), city);
                 else
-                    CityWindow.MakeCity(city).Show();
+                    new CityWindow(city).Show();
             });
             Close();
         }
