@@ -764,7 +764,7 @@
         "optional": true,
         "cardinality": 1,
         "xor": null,
-        "name": null,
+        "name": "character's current location",
         "transform": {
           "anchor": {
             "x": 129.28570938110352,
@@ -864,7 +864,7 @@
         "optional": false,
         "cardinality": 0,
         "xor": null,
-        "name": null,
+        "name": "characters's accepted quests",
         "transform": {
           "anchor": {
             "x": -145.14286041259766,
@@ -888,7 +888,7 @@
         "optional": false,
         "cardinality": 0,
         "xor": "13a82928ab5a9a66dc3661dab5a9a6ab5a9a6e5babb95ab5a9a6edd66c98",
-        "name": null,
+        "name": "placed in inventory",
         "transform": {
           "anchor": {
             "x": 599.4285697937012,
@@ -964,7 +964,7 @@
         "optional": true,
         "cardinality": 1,
         "xor": null,
-        "name": null,
+        "name": "stored in city",
         "transform": {
           "anchor": {
             "x": 653.4285697937012,
@@ -1014,7 +1014,7 @@
         "optional": true,
         "cardinality": 1,
         "xor": null,
-        "name": null,
+        "name": "equipped by the character",
         "transform": {
           "anchor": {
             "x": 911.4285697937012,
@@ -1276,7 +1276,7 @@
         "optional": false,
         "cardinality": 0,
         "xor": null,
-        "name": null,
+        "name": "npc's location",
         "transform": {
           "anchor": {
             "x": 128.85713958740234,
@@ -1344,7 +1344,7 @@
         "optional": false,
         "cardinality": 0,
         "xor": "13a82928ab5a9a66dc3661dab5a9a6ab5a9a6e5babb95ab5a9a6edd66c98",
-        "name": null,
+        "name": "owned by npc",
         "transform": {
           "anchor": {
             "x": 558.4285697937012,
@@ -1368,7 +1368,7 @@
         "optional": false,
         "cardinality": 1,
         "xor": null,
-        "name": null,
+        "name": "item has price",
         "transform": {
           "anchor": {
             "x": 446.2857093811035,
@@ -1576,7 +1576,7 @@
         "optional": false,
         "cardinality": 0,
         "xor": null,
-        "name": null,
+        "name": "quests that npc offers",
         "transform": {
           "anchor": {
             "x": 131.42856979370117,
@@ -1690,7 +1690,7 @@
         "optional": true,
         "cardinality": 1,
         "xor": null,
-        "name": null,
+        "name": "item on sale",
         "transform": {
           "anchor": {
             "x": 754.4285697937012,
@@ -1718,7 +1718,7 @@
         "optional": true,
         "cardinality": 0,
         "xor": null,
-        "name": null,
+        "name": "is traveling to area",
         "transform": {
           "anchor": {
             "x": 938.2857093811035,
@@ -1794,7 +1794,7 @@
         "optional": true,
         "cardinality": 1,
         "xor": null,
-        "name": null,
+        "name": "traveling",
         "transform": {
           "anchor": {
             "x": 693.1785700321198,
