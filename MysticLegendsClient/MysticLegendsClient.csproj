@@ -31,6 +31,7 @@
     <Resource Include="icons\scale-balanced-solid.svg" />
     <Resource Include="icons\user-solid.svg" />
 	<Resource Include="icons\crown-solid.svg" />
+	<Resource Include="icons\toolbox-solid.svg" />
     <Resource Include="images\Cities\Ayreim.png" />
 	<Resource Include="images\Cities\Tisling.png" />
 	<Resource Include="images\Cities\Soria.png" />

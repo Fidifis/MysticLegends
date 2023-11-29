@@ -151,7 +151,7 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
-        ///   Vyhledá lokalizovaný řetězec podobný /icons/anvil.svg.
+        ///   Vyhledá lokalizovaný řetězec podobný /icons/toolbox-solid.svg.
         /// </summary>
         public static string city_storage {
             get {

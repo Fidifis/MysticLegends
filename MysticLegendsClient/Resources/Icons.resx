@@ -148,7 +148,7 @@
     <value>/icons/dragon-solid.svg</value>
   </data>
   <data name="city/storage" xml:space="preserve">
-    <value>/icons/anvil.svg</value>
+    <value>/icons/toolbox-solid.svg</value>
   </data>
   <data name="city/tradeMarket" xml:space="preserve">
     <value>/icons/scale-balanced-solid.svg</value>
