@@ -6,22 +6,22 @@ Tento token expiruje v řádu měsíců a slouží k vygenerování Access token
 Každý uživatel může mít více refresh tokenů (co zařízení to refresh token).
 Access token je vydán po ověření platného refresh tokenu a slouží jako ověření identity uživatele.
 Pro jednoho uživatele může existovat jen jeden Access token v jeden moment.
-Toto chování zamezuje přístupu z několika zařízení součastně.
-Expirac Access token je v řádu minut/hodin.
+Toto chování zamezuje přístupu z několika zařízení současně.
+Expirace Access token je v řádu minut/hodin.
 
 Každý uživatel má jednu nebo několik postav za které může hrát.
 Každá postava postava se nachází v nějakém městě a může mezi nimi cestovat.
 Postava má "classu", peníze, level a zkušenosti (xp).
-Klíčovou mechanikou hry jsou předměty, které můžou být uloženy v inventáři postavy, nasazeny na postavě (pouze typ brnění a zbraň) uloženy v městském skladě nebo je nemusí vlastnít hráč ale NPC (non-playable character).
+Klíčovou mechanikou hry jsou předměty, které můžou být uloženy v inventáři postavy, nasazeny na postavě (pouze typ brnění a zbraň) uloženy v městském skladě nebo je nemusí vlastnit hráč ale NPC (non-playable character).
 Předměty pro boj mají své statistiky, díky nimž může být každý předmět unikátní. Tyto hodnoty se aplikují při boji.
 
 Předměty mohou být kýmkoli nabídnuty k prodeji na trhu (trade market). Mohou být prodány za fixní cenu nebo jako aukce s příhozy.
 
-Každé město má své obchodníky kteří prodávají předměty, které vyrobili.
-Zadavatelé, NPC které nic neprodávájí, a obchodníci můžou zadávat hráčům úkoly.
-Na splnění úkolu jsou dány požadavky, přinést nějké předměty.
+Každé město má své obchodníky, kteří prodávají předměty, které vyrobili.
+Zadavatelé (NPC které nic neprodává), a obchodníci můžou zadávat hráčům úkoly.
+Na splnění úkolu jsou dány požadavky, přinést nějaké předměty.
 Jako odměna jsou zkušenosti (xp) pro levelování a peníze.
-Pro získání nějakého předmětu, který nejde (nebo hráč nechce) koupit, může vyrazit na cestu a pobít pár monster.
+Hráč pro získání nějakého předmětu, který nejde (nebo nechce) koupit, může vyrazit na cestu a pobít pár monster.
 Z nich může získat nejrůznější předměty od běžných po velmi vzácné.
 
 ## Konceptuální schéma
