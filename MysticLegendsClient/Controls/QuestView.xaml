@@ -10,5 +10,6 @@
         <ScrollViewer>
             <StackPanel x:Name="questPanel"/>
         </ScrollViewer>
+        <Label x:Name="noQestsLabel" Content="No quests" FontSize="20"/>
     </Grid>
 </UserControl>

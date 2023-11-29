@@ -352,10 +352,10 @@ FALSE, TRUE, 2),
 (3, 0, 'Quest1',
 'Lorem ipsum',
 FALSE, TRUE, 1),
-(4, 3, 'Quest2',
+(4, 5, 'Quest2',
 'Lorem ipsum',
 FALSE, TRUE, 1),
-(5, 4, 'Quest3',
+(5, 6, 'Quest3',
 'Lorem ipsum',
 FALSE, TRUE, 1);
 

@@ -20,6 +20,7 @@ namespace MysticLegendsClient.Controls
         public void FillData(IEnumerable<Quest> quests)
         {
             questPanel.Children.Clear();
+            noQestsLabel.Visibility = quests.Any() ? Visibility.Collapsed : Visibility.Visible;
             foreach (var quest in quests)
             {
                 questsDict[quest.QuestId] = quest;

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MysticLegendsClient"
         xmlns:controls="clr-namespace:MysticLegendsClient.Controls"
         mc:Ignorable="d"
-        Title="QuestDetails" Height="500" Width="450"
+        Title="QuestDetails" Height="580" Width="450"
         MinHeight="350" MinWidth="300">
     <Grid>
         <TextBlock x:Name="title" Text="Quest Title" FontSize="25" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20"/>
