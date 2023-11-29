@@ -1,6 +1,6 @@
 # Semestrální projekt - Databáze
 ## Popis
-Jedná se databázový systém k online RPG hře. Můžete se registrovat nebo přihlásit do systému.
+Jedná se o databázový systém k online RPG hře. Můžete se registrovat nebo přihlásit do systému.
 Ověření uživatele je provedeno dvěma tokeny. Po poskytnutí username a hesla klient obdrží refresh token který si uloží.
 Tento token expiruje v řádu měsíců a slouží k vygenerování Access tokenu.
 Každý uživatel může mít více refresh tokenů (co zařízení to refresh token).
