@@ -12,6 +12,16 @@ internal static class AuthCall
         return (gameState ?? GameState.Current).Connection.PostAsync<string>($"api/Auth/login", parameters);
     }
 
+    public static Task<string> RegisterServerCallAsync(string username, string password, GameState? gameState = null)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            ["username"] = username,
+            ["password"] = password,
+        };
+        return (gameState ?? GameState.Current).Connection.PostAsync<string>($"api/Auth/register", parameters);
+    }
+
     public static async Task LogoutServerCallAsync(string? refreshToken, string? accessToken, GameState? gameState = null)
     {
         var parameters = new Dictionary<string, string>();

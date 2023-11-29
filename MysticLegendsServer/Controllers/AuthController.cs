@@ -30,6 +30,25 @@ namespace MysticLegendsServer.Controllers
             return Ok(token);
         }
 
+        [HttpPost("register")]
+        public async Task<ObjectResult> Register([FromBody] Dictionary<string, string> paramters)
+        {
+            var username = paramters["username"];
+            var password = paramters["password"];
+
+            if (!await auth.RegisterUser(username, password))
+            {
+                return BadRequest("Registration failed");
+            }
+
+            var token = await auth.IssueRefreshToken(username, password);
+
+            if (token is null)
+                return BadRequest("Login failed");
+
+            return Ok(token);
+        }
+
         [HttpPost("logout")]
         public async Task<ObjectResult> Logout([FromBody] Dictionary<string, string> paramters)
         {

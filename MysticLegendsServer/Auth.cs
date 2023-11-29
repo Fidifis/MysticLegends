@@ -91,6 +91,30 @@ public sealed class Auth: IDisposable
         return trueToken == accessToken;
     }
 
+    public async Task<bool> RegisterUser(string username, string password)
+    {
+        ObjectDisposedException.ThrowIf(disposed, this);
+
+        username = username.Trim();
+        if (username == "" || password == "")
+            return false;
+
+        foreach (var letter in username)
+        {
+            if (!alphaNumericChars.Contains(letter))
+                return false;
+        }
+
+        var user = new User()
+        {
+            Username = username,
+            PasswordHash = GetPasswordHash(password),
+        };
+
+        await dbContext.Users.AddAsync(user);
+        return true;
+    }
+
     public async Task<string?> IssueRefreshToken(string username, string password)
     {
         ObjectDisposedException.ThrowIf(disposed, this);
