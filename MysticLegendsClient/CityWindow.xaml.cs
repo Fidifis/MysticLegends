@@ -97,10 +97,6 @@ namespace MysticLegendsClient
                     window = new(typeof(BlacksmithNpc), npcId);
                     AddButton("Scout", Icons.city_scout, (_, _) => { window.Instance.ShowWindow(); });
                     break;
-                case NpcType.Rebel:
-                    window = new(typeof(BlacksmithNpc), npcId);
-                    AddButton("Dark Alley", Icons.city_darkAlley, (_, _) => { window.Instance.ShowWindow(); });
-                    break;
                 case NpcType.AyreimQueen:
                     window = new(typeof(QueenOfAyreimNpc), npcId);
                     AddButton("Queen of Ayreim", Icons.city_crown, (_, _) => { window.Instance.ShowWindow(); });

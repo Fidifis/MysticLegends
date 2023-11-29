@@ -120,6 +120,12 @@
   <data name="bodyArmor/ayreimWarrior" xml:space="preserve">
     <value>/items/armor/Full_Chainmail_inventory_icon.png</value>
   </data>
+  <data name="boots/ayreimWarrior" xml:space="preserve">
+    <value>/items/boots/Vaal_Greaves_inventory_icon.png</value>
+  </data>
+  <data name="gloves/ayreimWarrior" xml:space="preserve">
+    <value>/items/gloves/Antique_Gauntlets_inventory_icon.png</value>
+  </data>
   <data name="helmet/ayreimWarrior" xml:space="preserve">
     <value>/items/helmet/Close_Helmet_inventory_icon.png</value>
   </data>

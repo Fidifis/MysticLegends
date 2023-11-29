@@ -294,7 +294,9 @@ VALUES ('Area1', 'Mob1', 1, 1, 5);
 INSERT INTO item (item_id, name, icon, item_type, max_stack, max_durability)
 VALUES (1, 'Armor of Ayreim warriors', 'bodyArmor/ayreimWarrior', 10, 1, 100),
        (2, 'Helmet of Ayreim warriors', 'helmet/ayreimWarrior', 11, 1, 100),
-       (3, 'Small Health Potion', 'potion/smallHealth', 20, 50, NULL);
+       (3, 'Boots of Ayreim warriors', 'boots/ayreimWarrior', 13, 1, 100),
+       (4, 'Gloves of Ayreim warriors', 'gloves/ayreimWarrior', 12, 1, 100),
+       (10, 'Small Health Potion', 'potion/smallHealth', 20, 50, NULL);
 
 
 INSERT INTO character_inventory (character_name, capacity)
@@ -302,7 +304,24 @@ VALUES ('zmrdus', 10);
 
 -- Insert data into the "npc" table
 INSERT INTO npc (npc_id, city_name, npc_type, currency_gold)
-VALUES (1, 'Ayreim', 1, 500);
+VALUES (0, 'Ayreim', 100, 1000000),
+       (1, 'Ayreim', 1, 500),
+       (2, 'Ayreim', 0, 500),
+       (3, 'Ayreim', 2, 500),
+       (4, 'Ayreim', 3, 500),
+       (5, 'Ayreim', 4, 500),
+       (6, 'Tisling', 0, 500),
+       (7, 'Tisling', 1, 500),
+       (8, 'Tisling', 2, 500),
+       (9, 'Tisling', 3, 500),
+       (10, 'Tisling', 4, 500),
+       (11, 'Soria', 0, 500),
+       (12, 'Soria', 1, 500),
+       (13, 'Soria', 2, 500),
+       (14, 'Soria', 3, 500),
+       (15, 'Dagos', 0, 500),
+       (16, 'Dagos', 1, 500),
+       (17, 'Dagos', 3, 500);
 
 -- Insert data into the "inventory_item" table
 INSERT INTO inventory_item (invitem_id, character_inventory_character_n, character_name, npc_id, item_id, level, stack_count, position)
@@ -311,9 +330,9 @@ VALUES (1, 'zmrdus', NULL, NULL, 1, 1, 1, 0),
        (3, 'zmrdus', NULL, NULL, 1, 1, 1, 2),
        (4, NULL, NULL, 1, 1, 1, 1, 3),
        (5, NULL, NULL, 1, 2, 1, 1, 4),
-       (6, NULL, NULL, 1, 3, NULL, 10, 5),
-       (7, NULL, NULL, 1, 3, NULL, 200, 0),
-       (8, NULL, NULL, 1, 3, NULL, 150, 0);
+       (6, NULL, NULL, 1, 10, NULL, 10, 5),
+       (7, NULL, NULL, 1, 10, NULL, 200, 0),
+       (8, NULL, NULL, 1, 10, NULL, 150, 0);
 
 INSERT INTO price (invitem_id, price_gold, quantity_per_purchase)
 VALUES (4, 200, NULL),
@@ -329,25 +348,38 @@ VALUES (1, 1, 'Out of stock',
 TRUE, TRUE, 1),
 (2, 1, 'The Cursed Fang',
 'Master Alarics alchemical prowess faces a dire challenge. The cure for a potent ailment lies within the venomous fang of the elusive Shadow Serpent, a creature rumored to haunt the forbidden Mistwood Forest. The demand for this rare potion is urgent, and Master Alaric implores the bravest of adventurers to embark on a perilous quest.',
-FALSE, TRUE, 2);
+FALSE, TRUE, 2),
+(3, 0, 'Quest1',
+'Lorem ipsum',
+FALSE, TRUE, 1),
+(4, 3, 'Quest2',
+'Lorem ipsum',
+FALSE, TRUE, 1),
+(5, 4, 'Quest3',
+'Lorem ipsum',
+FALSE, TRUE, 1);
 
 -- Insert data into the "quest_requirement" table
 INSERT INTO quest_requirement (quest_id, item_id, amount)
-VALUES (1, 3, 10),
-       (2, 3, 1);
+VALUES (1, 10, 10),
+       (2, 10, 20),
+       (3, 3, 1),
+       (4, 4, 1);
 
 -- Insert data into the "quest_reward" table
 INSERT INTO quest_reward (quest_id, currency_gold, xp)
 VALUES (1, 100, 20),
-       (2, 500, 1000);
+       (2, 500, 1000),
+       (3, 100, 100),
+       (4, 100, 200);
 
 INSERT INTO accepted_quest (character_name, quest_id, quest_state)
 VALUES ('zmrdus', 1, 1);
 
 INSERT INTO battle_stats (stat_type, method, invitem_id, value)
-VALUES (1, 0, 1, 50),  -- Example stat 1
-       (1, 1, 2, 3),  -- Example stat 2
-       (1, 0, 3, 60);  -- Example stat 3
+VALUES (1, 0, 1, 50),
+       (1, 1, 2, 3),
+       (1, 0, 3, 60);
 
 DO $$
 BEGIN

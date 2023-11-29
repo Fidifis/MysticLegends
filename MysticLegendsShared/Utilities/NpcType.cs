@@ -7,7 +7,6 @@ public enum NpcType
     Trader,
     StorageKeeper,
     Scout,
-    Rebel,
 
 
     // City specific NPCs //
