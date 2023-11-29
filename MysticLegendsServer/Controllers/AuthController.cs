@@ -36,12 +36,13 @@ namespace MysticLegendsServer.Controllers
             var username = paramters["username"];
             var password = paramters["password"];
 
-            if (!await auth.RegisterUser(username, password))
+            var user = await auth.RegisterUser(username, password);
+            if (user is null)
             {
                 return BadRequest("Registration failed");
             }
 
-            var token = await auth.IssueRefreshToken(username, password);
+            var token = await auth.IssueRefreshToken(username, password, user);
 
             if (token is null)
                 return BadRequest("Login failed");

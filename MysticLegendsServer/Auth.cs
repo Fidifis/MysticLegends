@@ -91,18 +91,18 @@ public sealed class Auth: IDisposable
         return trueToken == accessToken;
     }
 
-    public async Task<bool> RegisterUser(string username, string password)
+    public async Task<User?> RegisterUser(string username, string password)
     {
         ObjectDisposedException.ThrowIf(disposed, this);
 
         username = username.Trim();
         if (username == "" || password == "")
-            return false;
+            return null;
 
         foreach (var letter in username)
         {
             if (!alphaNumericChars.Contains(letter))
-                return false;
+                return null;
         }
 
         var user = new User()
@@ -112,16 +112,21 @@ public sealed class Auth: IDisposable
         };
 
         await dbContext.Users.AddAsync(user);
-        return true;
+        await dbContext.SaveChangesAsync();
+        return user;
     }
 
     public async Task<string?> IssueRefreshToken(string username, string password)
     {
+        var user = await dbContext.Users.SingleAsync(user => user.Username == username);
+        return await IssueRefreshToken(username, password, user);
+    }
+
+    public async Task<string?> IssueRefreshToken(string username, string password, User user)
+    {
         ObjectDisposedException.ThrowIf(disposed, this);
 
-        var userTask = dbContext.Users.SingleAsync(user => user.Username == username);
         var passwordHash = GetPasswordHash(password);
-        var user = await userTask;
 
         if (user.PasswordHash != passwordHash)
             return null;
