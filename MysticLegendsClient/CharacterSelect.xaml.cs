@@ -34,7 +34,7 @@ namespace MysticLegendsClient
             InitializeComponent();
             this.userWhenCreating = userWhenCreating;
             charactersToFill = characters;
-            ButtonsVisibility(false);
+            CreationButtonsVisibility(false, !charactersToFill.Any());
             FillView(characters, true);
         }
 
@@ -97,7 +97,7 @@ namespace MysticLegendsClient
         private void Create_Click(object sender, RoutedEventArgs e)
         {
             createMode = true;
-            ButtonsVisibility(true);
+            CreationButtonsVisibility(true);
 
             FillView(Enum.GetValues<CharacterClass>().Select(clas =>
                 new CharacterDisplayData()
@@ -119,17 +119,18 @@ namespace MysticLegendsClient
             };
         }
 
-        private void ButtonsVisibility(bool showCreate)
+        private void CreationButtonsVisibility(bool showCreate, bool centered = false)
         {
             heading.Content = showCreate ? "Choose class" : "Choose your character";
-            createBtn.Visibility = showCreate ? Visibility.Hidden : Visibility.Visible;
             backBtn.Visibility = showCreate ? Visibility.Visible : Visibility.Hidden;
+            createBtn.Visibility = !showCreate && !centered ? Visibility.Visible : Visibility.Hidden;
+            noCharsLabel.Visibility = !showCreate && centered ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             createMode = false;
-            ButtonsVisibility(false);
+            CreationButtonsVisibility(false, !charactersToFill.Any());
 
             FillView(charactersToFill, true);
         }

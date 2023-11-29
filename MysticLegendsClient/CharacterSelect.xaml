@@ -13,7 +13,11 @@
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
             <StackPanel x:Name="slotsPanel" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10, 50"/>
         </ScrollViewer>
-        <Button Content="Create new" x:Name="createBtn" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,30,20" Height="30" Width="75" Click="Create_Click"/>
+        <Grid x:Name="noCharsLabel">
+            <Label Content="No characters." FontSize="40" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Button Content="Create new" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,100,0,0" Height="30" Width="75" Click="Create_Click"/>
+        </Grid>
+        <Button Content="Create new" x:Name="createBtn" Visibility="Hidden" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,30,20" Height="30" Width="75" Click="Create_Click"/>
         <Button Content="Back" x:Name="backBtn" Visibility="Hidden" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,30,20" Height="30" Width="75" Click="Back_Click"/>
     </Grid>
 </Window>
