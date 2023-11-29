@@ -45,7 +45,7 @@
             <CheckBox x:Name="remember" Content="Remeber me" Style="{StaticResource MarginBot}"/>
 
             <Button x:Name="loginButton" Content="Log in" Margin="0 20 0 10" Click="Login_Click" Height="25"/>
-            <Button x:Name="registerButton" Content="Register" Height="25"/>
+            <Button x:Name="registerButton" Content="Register" Height="25" Click="RegisterButton_Click"/>
             <Label x:Name="loggingInLabel" Content="Logging in" HorizontalAlignment="Center" Visibility="Collapsed"/>
         </StackPanel>
         <Grid Grid.Column="1">

@@ -55,6 +55,21 @@ class ServerConnector
         gameState.Username = username;
     }
 
+    public static async Task Register(string username, string password, bool saveToken, GameState gameState)
+    {
+        var refreshToken = await ApiCalls.AuthCall.RegisterServerCallAsync(username, password, gameState);
+        var accessToken = await ApiCalls.AuthCall.TokenServerCallAsync(refreshToken, gameState);
+
+        if (saveToken == true)
+        {
+            await gameState.TokenStore.SaveRefreshToken(refreshToken, gameState.Connection.Host);
+            await gameState.TokenStore.SaveUsername(username, gameState.Connection.Host);
+        }
+
+        gameState.ChangeAccessToken(accessToken);
+        gameState.Username = username;
+    }
+
     public static async Task Logout(GameState gameState)
     {
         var refreshToken = await gameState.TokenStore.ReadRefreshTokenAsync(gameState.Connection.Host);

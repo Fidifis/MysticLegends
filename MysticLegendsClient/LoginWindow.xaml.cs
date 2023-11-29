@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using MysticLegendsClient.Dialogs;
+using System.Windows;
 
 namespace MysticLegendsClient
 {
@@ -96,6 +97,44 @@ namespace MysticLegendsClient
             loginButton.IsEnabled = isEnabled;
             registerButton.IsEnabled = isEnabled;
             loggingInLabel.Visibility = isEnabled ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        // TODO: Make method with code that is same in register and login
+        private async void RegisterButton_Click(object sender, RoutedEventArgs e)
+        {
+            var connectionType = (ServerConnector.ServerConncetionType)serverSelect.SelectedItem;
+            var gameState = new GameState(ServerConnector.ConnectionTypeToUrl(connectionType, customServerTxt.Text));
+
+            var registerDial = new RegisterDialog(username.Text, password.Password);
+            var registerResult = registerDial.ShowDialog();
+            if (registerResult != true)
+                return;
+
+            username.Text = registerDial.Username;
+            password.Password = registerDial.Password;
+
+            if (!await gameState.Connection.HealthCheckAsync())
+            {
+                MessageBox.Show("Can't connect to server", "Connection failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                await ServerConnector.Register(username.Text, password.Password, remember.IsChecked == true, gameState);
+
+                await gameState.ConfigStore.WriteAsync("connectionType", connectionType.ToString());
+                await gameState.ConfigStore.WriteAsync("customConnectionAddress", customServerTxt.Text == "" ? null : customServerTxt.Text);
+
+                GameState.MakeGameStateCurrent(gameState);
+                DialogResult = true;
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to register\n" + ex.Message);
+                return;
+            }
         }
     }
 }

@@ -21,27 +21,24 @@ public partial class RegisterDialog : Window
     {
         if (usernameBox.Text.Trim() == "" || passwordBox.Text.Trim() == "" || confirmPasswordBox.Text.Trim() == "")
         {
-            DialogResult = false;
             MessageBox.Show("Please fill all fields");
             return;
         }
         if (passwordBox.Text != confirmPasswordBox.Text)
         {
-            DialogResult = false;
             MessageBox.Show("Passwords don't match");
             return;
         }
         
-        if (usernameBox.Text.Contains(' ') || usernameBox.Text.IsNormalized())
+        if (usernameBox.Text.Contains(' '))
         {
-            DialogResult = false;
             MessageBox.Show("Username cann't contain spaces and special characters");
             return;
         }
 
-        DialogResult = true;
         Username = usernameBox.Text.Trim();
         Password = passwordBox.Text;
+        DialogResult = true;
         Close();
     }
 }
