@@ -71,6 +71,9 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
 
 ![dependency_tree](dependency.jpg)
 
+## Dotazy
+
+
 ## Zdroje
 - ČVUT. Data Modeler (Kreslítko). Online. BI-DBS. © 2023. Dostupné z: https://dbs.fit.cvut.cz/kreslitko. [cit. 2023-11-29].
 - OPENAI. ChatGPT 3.5. ChatGPT [online]. © 2023 [cit. 2023-11-29]. Dostupné z: https://chat.openai.com/. Prompt: "dependency tree", "Make short description of this schema: [DDL script]".

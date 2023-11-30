@@ -124,21 +124,21 @@ namespace MysticLegendsClient.Controls
 
         public void FillBattleStats(BattleStats battleStats)
         {
-            strength.VarContent = battleStats.Get(CBattleStat.Type.Strength).Value.ToString();
-            dexterity.VarContent = battleStats.Get(CBattleStat.Type.Dexterity).Value.ToString();
-            intelligence.VarContent = battleStats.Get(CBattleStat.Type.Intelligence).Value.ToString();
+            strength.VarContent = battleStats.Get(CBattleStat.Type.Strength).Value.ToString("F2");
+            dexterity.VarContent = battleStats.Get(CBattleStat.Type.Dexterity).Value.ToString("F2");
+            intelligence.VarContent = battleStats.Get(CBattleStat.Type.Intelligence).Value.ToString("F2");
 
-            physicalDamage.VarContent = battleStats.Get(CBattleStat.Type.PhysicalDamage).Value.ToString();
-            swiftness.VarContent = battleStats.Get(CBattleStat.Type.Swiftness).Value.ToString();
-            magicStrength.VarContent = battleStats.Get(CBattleStat.Type.MagicStrength).Value.ToString();
+            physicalDamage.VarContent = battleStats.Get(CBattleStat.Type.PhysicalDamage).Value.ToString("F2");
+            swiftness.VarContent = battleStats.Get(CBattleStat.Type.Swiftness).Value.ToString("F2");
+            magicStrength.VarContent = battleStats.Get(CBattleStat.Type.MagicStrength).Value.ToString("F2");
 
-            resilience.VarContent = battleStats.Get(CBattleStat.Type.Resilience).Value.ToString();
-            evade.VarContent = battleStats.Get(CBattleStat.Type.Evade).Value.ToString();
-            magicProtection.VarContent = battleStats.Get(CBattleStat.Type.MagicProtection).Value.ToString();
+            resilience.VarContent = battleStats.Get(CBattleStat.Type.Resilience).Value.ToString("F2");
+            evade.VarContent = battleStats.Get(CBattleStat.Type.Evade).Value.ToString("F2");
+            magicProtection.VarContent = battleStats.Get(CBattleStat.Type.MagicProtection).Value.ToString("F2");
 
-            fireResistance.VarContent = battleStats.Get(CBattleStat.Type.FireResistance).Value.ToString();
-            poisonResistance.VarContent = battleStats.Get(CBattleStat.Type.PoisonResistance).Value.ToString();
-            arcaneResistance.VarContent = battleStats.Get(CBattleStat.Type.ArcaneResistance).Value.ToString();
+            fireResistance.VarContent = battleStats.Get(CBattleStat.Type.FireResistance).Value.ToString("F2");
+            poisonResistance.VarContent = battleStats.Get(CBattleStat.Type.PoisonResistance).Value.ToString("F2");
+            arcaneResistance.VarContent = battleStats.Get(CBattleStat.Type.ArcaneResistance).Value.ToString("F2");
         }
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)

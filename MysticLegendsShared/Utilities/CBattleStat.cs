@@ -59,9 +59,9 @@ public record struct CBattleStat
 
     public override string ToString() => StatMethod switch
     {
-        Method.Add => $"Adds {Value} {StatType}",
-        Method.Multiply => $"Multiplies {StatType} by {Value}",
-        Method.Fix => $"Fixes {StatType} at {Value}",
+        Method.Add => string.Format("Adds {0:N2} {1}", Value, StatType),
+        Method.Multiply => string.Format("Multiplies {0} by {1:N2}", StatType, Value),
+        Method.Fix => string.Format("Fixes {0} at {1:N2}", StatType, Value),
         _ => "Unknown method"
     };
 }

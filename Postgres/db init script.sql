@@ -264,10 +264,10 @@ CREATE INDEX ix_quest_npc_id ON quest USING btree (npc_id);
 
 -- BEGINING OF ISERTIONS --
 
--- Insert data into the "users" table
-INSERT INTO "users" (username, password_hash) VALUES ('demo', 'fe01ce2a7fbac8fafaed7c982a04e229');
+INSERT INTO "users" (username, password_hash)
+VALUES ('demo', 'fe01ce2a7fbac8fafaed7c982a04e229'),
+       ('nemo', 'e587f6146ebfbdefdc028c591643f220');
 
--- Insert data into the "city" table
 INSERT INTO city (city_name)
 VALUES ('Ayreim'),
        ('Tisling'),
@@ -275,32 +275,62 @@ VALUES ('Ayreim'),
        ('Soria');
 
 
--- Insert data into the "character" table
 INSERT INTO character (character_name, username, character_class, level, currency_gold, city_name, xp)
-VALUES ('zmrdus', 'demo', 1, 1, 1000, 'Ayreim', 0);
+VALUES ('burger', 'demo', 1, 1, 1000, 'Ayreim', 0),
+       ('spongebob', 'nemo', 2, 20, 1200, 'Ayreim', 50),
+       ('patrick star', 'nemo', 0, 5, 300, 'Ayreim', 30);
 
--- Insert data into the "city_inventory" table
+
 INSERT INTO city_inventory (city_name, character_name, capacity)
-VALUES ('Ayreim', 'zmrdus', 100);
+VALUES ('Ayreim', 'burger', 100),
+       ('Ayreim', 'spongebob', 100),
+       ('Ayreim', 'patrick star', 100),
+       ('Tisling', 'burger', 100),
+       ('Tisling', 'spongebob', 100),
+       ('Tisling', 'patrick star', 100),
+       ('Dagos', 'burger', 100),
+       ('Dagos', 'spongebob', 100),
+       ('Dagos', 'patrick star', 100),
+       ('Soria', 'burger', 100),
+       ('Soria', 'spongebob', 100),
+       ('Soria', 'patrick star', 100);
 
 -- Insert data into the "area" table
-INSERT INTO area (area_name) VALUES ('Area1');
+INSERT INTO area (area_name)
+VALUES ('Vergarni Hills'),
+       ('Dagos Valley');
 
 -- Insert data into the "mob" table
-INSERT INTO mob (area_name, mob_name, type, level, group_size)
-VALUES ('Area1', 'Mob1', 1, 1, 5);
+INSERT INTO mob (mob_id, mob_name, area_name, type, level, group_size)
+VALUES (1, 'Wolves', 'Vergarni Hills', 0, 1, 100),
+       (2, 'Wolves', 'Vergarni Hills', 0, 10, 500),
+       (3, 'Goat', 'Vergarni Hills', 1, 1, 600),
+       (4, 'Driftshade Serpent', 'Vergarni Hills', 2, 30, 150),
+       (5, 'Twilightcoil Serpent', 'Vergarni Hills', 2, 20, 110),
 
--- Insert data into the "item" table
+       (6, 'Wolves', 'Dagos Valley', 0, 6, 70),
+       (7, 'Wolves', 'Dagos Valley', 0, 14, 30),
+       (8, 'Hare', 'Dagos Valley', 3, 1, 754),
+       (9, 'Sigil', 'Dagos Valley', 4, 32, 202);
+
+
 INSERT INTO item (item_id, name, icon, item_type, max_stack, max_durability)
 VALUES (1, 'Armor of Ayreim warriors', 'bodyArmor/ayreimWarrior', 10, 1, 100),
        (2, 'Helmet of Ayreim warriors', 'helmet/ayreimWarrior', 11, 1, 100),
        (3, 'Boots of Ayreim warriors', 'boots/ayreimWarrior', 13, 1, 100),
        (4, 'Gloves of Ayreim warriors', 'gloves/ayreimWarrior', 12, 1, 100),
-       (10, 'Small Health Potion', 'potion/smallHealth', 20, 50, NULL);
+       (5, 'Small Health Potion', 'potion/smallHealth', 20, 50, NULL),
+       (6, 'Medium Health Potion', 'potion/mediumHealth', 20, 50, NULL),
+       (7, 'Small Strength Potion', 'potion/smallStrength', 20, 50, NULL),
+       (8, 'Small Dexterity Potion', 'potion/smallDexterity', 20, 50, NULL),
+       (9, 'Goat horn', 'regular/goatHorn', 0, 50, NULL),
+       (10, 'Wolve fang', 'regular/wolveFang', 0, 50, NULL);
 
 
 INSERT INTO character_inventory (character_name, capacity)
-VALUES ('zmrdus', 10);
+VALUES ('burger', 10),
+       ('spongebob', 10),
+       ('patrick star', 10);
 
 -- Insert data into the "npc" table
 INSERT INTO npc (npc_id, city_name, npc_type, currency_gold)
@@ -323,63 +353,81 @@ VALUES (0, 'Ayreim', 100, 1000000),
        (16, 'Dagos', 1, 500),
        (17, 'Dagos', 3, 500);
 
--- Insert data into the "inventory_item" table
+
 INSERT INTO inventory_item (invitem_id, character_inventory_character_n, character_name, npc_id, item_id, level, stack_count, position)
-VALUES (1, 'zmrdus', NULL, NULL, 1, 1, 1, 0),
-       (2, 'zmrdus', NULL, NULL, 2, 1, 1, 1),
-       (3, 'zmrdus', NULL, NULL, 1, 1, 1, 2),
-       (4, NULL, NULL, 1, 1, 1, 1, 3),
-       (5, NULL, NULL, 1, 2, 1, 1, 4),
-       (6, NULL, NULL, 1, 10, NULL, 10, 5),
-       (7, NULL, NULL, 1, 10, NULL, 200, 0),
-       (8, NULL, NULL, 1, 10, NULL, 150, 0);
+VALUES                     (1,          'burger',                        NULL,           NULL,   1,       1,     1,           0),
+                           (2,           NULL,                          'burger',        NULL,   2,       1,     1,           1),
+                           (3,          'burger',                        NULL,           NULL,   3,       1,     1,           2),
+                           (4,           NULL,                          'spongebob',     NULL,   1,       5,     1,           4),
+                           (5,           NULL,                          'spongebob',     NULL,   2,       5,     1,           1),
+                           (6,           NULL,                          'spongebob',     NULL,   3,       5,     1,           5),
+                           (7,          'spongebob',                     NULL,           NULL,   5,       NULL,  8,           0),
+                           (8,           NULL,                           NULL,           2,      1,       3,     1,           0),
+                           (9,           NULL,                           NULL,           6,      2,       5,     1,           0),
+                           (10,          NULL,                           NULL,           11,     3,       3,     1,           0),
+                           (11,          NULL,                           NULL,           15,     4,       9,     1,           0),
+                           (12,          NULL,                           NULL,           1,      5,       NULL,  300,         0),
+                           (13,          NULL,                           NULL,           1,      6,       NULL,  200,         0),
+                           (14,          NULL,                           NULL,           1,      7,       NULL,  150,         0),
+                           (15,          NULL,                           NULL,           1,      8,       NULL,  150,         0);
 
 INSERT INTO price (invitem_id, price_gold, quantity_per_purchase)
-VALUES (4, 200, NULL),
-	   (5, 100, NULL),
-	   (6, 50, NULL),
-       (7, 52, 6),
-       (8, 50, 5);
+VALUES (8, 100, NULL),
+	   (9, 100, NULL),
+	   (10, 100, NULL),
+       (11, 100, NULL),
+       (12, 50, 5),
+       (13, 90, 5),
+       (14, 70, 5),
+       (15, 70, 5);
 
--- Insert data into the "quest" table
+INSERT INTO battle_stats (stat_type, method, invitem_id, value)
+VALUES (FLOOR(RANDOM() * 3) + 1,  FLOOR(RANDOM() * 2), 1, RANDOM() * 100),
+       (FLOOR(RANDOM() * 3) + 10, FLOOR(RANDOM() * 2), 2, RANDOM() * 100),
+       (FLOOR(RANDOM() * 3) + 20, FLOOR(RANDOM() * 2), 3, RANDOM() * 100),
+       (FLOOR(RANDOM() * 4) + 30, FLOOR(RANDOM() * 2), 4, RANDOM() * 100),
+       (FLOOR(RANDOM() * 3) + 1,  FLOOR(RANDOM() * 2), 5, RANDOM() * 100),
+       (FLOOR(RANDOM() * 3) + 10, FLOOR(RANDOM() * 2), 6, RANDOM() * 100),
+       (FLOOR(RANDOM() * 3) + 20, FLOOR(RANDOM() * 2), 7, RANDOM() * 100),
+       (FLOOR(RANDOM() * 4) + 30, FLOOR(RANDOM() * 2), 8, RANDOM() * 100),
+       (FLOOR(RANDOM() * 3) + 1,  FLOOR(RANDOM() * 2), 9, RANDOM() * 100),
+       (FLOOR(RANDOM() * 3) + 10, FLOOR(RANDOM() * 2), 10, RANDOM() * 100),
+       (FLOOR(RANDOM() * 3) + 20, FLOOR(RANDOM() * 2), 11, RANDOM() * 100),
+
+       (0, 1, 14, RANDOM() * 10),
+       (1, 1, 15, RANDOM() * 10);
+
+
 INSERT INTO quest (quest_id, npc_id, name, description, is_repeable, is_offered, level)
 VALUES (1, 1, 'Out of stock',
 'Master Alaric, a highly esteemed potion crafter, faces an unprecedented crisis. The demand for his renowned potions has surged, leaving his once-teeming shelves barren. Desperate to uphold his reputation, Master Alaric urgently seeks the assistance of intrepid adventurers. He seeks help with refilling his dwindling potion supplies',
 TRUE, TRUE, 1),
 (2, 1, 'The Cursed Fang',
 'Master Alarics alchemical prowess faces a dire challenge. The cure for a potent ailment lies within the venomous fang of the elusive Shadow Serpent, a creature rumored to haunt the forbidden Mistwood Forest. The demand for this rare potion is urgent, and Master Alaric implores the bravest of adventurers to embark on a perilous quest.',
-FALSE, TRUE, 2),
-(3, 0, 'Quest1',
-'Lorem ipsum',
-FALSE, TRUE, 1),
-(4, 5, 'Quest2',
-'Lorem ipsum',
-FALSE, TRUE, 1),
-(5, 6, 'Quest3',
-'Lorem ipsum',
+FALSE, TRUE, 20),
+(3, 0, 'Rituals',
+'We run some rituals. I cannot say more.',
+TRUE, TRUE, 7),
+(4, 5, 'Medicine',
+'Please help. My wife is ill. She is very week. I need a health potion for her.',
 FALSE, TRUE, 1);
 
--- Insert data into the "quest_requirement" table
 INSERT INTO quest_requirement (quest_id, item_id, amount)
-VALUES (1, 10, 10),
-       (2, 10, 20),
-       (3, 3, 1),
-       (4, 4, 1);
+VALUES (1, 6, 10),
+       (2, 10, 3),
+       (3, 9, 21),
+       (4, 5, 1);
 
--- Insert data into the "quest_reward" table
 INSERT INTO quest_reward (quest_id, currency_gold, xp)
 VALUES (1, 100, 20),
        (2, 500, 1000),
-       (3, 100, 100),
-       (4, 100, 200);
+       (3, 30, 30),
+       (4, 10, 15);
 
 INSERT INTO accepted_quest (character_name, quest_id, quest_state)
-VALUES ('zmrdus', 1, 1);
-
-INSERT INTO battle_stats (stat_type, method, invitem_id, value)
-VALUES (1, 0, 1, 50),
-       (1, 1, 2, 3),
-       (1, 0, 3, 60);
+VALUES ('burger', 1, 1),
+       ('burger', 4, 1),
+       ('spongebob', 2, 1);
 
 DO $$
 BEGIN
