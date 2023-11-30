@@ -277,23 +277,23 @@ VALUES ('Ayreim'),
 
 INSERT INTO character (character_name, username, character_class, level, currency_gold, city_name, xp)
 VALUES ('burger', 'demo', 1, 1, 1000, 'Ayreim', 0),
-       ('spongebob', 'nemo', 2, 20, 1200, 'Ayreim', 50),
-       ('patrick star', 'nemo', 0, 5, 300, 'Ayreim', 30);
+       ('hero23', 'nemo', 2, 20, 1200, 'Ayreim', 50),
+       ('qwertz', 'nemo', 0, 5, 300, 'Ayreim', 30);
 
 
 INSERT INTO city_inventory (city_name, character_name, capacity)
 VALUES ('Ayreim', 'burger', 100),
-       ('Ayreim', 'spongebob', 100),
-       ('Ayreim', 'patrick star', 100),
+       ('Ayreim', 'hero23', 100),
+       ('Ayreim', 'qwertz', 100),
        ('Tisling', 'burger', 100),
-       ('Tisling', 'spongebob', 100),
-       ('Tisling', 'patrick star', 100),
+       ('Tisling', 'hero23', 100),
+       ('Tisling', 'qwertz', 100),
        ('Dagos', 'burger', 100),
-       ('Dagos', 'spongebob', 100),
-       ('Dagos', 'patrick star', 100),
+       ('Dagos', 'hero23', 100),
+       ('Dagos', 'qwertz', 100),
        ('Soria', 'burger', 100),
-       ('Soria', 'spongebob', 100),
-       ('Soria', 'patrick star', 100);
+       ('Soria', 'hero23', 100),
+       ('Soria', 'qwertz', 100);
 
 -- Insert data into the "area" table
 INSERT INTO area (area_name)
@@ -329,8 +329,8 @@ VALUES (1, 'Armor of Ayreim warriors', 'bodyArmor/ayreimWarrior', 10, 1, 100),
 
 INSERT INTO character_inventory (character_name, capacity)
 VALUES ('burger', 10),
-       ('spongebob', 10),
-       ('patrick star', 10);
+       ('hero23', 10),
+       ('qwertz', 10);
 
 -- Insert data into the "npc" table
 INSERT INTO npc (npc_id, city_name, npc_type, currency_gold)
@@ -358,10 +358,10 @@ INSERT INTO inventory_item (invitem_id, character_inventory_character_n, charact
 VALUES                     (1,          'burger',                        NULL,           NULL,   1,       1,     1,           0),
                            (2,           NULL,                          'burger',        NULL,   2,       1,     1,           1),
                            (3,          'burger',                        NULL,           NULL,   3,       1,     1,           2),
-                           (4,           NULL,                          'spongebob',     NULL,   1,       5,     1,           4),
-                           (5,           NULL,                          'spongebob',     NULL,   2,       5,     1,           1),
-                           (6,           NULL,                          'spongebob',     NULL,   3,       5,     1,           5),
-                           (7,          'spongebob',                     NULL,           NULL,   5,       NULL,  8,           0),
+                           (4,           NULL,                          'hero23',        NULL,   1,       5,     1,           4),
+                           (5,           NULL,                          'hero23',        NULL,   2,       5,     1,           1),
+                           (6,           NULL,                          'hero23',        NULL,   3,       5,     1,           5),
+                           (7,          'hero23',                        NULL,           NULL,   5,       NULL,  8,           0),
                            (8,           NULL,                           NULL,           2,      1,       3,     1,           0),
                            (9,           NULL,                           NULL,           6,      2,       5,     1,           0),
                            (10,          NULL,                           NULL,           11,     3,       3,     1,           0),
@@ -378,8 +378,7 @@ VALUES (8, 100, NULL),
        (11, 100, NULL),
        (12, 50, 5),
        (13, 90, 5),
-       (14, 70, 5),
-       (15, 70, 5);
+       (14, 70, 5);
 
 INSERT INTO battle_stats (stat_type, method, invitem_id, value)
 VALUES (FLOOR(RANDOM() * 3) + 1,  FLOOR(RANDOM() * 2), 1, RANDOM() * 100),
@@ -427,7 +426,7 @@ VALUES (1, 100, 20),
 INSERT INTO accepted_quest (character_name, quest_id, quest_state)
 VALUES ('burger', 1, 1),
        ('burger', 4, 1),
-       ('spongebob', 2, 1);
+       ('hero23', 2, 1);
 
 DO $$
 BEGIN
