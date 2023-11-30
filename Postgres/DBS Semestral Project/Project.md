@@ -58,7 +58,7 @@ Pod obrázkem vizualizace smyček jsem vytvořil jiný náhled na schéma (*depe
 - Tato situace je naprosto v pořádku a v určitém případě i vyžadována, viz **integritní omezení**.
 
 ### Smyčky vizuálně
-![schéma_se_smyčkai](Cycles.jpg)
+![schéma_se_smyčkai](Loops.jpg)
 
 ### Dependency tree
 Schéma jsem se pokusil přetransformovat do jiné podoby a udělat jakoby dependency tree. S tím že ořežu entity které nejsou ve smyčce (třeba user je mimo smyčku) a nechám jen ty které ve smyčce jsou.
