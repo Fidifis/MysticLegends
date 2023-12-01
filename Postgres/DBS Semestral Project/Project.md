@@ -195,6 +195,9 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     ```
 14. Item který má každá postava
     ```
+    {inventory_item[item_id, character_inventory_character_n]÷character[character_name]}*item
+    ```
+    ```
     with
     postavy as (select character_name from character),
     mozne_predmety as (select item_id, character_name from item cross join character),
@@ -229,41 +232,46 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     ) as t
     natural join item
     ```
+16. Kontrola dotazu z kategorie D1 (dotaz 14)
+    ```
+    -- žádný výstup znamená správnost
+    select * from character
+    except
+    select * from character where character_name in(
+    select character_inventory_character_n from inventory_item where inventory_item.character_inventory_character_n=character.character_name and item_id in(
+    select item_id from (
+    --overovana cast
+        select * from item it where
+        (select count(distinct character_inventory_character_n) from inventory_item inv where inv.item_id=it.item_id)
+        =
+        (select count(character_name) from character)
+    ) it));
+    --end of overovana cast
+    ```
 
 ## Tabulka pokrytí SQL dotazů
 | Kategorie | Kódy dotazů                                         | Charakteristika kategorie                                              |
 |-----------|-----------------------------------------------------|------------------------------------------------------------------------|
 | A         | 2; 3; 5; 6; 7; 8; 9; 10; 11; 12; 13;                | A - Pozitivní dotaz nad spojením alespoň dvou tabulek                  |
-| AR        | 2;                                                  | A (RA) - Pozitivní dotaz nad spojením alespoň dvou tabulek             |
 | B         | 4;                                                  | B - Negativní dotaz nad spojením alespoň dvou tabulek                  |
 | C         | 13;                                                 | C - Vyber ty, kteří mají vztah POUZE k ...                             |
 | D1        | 14;                                                 | D1 - Vyber ty, kteří/které jsou ve vztahu se všemi - dotaz s univerzální kvantifikací |
-| D2        |                                                     | D2 - Kontrola výsledku dotazu z kategorie D1                           |
-| D2N       |                                                     | D2 (NATURAL) - Kontrola výsledku dotazu z kategorie D1                 |
-| D2R       |                                                     | D2 (RA) - Kontrola výsledku dotazu z kategorie D1                      |
+| D2        | 16;                                                 | D2 - Kontrola výsledku dotazu z kategorie D1                           |
 | F1        |                                                     | F1 - JOIN ON                                                           |
-| F1R       |                                                     | F1 (RA) - JOIN ON                                                      |
 | F2        |                                                     | F2 - NATURAL JOIN|JOIN USING                                           |
-| F2R       |                                                     | F2 (RA) - NATURAL JOIN|JOIN USING                                      |
 | F3        |                                                     | F3 - CROSS JOIN                                                        |
-| F3R       |                                                     | F3 (RA) - CROSS JOIN                                                   |
 | F4        |                                                     | F4 - LEFT|RIGHT OUTER JOIN                                             |
 | F5        |                                                     | F5 - FULL (OUTER) JOIN                                                 |
 | G1        |                                                     | G1 - Vnořený dotaz v klauzuli WHERE                                    |
-| G1R       |                                                     | G1 (RA) - Vnořený dotaz v klauzuli WHERE                               |
 | G2        |                                                     | G2 - Vnořený dotaz v klauzuli FROM                                     |
 | G3        |                                                     | G3 - Vnořený dotaz v klauzuli SELECT                                   |
 | G4        |                                                     | G4 - Vztažený vnořený dotaz (EXISTS, NOT EXISTS)                       |
-| G4R       |                                                     | G4 (RA) - Vztažený vnořený dotaz (EXISTS, NOT EXISTS)                  |
 | H1        |                                                     | H1 - Množinové sjednocení - UNION                                      |
 | H2        | 15;                                                 | H2 - Množinový rozdíl - MINUS nebo EXCEPT                              |
-| H2R       | 15;                                                 | H2 (RA) - Množinový rozdíl - MINUS nebo EXCEPT                         |
 | H3        |                                                     | H3 - Množinový průnik - INTERSECT                                      |
 | I1        |                                                     | I1 - Agregační funkce (count|sum|min|max|avg)                          |
-| I1R       |                                                     | I1 (RA) - Agregační funkce (count|sum|min|max|avg)                     |
 | I2        |                                                     | I2 - Agregační funkce nad seskupenými řádky - GROUP BY (HAVING)        |
 | J         | 14;                                                 | J - Stejný dotaz ve třech různých formulacích SQL                      |
-| JR        |                                                     | J (RA) - Stejný dotaz ve třech různých formulacích SQL                 |
 | K         |                                                     | K - Všechny klauzule v 1 dotazu - SELECT FROM WHERE GROUP BY HAVING ORDER BY |
 | L         |                                                     | L - VIEW                                                               |
 | M         |                                                     | M - Dotaz nad pohledem                                                 |
