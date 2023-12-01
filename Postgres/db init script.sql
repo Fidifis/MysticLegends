@@ -268,6 +268,9 @@ INSERT INTO "users" (username, password_hash)
 VALUES ('demo', 'fe01ce2a7fbac8fafaed7c982a04e229'),
        ('nemo', 'e587f6146ebfbdefdc028c591643f220');
 
+INSERT INTO "refresh_token" (record_id, username, refresh_token, expiration)
+VALUES (1, 'nemo', 'f427f6146ebfbdefdc028c591643e453', '12/01/2023 12:20:50');
+
 INSERT INTO city (city_name)
 VALUES ('Ayreim'),
        ('Tisling'),
@@ -325,6 +328,19 @@ VALUES (1, 'Armor of Ayreim warriors', 'bodyArmor/ayreimWarrior', 10, 1, 100),
        (8, 'Small Dexterity Potion', 'potion/smallDexterity', 20, 50, NULL),
        (9, 'Goat horn', 'regular/goatHorn', 0, 50, NULL),
        (10, 'Wolve fang', 'regular/wolveFang', 0, 50, NULL);
+
+
+INSERT INTO mob_item_drop (mob_id, item_id, drop_rate)
+VALUES (1, 10, 0.9),
+       (2, 10, 0.92),
+       (3, 9, 0.9),
+       (4, 8, 0.5),
+       (5, 8, 0.58),
+       (6, 10, 0.91),
+       (7, 10, 0.93),
+       (9, 7, 0.3),
+       (9, 8, 0.3),
+       (9, 6, 0.3);
 
 
 INSERT INTO character_inventory (character_name, capacity)

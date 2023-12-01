@@ -124,6 +124,60 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     group by f.city_name
     order by f.city_name
     ```
+7. postava, která nemá žádný úkol
+    ```
+    character[character_name] !*> accepted_quest
+    ```
+    ```
+    select ch.character_name from character ch
+    except (
+        select ch2.character_name from character ch2
+        inner join accepted_quest aq on ch2.character_name = aq.character_name
+    )
+    ```
+8. postava, která je ve městě kde má úkol
+    ```
+    select distinct ch.character_name, npc.city_name from character ch 
+    join accepted_quest aq on ch.character_name = aq.character_name
+    join quest q on q.quest_id = aq.quest_id
+    join npc on npc.npc_id = q.npc_id
+    where npc.city_name = ch.city_name
+    ```
+9. itemy které hráč již má a zároveň je potřebuje ke splnění úkolu
+    ```
+    with
+    invit as (select * from inventory_item),
+    reqit as (select it.item_id, it.name from quest_requirement qr join item it on it.item_id = qr.item_id)
+    select reqit.item_id, reqit.name from reqit join invit on invit.item_id = reqit.item_id
+    ```
+10. u koho se nacházejí itemy, které přidávanjí dexterity nebo strength
+    ```
+    select distinct inv.npc_id, inv.character_name, inv.character_inventory_character_n, inv.invitem_id, bs.stat_type, bs.value
+    from inventory_item inv
+    natural join battle_stats bs
+    where bs.stat_type = 0 or bs.stat_type = 1
+    ```
+11. expirované tokeny
+    ```
+    refresh_token[expiration](expiration < CURRENT_TIMESTAMP) * users[username] *> access_token[current_access_expiration]
+    ```
+    ```
+    SELECT u.username,
+    rt.expiration as refresh_expiration,
+    at.expiration as current_access_expiration
+    FROM refresh_token rt
+    inner join users u on rt.username = u.username
+    left join access_token at on u.username = at.username
+    WHERE (rt.expiration < CURRENT_TIMESTAMP)
+    ```
+12. Počet předmětů v invetáři u každé postavy
+    ```
+    SELECT ch.character_name, count(inv)
+    FROM character ch
+    left join inventory_item inv on inv.character_inventory_character_n = ch.character_name
+    group by ch.character_name
+    ```
+13. 
 
 
 ## Zdroje
