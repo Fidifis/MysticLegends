@@ -83,6 +83,9 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     ```
 2. item na prodej u obchodníka, které stojí více jak 50
     ```
+    {inventory_item[invitem_id]} * {price(price_gold> 50)[price_gold]}
+    ```
+    ```
     select it.invitem_id, p.price_gold
     from inventory_item as it
     join price as p on it.invitem_id=p.invitem_id
@@ -159,10 +162,10 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     ```
 11. expirované tokeny
     ```
-    refresh_token[expiration](expiration < CURRENT_TIMESTAMP) * users[username] *> access_token[current_access_expiration]
+    refresh_token(expiration < CURRENT_TIMESTAMP)[expiration->refresh_expiration] * users[username] *> access_token[expiration->current_access_expiration]
     ```
     ```
-    SELECT u.username,
+    SELECT DISTINCT u.username,
     rt.expiration as refresh_expiration,
     at.expiration as current_access_expiration
     FROM refresh_token rt
@@ -172,20 +175,69 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     ```
 12. Počet předmětů v invetáři u každé postavy
     ```
-    SELECT ch.character_name, count(inv)
-    FROM character ch
+    select ch.character_name, count(inv)
+    from character ch
     left join inventory_item inv on inv.character_inventory_character_n = ch.character_name
     group by ch.character_name
+    ```
+13. Úkol(y), který má přijmutý jen postava se jménem 'hellmanz' a nikdo jiný
+    ```
+    {character(character_name='hellmanz')*accepted_quest*quest}
+    \
+    {character(character_name!='hellmanz')*accepted_quest*quest}
+    ```
+    ```
+    select distinct q.* from character ch natural join accepted_quest aq natural join quest q
+    where ch.character_name='hellmanz'
+    except
+    select distinct q.* from character ch natural join accepted_quest aq natural join quest q
+    where ch.character_name!='hellmanz'
+    ```
+14. Item který má každá postava
+    ```
+    with
+    postavy as (select character_name from character),
+    mozne_predmety as (select item_id, character_name from item cross join character),
+    existuji_predmety as (select item_id, character_inventory_character_n from inventory_item),
+    neexistuji_predmety as (select * from mozne_predmety except select * from existuji_predmety),
+    item_co_nema_kazdy as (select item_id from neexistuji_predmety),
+    item_co_ma_kazdy as (select item_id from item except select item_id from neexistuji_predmety)
+    select * from item_co_ma_kazdy natural join item
+    ```
+    ```
+    select * from item it where not exists(
+      select * from character ch where not exists(
+        select * from inventory_item inv
+        where inv.item_id=it.item_id and inv.character_inventory_character_n=ch.character_name
+      )
+    )
+    ```
+    ```
+    select * from item it where
+    (select count(distinct character_inventory_character_n) from inventory_item inv where inv.item_id=it.item_id)
+    =
+    (select count(character_name) from character)
+    ```
+15. Item, který nemá žádná postava
+    ```
+    item \ inventory_item
+    ```
+    ```
+    select * from (
+      select item_id from item
+      except (select item_id from inventory_item)
+    ) as t
+    natural join item
     ```
 
 ## Tabulka pokrytí SQL dotazů
 | Kategorie | Kódy dotazů                                         | Charakteristika kategorie                                              |
 |-----------|-----------------------------------------------------|------------------------------------------------------------------------|
-| A         |                                                     | A - Pozitivní dotaz nad spojením alespoň dvou tabulek      |
-| AR        |                                                     | A (RA) - Pozitivní dotaz nad spojením alespoň dvou tabulek             |
-| B         |                                                     | B - Negativní dotaz nad spojením alespoň dvou tabulek                  |
-| C         |                                                     | C - Vyber ty, kteří mají vztah POUZE k ...                             |
-| D1        |                                                     | D1 - Vyber ty, kteří/které jsou ve vztahu se všemi - dotaz s univerzální kvantifikací |
+| A         | 2; 3; 5; 6; 7; 8; 9; 10; 11; 12; 13;                | A - Pozitivní dotaz nad spojením alespoň dvou tabulek                  |
+| AR        | 2;                                                  | A (RA) - Pozitivní dotaz nad spojením alespoň dvou tabulek             |
+| B         | 4;                                                  | B - Negativní dotaz nad spojením alespoň dvou tabulek                  |
+| C         | 13;                                                 | C - Vyber ty, kteří mají vztah POUZE k ...                             |
+| D1        | 14;                                                 | D1 - Vyber ty, kteří/které jsou ve vztahu se všemi - dotaz s univerzální kvantifikací |
 | D2        |                                                     | D2 - Kontrola výsledku dotazu z kategorie D1                           |
 | D2N       |                                                     | D2 (NATURAL) - Kontrola výsledku dotazu z kategorie D1                 |
 | D2R       |                                                     | D2 (RA) - Kontrola výsledku dotazu z kategorie D1                      |
@@ -204,13 +256,13 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
 | G4        |                                                     | G4 - Vztažený vnořený dotaz (EXISTS, NOT EXISTS)                       |
 | G4R       |                                                     | G4 (RA) - Vztažený vnořený dotaz (EXISTS, NOT EXISTS)                  |
 | H1        |                                                     | H1 - Množinové sjednocení - UNION                                      |
-| H2        |                                                     | H2 - Množinový rozdíl - MINUS nebo EXCEPT                              |
-| H2R       |                                                     | H2 (RA) - Množinový rozdíl - MINUS nebo EXCEPT                         |
+| H2        | 15;                                                 | H2 - Množinový rozdíl - MINUS nebo EXCEPT                              |
+| H2R       | 15;                                                 | H2 (RA) - Množinový rozdíl - MINUS nebo EXCEPT                         |
 | H3        |                                                     | H3 - Množinový průnik - INTERSECT                                      |
 | I1        |                                                     | I1 - Agregační funkce (count|sum|min|max|avg)                          |
 | I1R       |                                                     | I1 (RA) - Agregační funkce (count|sum|min|max|avg)                     |
 | I2        |                                                     | I2 - Agregační funkce nad seskupenými řádky - GROUP BY (HAVING)        |
-| J         |                                                     | J - Stejný dotaz ve třech různých formulacích SQL                      |
+| J         | 14;                                                 | J - Stejný dotaz ve třech různých formulacích SQL                      |
 | JR        |                                                     | J (RA) - Stejný dotaz ve třech různých formulacích SQL                 |
 | K         |                                                     | K - Všechny klauzule v 1 dotazu - SELECT FROM WHERE GROUP BY HAVING ORDER BY |
 | L         |                                                     | L - VIEW                                                               |
@@ -227,6 +279,7 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
 
 ## Závěr
 TODO: až to dopíšu závěr zde... (pokud to vidíte znamená to že jsem na to zapomněl)
+Nejvíce času zabralo vymyslet dotazy.
 
 
 ## Zdroje

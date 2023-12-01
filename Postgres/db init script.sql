@@ -280,30 +280,29 @@ VALUES ('Ayreim'),
 
 INSERT INTO character (character_name, username, character_class, level, currency_gold, city_name, xp)
 VALUES ('burger', 'demo', 1, 1, 1000, 'Ayreim', 0),
-       ('hero23', 'nemo', 2, 20, 1200, 'Ayreim', 50),
+       ('hellmanz', 'nemo', 2, 20, 1200, 'Ayreim', 50),
        ('qwertz', 'nemo', 0, 5, 300, 'Ayreim', 30);
 
 
 INSERT INTO city_inventory (city_name, character_name, capacity)
 VALUES ('Ayreim', 'burger', 100),
-       ('Ayreim', 'hero23', 100),
+       ('Ayreim', 'hellmanz', 100),
        ('Ayreim', 'qwertz', 100),
        ('Tisling', 'burger', 100),
-       ('Tisling', 'hero23', 100),
+       ('Tisling', 'hellmanz', 100),
        ('Tisling', 'qwertz', 100),
        ('Dagos', 'burger', 100),
-       ('Dagos', 'hero23', 100),
+       ('Dagos', 'hellmanz', 100),
        ('Dagos', 'qwertz', 100),
        ('Soria', 'burger', 100),
-       ('Soria', 'hero23', 100),
+       ('Soria', 'hellmanz', 100),
        ('Soria', 'qwertz', 100);
 
--- Insert data into the "area" table
 INSERT INTO area (area_name)
 VALUES ('Vergarni Hills'),
        ('Dagos Valley');
 
--- Insert data into the "mob" table
+
 INSERT INTO mob (mob_id, mob_name, area_name, type, level, group_size)
 VALUES (1, 'Wolves', 'Vergarni Hills', 0, 1, 100),
        (2, 'Wolves', 'Vergarni Hills', 0, 10, 500),
@@ -345,10 +344,9 @@ VALUES (1, 10, 0.9),
 
 INSERT INTO character_inventory (character_name, capacity)
 VALUES ('burger', 10),
-       ('hero23', 10),
+       ('hellmanz', 10),
        ('qwertz', 10);
 
--- Insert data into the "npc" table
 INSERT INTO npc (npc_id, city_name, npc_type, currency_gold)
 VALUES (0, 'Ayreim', 100, 1000000),
        (1, 'Ayreim', 1, 500),
@@ -374,10 +372,10 @@ INSERT INTO inventory_item (invitem_id, character_inventory_character_n, charact
 VALUES                     (1,          'burger',                        NULL,           NULL,   1,       1,     1,           0),
                            (2,           NULL,                          'burger',        NULL,   2,       1,     1,           1),
                            (3,          'burger',                        NULL,           NULL,   3,       1,     1,           2),
-                           (4,           NULL,                          'hero23',        NULL,   1,       5,     1,           4),
-                           (5,           NULL,                          'hero23',        NULL,   2,       5,     1,           1),
-                           (6,           NULL,                          'hero23',        NULL,   3,       5,     1,           5),
-                           (7,          'hero23',                        NULL,           NULL,   5,       NULL,  8,           0),
+                           (4,           NULL,                          'hellmanz',      NULL,   1,       5,     1,           4),
+                           (5,           NULL,                          'hellmanz',      NULL,   2,       5,     1,           1),
+                           (6,           NULL,                          'hellmanz',      NULL,   3,       5,     1,           5),
+                           (7,          'hellmanz',                      NULL,           NULL,   5,       NULL,  8,           0),
                            (8,           NULL,                           NULL,           2,      1,       3,     1,           0),
                            (9,           NULL,                           NULL,           6,      2,       5,     1,           0),
                            (10,          NULL,                           NULL,           11,     3,       3,     1,           0),
@@ -385,7 +383,9 @@ VALUES                     (1,          'burger',                        NULL,  
                            (12,          NULL,                           NULL,           1,      5,       NULL,  300,         0),
                            (13,          NULL,                           NULL,           1,      6,       NULL,  200,         0),
                            (14,          NULL,                           NULL,           1,      7,       NULL,  150,         0),
-                           (15,          NULL,                           NULL,           1,      8,       NULL,  150,         0);
+                           (15,          NULL,                           NULL,           1,      8,       NULL,  150,         0),
+                           (16,          'hellmanz',                     NULL,           NULL,   1,       NULL,  1,           1),
+                           (17,          'qwertz',                       NULL,           NULL,   1,       NULL,  1,           0);
 
 INSERT INTO price (invitem_id, price_gold, quantity_per_purchase)
 VALUES (8, 100, NULL),
@@ -397,20 +397,32 @@ VALUES (8, 100, NULL),
        (14, 70, 5);
 
 INSERT INTO battle_stats (stat_type, method, invitem_id, value)
-VALUES (FLOOR(RANDOM() * 3) + 1,  FLOOR(RANDOM() * 2), 1, RANDOM() * 100),
-       (FLOOR(RANDOM() * 3) + 10, FLOOR(RANDOM() * 2), 2, RANDOM() * 100),
-       (FLOOR(RANDOM() * 3) + 20, FLOOR(RANDOM() * 2), 3, RANDOM() * 100),
-       (FLOOR(RANDOM() * 4) + 30, FLOOR(RANDOM() * 2), 4, RANDOM() * 100),
-       (FLOOR(RANDOM() * 3) + 1,  FLOOR(RANDOM() * 2), 5, RANDOM() * 100),
-       (FLOOR(RANDOM() * 3) + 10, FLOOR(RANDOM() * 2), 6, RANDOM() * 100),
-       (FLOOR(RANDOM() * 3) + 20, FLOOR(RANDOM() * 2), 7, RANDOM() * 100),
-       (FLOOR(RANDOM() * 4) + 30, FLOOR(RANDOM() * 2), 8, RANDOM() * 100),
-       (FLOOR(RANDOM() * 3) + 1,  FLOOR(RANDOM() * 2), 9, RANDOM() * 100),
-       (FLOOR(RANDOM() * 3) + 10, FLOOR(RANDOM() * 2), 10, RANDOM() * 100),
-       (FLOOR(RANDOM() * 3) + 20, FLOOR(RANDOM() * 2), 11, RANDOM() * 100),
+VALUES (1, 0, 1, 42),
+       (11, 1, 2, 2),
+       (21, 0, 3, 13),
+       (32, 1, 4, 1.91),
+       (2, 0, 5, 27),
+       (12, 1, 6, 1.56),
+       (22, 0, 7, 84),
+       (35, 1, 8, 1.19),
+       (2, 0, 9, 63),
+       (11, 1, 10, 1.37),
+       (22, 0, 11, 72),
+       (2, 1, 1, 1.50),
+       (10, 1, 2, 1.95),
+       (20, 0, 3, 68),
+       (34, 0, 4, 24),
+       (1, 0, 5, 79),
+       (10, 1, 6, 1.45),
+       (20, 1, 7, 1.31),
+       (30, 1, 8, 1.59),
+       (0, 0, 9, 14),
+       (0, 0, 10, 86),
+       (10, 0, 11, 41),
 
-       (0, 1, 14, RANDOM() * 10),
-       (1, 1, 15, RANDOM() * 10);
+       -- potions --
+       (0, 1, 14, 2.5),
+       (1, 1, 15, 2.5);
 
 
 INSERT INTO quest (quest_id, npc_id, name, description, is_repeable, is_offered, level)
@@ -442,7 +454,8 @@ VALUES (1, 100, 20),
 INSERT INTO accepted_quest (character_name, quest_id, quest_state)
 VALUES ('burger', 1, 1),
        ('burger', 4, 1),
-       ('hero23', 2, 1);
+       ('hellmanz', 2, 1),
+       ('hellmanz', 1, 2);
 
 DO $$
 BEGIN
