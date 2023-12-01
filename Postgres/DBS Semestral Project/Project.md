@@ -73,38 +73,57 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
 
 ## Dotazy
 1. postavy které mají level větší roven 5
-    - ```
-      character(level>=5)[character_name, level]
-      ```
-    - ```
-      SELECT DISTINCT character_name, level FROM  character WHERE (level>=5)
-      ```
+    ```
+    character(level>=5)[character_name, level]
+    ```
+    ```
+    SELECT DISTINCT character_name, level
+    FROM character
+    WHERE (level>=5)
+    ```
 2. item na prodej u obchodníka, které stojí více jak 50
-    - ```
-      select it.invitem_id, p.price_gold from inventory_item as it join price as p on it.invitem_id=p.invitem_id where p.price_gold > 50
-      ```
+    ```
+    select it.invitem_id, p.price_gold
+    from inventory_item as it
+    join price as p on it.invitem_id=p.invitem_id
+    where p.price_gold > 50
+    ```
 3. itemy u obchodníka, které nejsou na prodej
-    - ```
-      select it.invitem_id, it.npc_id from inventory_item as it left join price as p on it.invitem_id = p.invitem_id where p.invitem_id is null and it.npc_id is not null
-      ```
+    ```
+    select it.invitem_id, it.npc_id
+    from inventory_item as it
+    left join price as p on it.invitem_id = p.invitem_id
+    where p.invitem_id is null and it.npc_id is not null
+    ```
 4. uživatel který nemá refresh token
-    - ```
-      users!*>refresh_token
-      ```
-    - ```
-      select distinct * from users u where not exists (select * from refresh_token r where u.username=r.username)
-      ```
+    ```
+    users!*>refresh_token
+    ```
+    ```
+    select distinct * from users u
+    where not exists (
+      select * from refresh_token r
+      where u.username=r.username
+    )
+    ```
 5. úkol společně s jeho requirements a reward
-    - ```
-      select q.*, qr.item_id, qr.amount, qrd.currency_gold, qrd.xp
-      from quest q
-      left join quest_requirement qr on q.quest_id = qr.quest_id
-      left join quest_reward qrd on q.quest_id = qrd.quest_id
-      ```
+    ```
+    select q.*, qr.item_id, qr.amount, qrd.currency_gold, qrd.xp
+    from quest q
+    left join quest_requirement qr on q.quest_id = qr.quest_id
+    left join quest_reward qrd on q.quest_id = qrd.quest_id
+    ```
 6. celkové množství peněz všech npcs v jednotlivých městech
-    - ```
-      select f.city_name as "city name", sum(f.currency_gold) as "total gold" from (select npc.city_name, npc.currency_gold from npc join city on npc.city_name = city.city_name) as f group by f.city_name order by f.city_name
-      ```
+    ```
+    select f.city_name as "city name", sum(f.currency_gold) as "total gold"
+    from (
+      select npc.city_name, npc.currency_gold
+      from npc
+      join city on npc.city_name = city.city_name
+    ) as f
+    group by f.city_name
+    order by f.city_name
+    ```
 
 
 ## Zdroje
