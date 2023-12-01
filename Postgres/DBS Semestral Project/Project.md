@@ -76,7 +76,7 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     ```
     character(level>=5)[character_name, level]
     ```
-    ```
+    ```sql
     SELECT DISTINCT character_name, level
     FROM character
     WHERE (level>=5)
@@ -85,14 +85,14 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     ```
     {inventory_item[invitem_id]} * {price(price_gold> 50)[price_gold]}
     ```
-    ```
+    ```sql
     select it.invitem_id, p.price_gold
     from inventory_item as it
     join price as p on it.invitem_id=p.invitem_id
     where p.price_gold > 50
     ```
 3. itemy u obchodníka, které nejsou na prodej
-    ```
+    ```sql
     select it.invitem_id, it.npc_id
     from inventory_item as it
     left join price as p on it.invitem_id = p.invitem_id
@@ -102,7 +102,7 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     ```
     users!*>refresh_token
     ```
-    ```
+    ```sql
     select distinct * from users u
     where not exists (
       select * from refresh_token r
@@ -110,14 +110,14 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     )
     ```
 5. úkol společně s jeho requirements a reward
-    ```
+    ```sql
     select q.*, qr.item_id, qr.amount, qrd.currency_gold, qrd.xp
     from quest q
     left join quest_requirement qr on q.quest_id = qr.quest_id
     left join quest_reward qrd on q.quest_id = qrd.quest_id
     ```
 6. celkové množství peněz všech npcs v jednotlivých městech
-    ```
+    ```sql
     select f.city_name as "city name", sum(f.currency_gold) as "total gold"
     from (
       select npc.city_name, npc.currency_gold
@@ -131,7 +131,7 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     ```
     character[character_name] !*> accepted_quest
     ```
-    ```
+    ```sql
     select ch.character_name from character ch
     except (
         select ch2.character_name from character ch2
@@ -139,7 +139,7 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     )
     ```
 8. postava, která je ve městě kde má úkol
-    ```
+    ```sql
     select distinct ch.character_name, npc.city_name from character ch
     join accepted_quest aq on ch.character_name = aq.character_name
     join quest q on q.quest_id = aq.quest_id
@@ -147,14 +147,14 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     where npc.city_name = ch.city_name
     ```
 9. itemy které hráč již má a zároveň je potřebuje ke splnění úkolu
-    ```
+    ```sql
     with
     invit as (select * from inventory_item),
     reqit as (select it.item_id, it.name from quest_requirement qr join item it on it.item_id = qr.item_id)
     select reqit.item_id, reqit.name from reqit join invit on invit.item_id = reqit.item_id
     ```
 10. u koho se nacházejí itemy, které přidávanjí dexterity nebo strength
-    ```
+    ```sql
     select distinct inv.npc_id, inv.character_name, inv.character_inventory_character_n, inv.invitem_id, bs.stat_type, bs.value
     from inventory_item inv
     natural join battle_stats bs
@@ -164,7 +164,7 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     ```
     refresh_token(expiration < CURRENT_TIMESTAMP)[expiration->refresh_expiration] * users[username] *> access_token[expiration->current_access_expiration]
     ```
-    ```
+    ```sql
     SELECT DISTINCT u.username,
     rt.expiration as refresh_expiration,
     at.expiration as current_access_expiration
@@ -174,19 +174,19 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     WHERE (rt.expiration < CURRENT_TIMESTAMP)
     ```
 12. Počet předmětů v invetáři u každé postavy
-    ```
+    ```sql
     select ch.character_name, count(inv)
     from character ch
     left join inventory_item inv on inv.character_inventory_character_n = ch.character_name
     group by ch.character_name
     ```
 13. Úkol(y), který má přijmutý jen postava se jménem 'hellmanz' a nikdo jiný
-    ```
+    ```sql
     {character(character_name='hellmanz')*accepted_quest*quest}
     \
     {character(character_name!='hellmanz')*accepted_quest*quest}
     ```
-    ```
+    ```sql
     select distinct q.* from character ch natural join accepted_quest aq natural join quest q
     where ch.character_name='hellmanz'
     except
@@ -197,7 +197,7 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     ```
     {inventory_item[item_id, character_inventory_character_n]÷character[character_name]}*item
     ```
-    ```
+    ```sql
     with
     postavy as (select character_name from character),
     mozne_predmety as (select item_id, character_name from item cross join character),
@@ -207,7 +207,7 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     item_co_ma_kazdy as (select item_id from item except select item_id from neexistuji_predmety)
     select * from item_co_ma_kazdy natural join item
     ```
-    ```
+    ```sql
     select * from item it where not exists(
       select * from character ch where not exists(
         select * from inventory_item inv
@@ -215,7 +215,7 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
       )
     )
     ```
-    ```
+    ```sql
     select * from item it where
     (select count(distinct character_inventory_character_n) from inventory_item inv where inv.item_id=it.item_id)
     =
@@ -225,7 +225,7 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     ```
     item \ inventory_item
     ```
-    ```
+    ```sql
     select * from (
       select item_id from item
       except (select item_id from inventory_item)
@@ -233,7 +233,7 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     natural join item
     ```
 16. Kontrola dotazu z kategorie D1 (dotaz 14)
-    ```
+    ```sql
     -- žádný výstup znamená správnost
     select * from character
     except
