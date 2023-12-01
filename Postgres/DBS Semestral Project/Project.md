@@ -137,7 +137,7 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     ```
 8. postava, která je ve městě kde má úkol
     ```
-    select distinct ch.character_name, npc.city_name from character ch 
+    select distinct ch.character_name, npc.city_name from character ch
     join accepted_quest aq on ch.character_name = aq.character_name
     join quest q on q.quest_id = aq.quest_id
     join npc on npc.npc_id = q.npc_id
@@ -177,12 +177,64 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     left join inventory_item inv on inv.character_inventory_character_n = ch.character_name
     group by ch.character_name
     ```
-13. 
+
+## Tabulka pokrytí SQL dotazů
+| Kategorie | Kódy dotazů                                         | Charakteristika kategorie                                              |
+|-----------|-----------------------------------------------------|------------------------------------------------------------------------|
+| A         |                                                     | A - Pozitivní dotaz nad spojením alespoň dvou tabulek      |
+| AR        |                                                     | A (RA) - Pozitivní dotaz nad spojením alespoň dvou tabulek             |
+| B         |                                                     | B - Negativní dotaz nad spojením alespoň dvou tabulek                  |
+| C         |                                                     | C - Vyber ty, kteří mají vztah POUZE k ...                             |
+| D1        |                                                     | D1 - Vyber ty, kteří/které jsou ve vztahu se všemi - dotaz s univerzální kvantifikací |
+| D2        |                                                     | D2 - Kontrola výsledku dotazu z kategorie D1                           |
+| D2N       |                                                     | D2 (NATURAL) - Kontrola výsledku dotazu z kategorie D1                 |
+| D2R       |                                                     | D2 (RA) - Kontrola výsledku dotazu z kategorie D1                      |
+| F1        |                                                     | F1 - JOIN ON                                                           |
+| F1R       |                                                     | F1 (RA) - JOIN ON                                                      |
+| F2        |                                                     | F2 - NATURAL JOIN|JOIN USING                                           |
+| F2R       |                                                     | F2 (RA) - NATURAL JOIN|JOIN USING                                      |
+| F3        |                                                     | F3 - CROSS JOIN                                                        |
+| F3R       |                                                     | F3 (RA) - CROSS JOIN                                                   |
+| F4        |                                                     | F4 - LEFT|RIGHT OUTER JOIN                                             |
+| F5        |                                                     | F5 - FULL (OUTER) JOIN                                                 |
+| G1        |                                                     | G1 - Vnořený dotaz v klauzuli WHERE                                    |
+| G1R       |                                                     | G1 (RA) - Vnořený dotaz v klauzuli WHERE                               |
+| G2        |                                                     | G2 - Vnořený dotaz v klauzuli FROM                                     |
+| G3        |                                                     | G3 - Vnořený dotaz v klauzuli SELECT                                   |
+| G4        |                                                     | G4 - Vztažený vnořený dotaz (EXISTS, NOT EXISTS)                       |
+| G4R       |                                                     | G4 (RA) - Vztažený vnořený dotaz (EXISTS, NOT EXISTS)                  |
+| H1        |                                                     | H1 - Množinové sjednocení - UNION                                      |
+| H2        |                                                     | H2 - Množinový rozdíl - MINUS nebo EXCEPT                              |
+| H2R       |                                                     | H2 (RA) - Množinový rozdíl - MINUS nebo EXCEPT                         |
+| H3        |                                                     | H3 - Množinový průnik - INTERSECT                                      |
+| I1        |                                                     | I1 - Agregační funkce (count|sum|min|max|avg)                          |
+| I1R       |                                                     | I1 (RA) - Agregační funkce (count|sum|min|max|avg)                     |
+| I2        |                                                     | I2 - Agregační funkce nad seskupenými řádky - GROUP BY (HAVING)        |
+| J         |                                                     | J - Stejný dotaz ve třech různých formulacích SQL                      |
+| JR        |                                                     | J (RA) - Stejný dotaz ve třech různých formulacích SQL                 |
+| K         |                                                     | K - Všechny klauzule v 1 dotazu - SELECT FROM WHERE GROUP BY HAVING ORDER BY |
+| L         |                                                     | L - VIEW                                                               |
+| M         |                                                     | M - Dotaz nad pohledem                                                 |
+| N         |                                                     | N - INSERT                                                             |
+| O         |                                                     | O - UPDATE s vnořeným SELECT příkazem                                  |
+| P         |                                                     | P - DELETE s vnořeným SELECT příkazem                                  |
+
+
+
+## Script
+- Script pro vytvoření a naplnění daty: [db init script.sql](../db%20init%20script.sql)
+- Schéma pro [kreslítko](https://dbs.fit.cvut.cz/kreslitko/): [database schema.json](../database%20schema.json)
+
+## Závěr
+TODO: až to dopíšu závěr zde... (pokud to vidíte znamená to že jsem na to zapomněl)
 
 
 ## Zdroje
-- ČVUT. Data Modeler (Kreslítko). Online. BI-DBS. © 2023. Dostupné z: https://dbs.fit.cvut.cz/kreslitko. [cit. 2023-11-29].
-- OPENAI. ChatGPT 3.5. ChatGPT [online]. © 2023 [cit. 2023-11-29]. Dostupné z: https://chat.openai.com/. Prompt: "dependency tree", "Make short description of this schema: [DDL script]".
-- ČVUT. Zoo ve skluzu. Online. BI-DBS. Dostupné z: https://users.fit.cvut.cz/~hunkajir/dbs2/main.xml. [cit. 2023-11-29].
+- ČVUT. Data Modeler (Kreslítko). Online. ©2023. Dostupné z: https://dbs.fit.cvut.cz/kreslitko. [cit. 2023-11-29].
 - ČZU. Databázové systémy. Online. Moodle. [2023]. Dostupné z: https://moodle.czu.cz/course/view.php?id=4078. [cit. 2023-11-29].
 - PAVLÍČEK, Josef. SQLClient. Online. Dostupné z: https://psqlc.db.kii.pef.czu.cz/SQLCLient. [cit. 2023-11-29].
+- HUNKA, Jiří. Zoo ve skluzu. Online. Dostupné z: https://users.fit.cvut.cz/~hunkajir/dbs2/main.xml. [cit. 2023-12-01].
+- OPENAI. ChatGPT 3.5. [online]. ©2023 [cit. 2023-12-01]. Dostupné z: https://chat.openai.com/.
+  Prompts: "dependency tree",
+  "Make short description of this schema: [DDL script]",
+  "[CSV] Here i give a CSV. Take the content and poste it to a markdown table like this: [md snippet]"
