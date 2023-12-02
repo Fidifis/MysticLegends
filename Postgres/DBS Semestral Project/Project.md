@@ -74,6 +74,11 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
 
 ![dependency_tree](dependency.jpg)
 
+## Relační schéma
+Omlovám se že to vypadá jako to vypadá, ovládání ERD toolu v PGAdminu pro mě není intuitivní.
+
+![ERD](ERD.png)
+
 ## Dotazy
 1. postavy které mají level větší roven 5
     ```
@@ -436,6 +441,9 @@ Na práci mi nejvíce času a úsilí zabralo napsat všechny dotazy, a ještě 
 Další dobrou pomoc poskytl i náš [PSQLClient](https://psqlc.db.kii.pef.czu.cz/SQLClient) od pana doktora Pavlíčka,
 kde se dá dotaz v relační algebře spustit nebo převést na SQL a můžu si tak ověřit, že RA dotaz bude dělat to co chci.
 RA překladač si zatím neporadí se složitějšími dotazy, ale věřím že v budoucnu bude pracovat perfektně.
+Se svým ERD diagrem nejsem moc spokojený protože jsem musel můj model rozmotávat, aby vazby nebyli náhodně skrz celý diagram.
+A ovládání ERD toolu v PGAdminu nebylo moc přívětivé.
+Kreslítko je oproti tomu mnohem více intuitivní a dobře se ovládá.
 Bylo fajn si po delší době osvěžit SQL a navrhnout model, který dává smysl a má reálné využití.
 
 
