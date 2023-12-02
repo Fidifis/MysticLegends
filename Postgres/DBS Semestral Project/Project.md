@@ -1,7 +1,9 @@
 # Semestrální projekt - Databáze
 Autor: Filip Digrín
 ## Popis
-Jedná se o databázový systém k online RPG hře. Můžete se registrovat nebo přihlásit do systému.
+Jedná se o databázový systém k online RPG hře Mystic Legends (klient i server jsou také součástí tohoto repozitáře).
+
+Ve hře se můžete registrovat nebo přihlásit do systému.
 Ověření uživatele je provedeno dvěma tokeny. Po poskytnutí username a hesla klient obdrží refresh token který si uloží.
 Tento token expiruje v řádu měsíců a slouží k vygenerování Access tokenu.
 Každý uživatel může mít více refresh tokenů (co zařízení to refresh token).
@@ -428,7 +430,13 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
 - Schéma pro [kreslítko](https://dbs.fit.cvut.cz/kreslitko/): [database schema.json](../database%20schema.json)
 
 ## Závěr
-Tato práce byla po dlouhé době studia konečně něco zajímavého. Možná je schéma rozsáhlejší a složitější, než je třeba, ale aspoň je to trochu challenge a ne jen nějaká semetrálka co je za den hotová. Na práci mi nejvíce času a úsilí zabralo napsat všechny dotazy a ještě aby pokryli všechny kategorie z tabulky. Při psaní dotazů, mi byla nějvětší pomocí vzorová práce Zoo ve skluzu. Další dobrou pomoc poskytl i náš [PSQLClient](https://psqlc.db.kii.pef.czu.cz/SQLClient) od pana doktora Pavlíčka, kde se dá dotaz v relační algebře spustit nebo převést na SQL a můžu si tak ověřit, že RA dotaz bude dělat to co chci. RA překladač si zatím neporadí se složitějšími dotazy, ale věřím že v budoucnu bude pracovat perfektně. Bylo fajn si po delší době osvěžit SQL a navrhnout model, který dává smysl a má reálné využití.
+Tato práce byla po dlouhé době studia konečně něco zajímavého.
+Možná je schéma rozsáhlejší a složitější, než je třeba, ale aspoň je to trochu challenge a ne jen nějaká semetrálka co je za den hotová.
+Na práci mi nejvíce času a úsilí zabralo napsat všechny dotazy a ještě aby pokryli všechny kategorie z tabulky. Při psaní dotazů, mi byla nějvětší pomocí vzorová práce Zoo ve skluzu.
+Další dobrou pomoc poskytl i náš [PSQLClient](https://psqlc.db.kii.pef.czu.cz/SQLClient) od pana doktora Pavlíčka,
+kde se dá dotaz v relační algebře spustit nebo převést na SQL a můžu si tak ověřit, že RA dotaz bude dělat to co chci.
+RA překladač si zatím neporadí se složitějšími dotazy, ale věřím že v budoucnu bude pracovat perfektně.
+Bylo fajn si po delší době osvěžit SQL a navrhnout model, který dává smysl a má reálné využití.
 
 
 ## Zdroje
