@@ -431,8 +431,8 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
 
 ## Závěr
 Tato práce byla po dlouhé době studia konečně něco zajímavého.
-Možná je schéma rozsáhlejší a složitější, než je třeba, ale aspoň je to trochu challenge a ne jen nějaká semetrálka co je za den hotová.
-Na práci mi nejvíce času a úsilí zabralo napsat všechny dotazy a ještě aby pokryli všechny kategorie z tabulky. Při psaní dotazů, mi byla nějvětší pomocí vzorová práce Zoo ve skluzu.
+Možná je schéma rozsáhlejší a složitější, než je třeba, ale aspoň je to trochu challenge a nejen nějaká semetrálka co je za den hotová.
+Na práci mi nejvíce času a úsilí zabralo napsat všechny dotazy, a ještě aby pokryli všechny kategorie z tabulky. Při psaní dotazů, mi byla nějvětší pomocí vzorová práce Zoo ve skluzu.
 Další dobrou pomoc poskytl i náš [PSQLClient](https://psqlc.db.kii.pef.czu.cz/SQLClient) od pana doktora Pavlíčka,
 kde se dá dotaz v relační algebře spustit nebo převést na SQL a můžu si tak ověřit, že RA dotaz bude dělat to co chci.
 RA překladač si zatím neporadí se složitějšími dotazy, ale věřím že v budoucnu bude pracovat perfektně.
