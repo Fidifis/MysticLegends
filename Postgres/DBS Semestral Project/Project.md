@@ -181,7 +181,7 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     group by ch.character_name
     ```
 13. Úkol(y), který má přijmutý jen postava se jménem 'hellmanz' a nikdo jiný
-    ```sql
+    ```
     {character(character_name='hellmanz')*accepted_quest*quest}
     \
     {character(character_name!='hellmanz')*accepted_quest*quest}
@@ -221,14 +221,16 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     =
     (select count(character_name) from character)
     ```
-15. Item, který nemá žádná postava
+15. Item, který nikdo nemá
     ```
     item \ inventory_item
     ```
     ```sql
     select * from (
-      select item_id from item
-      except (select item_id from inventory_item)
+        select item_id from item
+        except (
+            select distinct item_id from inventory_item
+        )
     ) as t
     natural join item
     ```
@@ -248,7 +250,71 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     ) it));
     --end of overovana cast
     ```
-
+17. Předměty spojené s NPCs ukazující přehled které předměty jsou u NPC a které ne
+    ```sql
+    select inv.invitem_id, npc.npc_id, npc.city_name
+    from inventory_item inv
+    full outer join npc
+    on inv.npc_id = npc.npc_id
+    order by inv.invitem_id
+    ```
+18. Všechny tokeny (access + refresh) a jejich expirace, řazená podle expirace vzestupně
+    ```sql
+    select at.access_token as token, at.expiration from access_token as at
+    union(
+        select refresh_token, expiration from refresh_token
+    )
+    order by expiration asc
+    ```
+19. Počty mobů v jednotlivích oblastech
+    ```sql
+    select area.area_name,
+    (
+        select sum(mob.group_size)
+        from mob
+        where area.area_name = mob.area_name
+    ) as total_mobs
+    from area
+    ```
+20. Itemy, které někdo má
+    ```
+    item ∩ inventory_item
+    ```
+    ```sql
+    select * from (
+        select distinct item_id
+        from item
+        intersect (
+            select distinct item_id from inventory_item
+        )
+    ) as t
+    natural join item
+    ```
+21. Ověření dotazu 20 a 15
+    ```
+    item \ {{item ∩ inventory_item} ∪ {item \ inventory_item}}
+    ```
+    ```sql
+    -- žádná odpověď znamená správnost
+    with
+    d15 as (
+        select item_id from item
+        except (
+            select distinct item_id from inventory_item
+        )
+    ),
+    d20 as (
+        select distinct item_id
+        from item
+        intersect (
+            select distinct item_id from inventory_item
+        )
+    )
+    select distinct item_id from item except (
+        select distinct * from d15
+        union (select distinct * from d20)
+    )
+    ```
 ## Tabulka pokrytí SQL dotazů
 | Kategorie | Kódy dotazů                                         | Charakteristika kategorie                                              |
 |-----------|-----------------------------------------------------|------------------------------------------------------------------------|
@@ -257,18 +323,18 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
 | C         | 13;                                                 | C - Vyber ty, kteří mají vztah POUZE k ...                             |
 | D1        | 14;                                                 | D1 - Vyber ty, kteří/které jsou ve vztahu se všemi - dotaz s univerzální kvantifikací |
 | D2        | 16;                                                 | D2 - Kontrola výsledku dotazu z kategorie D1                           |
-| F1        |                                                     | F1 - JOIN ON                                                           |
-| F2        |                                                     | F2 - NATURAL JOIN|JOIN USING                                           |
-| F3        |                                                     | F3 - CROSS JOIN                                                        |
-| F4        |                                                     | F4 - LEFT|RIGHT OUTER JOIN                                             |
-| F5        |                                                     | F5 - FULL (OUTER) JOIN                                                 |
-| G1        |                                                     | G1 - Vnořený dotaz v klauzuli WHERE                                    |
-| G2        |                                                     | G2 - Vnořený dotaz v klauzuli FROM                                     |
-| G3        |                                                     | G3 - Vnořený dotaz v klauzuli SELECT                                   |
-| G4        |                                                     | G4 - Vztažený vnořený dotaz (EXISTS, NOT EXISTS)                       |
-| H1        |                                                     | H1 - Množinové sjednocení - UNION                                      |
-| H2        | 15;                                                 | H2 - Množinový rozdíl - MINUS nebo EXCEPT                              |
-| H3        |                                                     | H3 - Množinový průnik - INTERSECT                                      |
+| F1        | 2; 3; 5; 6; 7; 8; 9; 11; 12;                        | F1 - JOIN ON                                                           |
+| F2        | 10; 13; 14; 15; 20;                                 | F2 - NATURAL JOIN|JOIN USING                                           |
+| F3        | 14;                                                 | F3 - CROSS JOIN                                                        |
+| F4        | 3; 5; 11; 12;                                       | F4 - LEFT|RIGHT OUTER JOIN                                             |
+| F5        | 17;                                                 | F5 - FULL (OUTER) JOIN                                                 |
+| G1        | 4; 14;                                              | G1 - Vnořený dotaz v klauzuli WHERE                                    |
+| G2        | 6; 15; 16;                                          | G2 - Vnořený dotaz v klauzuli FROM                                     |
+| G3        | 19;                                                 | G3 - Vnořený dotaz v klauzuli SELECT                                   |
+| G4        | 4; 14;                                              | G4 - Vztažený vnořený dotaz (EXISTS, NOT EXISTS)                       |
+| H1        | 18; 21;                                             | H1 - Množinové sjednocení - UNION                                      |
+| H2        | 7; 15; 21;                                          | H2 - Množinový rozdíl - MINUS nebo EXCEPT                              |
+| H3        | 20;                                                 | H3 - Množinový průnik - INTERSECT                                      |
 | I1        |                                                     | I1 - Agregační funkce (count|sum|min|max|avg)                          |
 | I2        |                                                     | I2 - Agregační funkce nad seskupenými řádky - GROUP BY (HAVING)        |
 | J         | 14;                                                 | J - Stejný dotaz ve třech různých formulacích SQL                      |
