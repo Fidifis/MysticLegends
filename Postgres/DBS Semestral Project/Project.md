@@ -1,4 +1,5 @@
 # Semestrální projekt - Databáze
+Autor: Filip Digrín
 ## Popis
 Jedná se o databázový systém k online RPG hře. Můžete se registrovat nebo přihlásit do systému.
 Ověření uživatele je provedeno dvěma tokeny. Po poskytnutí username a hesla klient obdrží refresh token který si uloží.
@@ -116,16 +117,17 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
     left join quest_requirement qr on q.quest_id = qr.quest_id
     left join quest_reward qrd on q.quest_id = qrd.quest_id
     ```
-6. celkové množství peněz všech npcs v jednotlivých městech
+6. celkové množství peněz všech npcs v jednotlivých městech, vetší rovno 2000, seřazeno sestupně
     ```sql
-    select f.city_name as "city name", sum(f.currency_gold) as "total gold"
+    select f.city_name as "city name", sum(f.currency_gold) as total_gold
     from (
       select npc.city_name, npc.currency_gold
       from npc
       join city on npc.city_name = city.city_name
     ) as f
     group by f.city_name
-    order by f.city_name
+    having sum(f.currency_gold) >= 2000
+    order by total_gold desc
     ```
 7. postava, která nemá žádný úkol
     ```
@@ -315,6 +317,81 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
         union (select distinct * from d20)
     )
     ```
+22. View s počtem postav každého hráče a nejvyší dosažený level
+    ```sql
+    create or replace view players_overview as
+    select username, count(character), max(level) as max_level from users
+    join character using (username)
+    group by username
+    order by max_level desc;
+
+    select * from players_overview;
+    ```
+23. průměr nejvyšších levelů podle view *players_overview* (z dotazu 22)
+    ```sql
+    select avg(max_level) as average_level from players_overview
+    ```
+24. Vložení náhodného předměntu
+    ```sql
+    begin;
+    insert into inventory_item (character_inventory_character_n, item_id, level, stack_count, position)
+    select
+    (
+        select character_name from character order by random() limit 1
+    ),
+    (
+        select item_id from item order by random() limit 1
+    ),
+    (random() * 10)::int as level,
+    1 as stack_count,
+    (random() * 10)::int as position;
+
+    rollback;
+    ```
+25. Zvýšení levelu o 3 armorům
+    ```sql
+    begin;
+    update inventory_item i
+    set level=level+3
+    where i.character_inventory_character_n in (
+        select inv.character_inventory_character_n
+        from inventory_item inv
+        natural join item
+        where item_type = 10
+    );
+
+    -- ověření - součet by měl být větší
+    select sum(level) from inventory_item;
+
+    rollback;
+    ```
+26. Odstranění příjmutého questu
+    ```sql
+    begin;
+    -- úprava dat (aktualně žádná data nevyhovují podmínce pro delete, tak jeden záznam změníme aby podmínce vyhověl)
+    update quest
+    set is_offered=false
+    where quest_id=1;
+
+    -- delete query
+    delete from accepted_quest aq
+    where aq.quest_id in (
+        select q.quest_id
+        from quest q
+        where is_offered = false
+    );
+
+    --overeni
+    select count(*) from accepted_quest;
+
+    rollback;
+    ```
+
+---
+
+- Počet RA dotazů: 10
+- Počet SQL dotazů 26
+
 ## Tabulka pokrytí SQL dotazů
 | Kategorie | Kódy dotazů                                         | Charakteristika kategorie                                              |
 |-----------|-----------------------------------------------------|------------------------------------------------------------------------|
@@ -324,27 +401,26 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
 | D1        | 14;                                                 | D1 - Vyber ty, kteří/které jsou ve vztahu se všemi - dotaz s univerzální kvantifikací |
 | D2        | 16;                                                 | D2 - Kontrola výsledku dotazu z kategorie D1                           |
 | F1        | 2; 3; 5; 6; 7; 8; 9; 11; 12;                        | F1 - JOIN ON                                                           |
-| F2        | 10; 13; 14; 15; 20;                                 | F2 - NATURAL JOIN|JOIN USING                                           |
+| F2        | 10; 13; 14; 15; 20; 22;                             | F2 - NATURAL JOIN|JOIN USING                                           |
 | F3        | 14;                                                 | F3 - CROSS JOIN                                                        |
 | F4        | 3; 5; 11; 12;                                       | F4 - LEFT|RIGHT OUTER JOIN                                             |
 | F5        | 17;                                                 | F5 - FULL (OUTER) JOIN                                                 |
 | G1        | 4; 14;                                              | G1 - Vnořený dotaz v klauzuli WHERE                                    |
 | G2        | 6; 15; 16;                                          | G2 - Vnořený dotaz v klauzuli FROM                                     |
-| G3        | 19;                                                 | G3 - Vnořený dotaz v klauzuli SELECT                                   |
+| G3        | 19; 24;                                             | G3 - Vnořený dotaz v klauzuli SELECT                                   |
 | G4        | 4; 14;                                              | G4 - Vztažený vnořený dotaz (EXISTS, NOT EXISTS)                       |
 | H1        | 18; 21;                                             | H1 - Množinové sjednocení - UNION                                      |
 | H2        | 7; 15; 21;                                          | H2 - Množinový rozdíl - MINUS nebo EXCEPT                              |
 | H3        | 20;                                                 | H3 - Množinový průnik - INTERSECT                                      |
-| I1        |                                                     | I1 - Agregační funkce (count|sum|min|max|avg)                          |
-| I2        |                                                     | I2 - Agregační funkce nad seskupenými řádky - GROUP BY (HAVING)        |
+| I1        | 6; 12; 14; 16; 19; 22;                              | I1 - Agregační funkce (count|sum|min|max|avg)                          |
+| I2        | 6; 12; 22;                                          | I2 - Agregační funkce nad seskupenými řádky - GROUP BY (HAVING)        |
 | J         | 14;                                                 | J - Stejný dotaz ve třech různých formulacích SQL                      |
-| K         |                                                     | K - Všechny klauzule v 1 dotazu - SELECT FROM WHERE GROUP BY HAVING ORDER BY |
-| L         |                                                     | L - VIEW                                                               |
-| M         |                                                     | M - Dotaz nad pohledem                                                 |
-| N         |                                                     | N - INSERT                                                             |
-| O         |                                                     | O - UPDATE s vnořeným SELECT příkazem                                  |
-| P         |                                                     | P - DELETE s vnořeným SELECT příkazem                                  |
-
+| K         | 6;                                                  | K - Všechny klauzule v 1 dotazu - SELECT FROM WHERE GROUP BY HAVING ORDER BY |
+| L         | 22;                                                 | L - VIEW                                                               |
+| M         | 23;                                                 | M - Dotaz nad pohledem                                                 |
+| N         | 24;                                                 | N - INSERT                                                             |
+| O         | 25;                                                 | O - UPDATE s vnořeným SELECT příkazem                                  |
+| P         | 26;                                                 | P - DELETE s vnořeným SELECT příkazem                                  |
 
 
 ## Script
@@ -352,8 +428,7 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
 - Schéma pro [kreslítko](https://dbs.fit.cvut.cz/kreslitko/): [database schema.json](../database%20schema.json)
 
 ## Závěr
-TODO: až to dopíšu závěr zde... (pokud to vidíte znamená to že jsem na to zapomněl)
-Nejvíce času zabralo vymyslet dotazy.
+Tato práce byla po dlouhé době studia konečně něco zajímavého. Možná je schéma rozsáhlejší a složitější, než je třeba, ale aspoň je to trochu challenge a ne jen nějaká semetrálka co je za den hotová. Na práci mi nejvíce času a úsilí zabralo napsat všechny dotazy a ještě aby pokryli všechny kategorie z tabulky. Při psaní dotazů, mi byla nějvětší pomocí vzorová práce Zoo ve skluzu. Další dobrou pomoc poskytl i náš [PSQLClient](https://psqlc.db.kii.pef.czu.cz/SQLClient) od pana doktora Pavlíčka, kde se dá dotaz v relační algebře spustit nebo převést na SQL a můžu si tak ověřit, že RA dotaz bude dělat to co chci. RA překladač si zatím neporadí se složitějšími dotazy, ale věřím že v budoucnu bude pracovat perfektně. Bylo fajn si po delší době osvěžit SQL a navrhnout model, který dává smysl a má reálné využití.
 
 
 ## Zdroje
