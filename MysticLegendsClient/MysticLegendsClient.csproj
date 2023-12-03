@@ -21,34 +21,40 @@
 	<Resource Include="images\Characters\Mage.png" />
 	<Resource Include="images\Characters\Warrior.png" />
 	<Resource Include="images\Characters\Assassin.png" />
-    <Resource Include="icons\anvil.svg" />
-    <Resource Include="icons\coins-solid.svg" />
-    <Resource Include="icons\compass-regular.svg" />
-    <Resource Include="icons\dragon-solid.svg" />
-    <Resource Include="icons\flask-solid.svg" />
-    <Resource Include="icons\gear-solid.svg" />
-    <Resource Include="icons\rebel.svg" />
-    <Resource Include="icons\scale-balanced-solid.svg" />
-    <Resource Include="icons\user-solid.svg" />
+  <Resource Include="icons\anvil.svg" />
+  <Resource Include="icons\coins-solid.svg" />
+  <Resource Include="icons\compass-regular.svg" />
+  <Resource Include="icons\dragon-solid.svg" />
+  <Resource Include="icons\flask-solid.svg" />
+  <Resource Include="icons\gear-solid.svg" />
+  <Resource Include="icons\rebel.svg" />
+  <Resource Include="icons\scale-balanced-solid.svg" />
+  <Resource Include="icons\user-solid.svg" />
 	<Resource Include="icons\crown-solid.svg" />
 	<Resource Include="icons\toolbox-solid.svg" />
-    <Resource Include="images\Cities\Ayreim.png" />
+  <Resource Include="images\Cities\Ayreim.png" />
 	<Resource Include="images\Cities\Tisling.png" />
 	<Resource Include="images\Cities\Soria.png" />
 	<Resource Include="images\Cities\Dagos.png" />
 	<Resource Include="images\World\World1.png" />
-    <Resource Include="images\Graphics\LoginScreen.png" />
-    <Resource Include="images\Graphics\LoginScreen2.png" />
-    <Resource Include="images\Graphics\LoginScreen3.png" />
-    <Resource Include="images\NPCs\potion_crafter.png" />
+  <Resource Include="images\Graphics\LoginScreen.png" />
+  <Resource Include="images\Graphics\LoginScreen2.png" />
+  <Resource Include="images\Graphics\LoginScreen3.png" />
+  <Resource Include="images\NPCs\potion_crafter.png" />
 	<Resource Include="images\NPCs\blacksmith.png" />
 	<Resource Include="images\NPCs\dark_alley.png" />
 	<Resource Include="images\NPCs\queen_of_ayreim.png" />
-    <Resource Include="items\armor\Full_Chainmail_inventory_icon.png" />
-    <Resource Include="items\boots\Vaal_Greaves_inventory_icon.png" />
-    <Resource Include="items\gloves\Antique_Gauntlets_inventory_icon.png" />
-    <Resource Include="items\helmet\Close_Helmet_inventory_icon.png" />
+  <Resource Include="items\armor\Full_Chainmail_inventory_icon.png" />
+  <Resource Include="items\boots\Vaal_Greaves_inventory_icon.png" />
+  <Resource Include="items\gloves\Antique_Gauntlets_inventory_icon.png" />
+  <Resource Include="items\helmet\Close_Helmet_inventory_icon.png" />
+  <Resource Include="items\weapon\Legion_Sword_inventory_icon.png" />
 	<Resource Include="items\potions\Large_Life_Flask_inventory_icon.png" />
+  <Resource Include="items\potions\Greater_Life_Flask_inventory_icon.png" />
+  <Resource Include="items\potions\small_strength.png" />
+  <Resource Include="items\potions\small_dexterity.png" />
+  <Resource Include="items\regular\fang.png" />
+  <Resource Include="items\regular\horn.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -63,7 +69,7 @@
       <DependentUpon>ItemIcons.resx</DependentUpon>
     </Compile>
   </ItemGroup>
- 
+
   <ItemGroup>
     <EmbeddedResource Update="Resources\Icons.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

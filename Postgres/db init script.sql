@@ -432,8 +432,8 @@ TRUE, TRUE, 1),
 (2, 1, 'The Cursed Fang',
 'Master Alarics alchemical prowess faces a dire challenge. The cure for a potent ailment lies within the venomous fang of the elusive Shadow Serpent, a creature rumored to haunt the forbidden Mistwood Forest. The demand for this rare potion is urgent, and Master Alaric implores the bravest of adventurers to embark on a perilous quest.',
 FALSE, TRUE, 20),
-(3, 0, 'Rituals',
-'We run some rituals. I cannot say more.',
+(3, 0, 'Research',
+'Our royal alchemists are researching new potion. They need a lot of resources for experimenting. Can you bring some?',
 TRUE, TRUE, 7),
 (4, 5, 'Medicine',
 'Please help. My wife is ill. She is very week. I need a health potion for her.',
@@ -443,6 +443,7 @@ INSERT INTO quest_requirement (quest_id, item_id, amount)
 VALUES (1, 6, 10),
        (2, 10, 3),
        (3, 9, 21),
+       (3, 10, 42),
        (4, 5, 1);
 
 INSERT INTO quest_reward (quest_id, currency_gold, xp)

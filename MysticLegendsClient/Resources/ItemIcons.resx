@@ -129,10 +129,25 @@
   <data name="helmet/ayreimWarrior" xml:space="preserve">
     <value>/items/helmet/Close_Helmet_inventory_icon.png</value>
   </data>
+  <data name="potion/mediumHealth" xml:space="preserve">
+    <value>/items/potions/Greater_Life_Flask_inventory_icon.png</value>
+  </data>
+  <data name="potion/smallDexterity" xml:space="preserve">
+    <value>/items/potions/small_dexterity.png</value>
+  </data>
   <data name="potion/smallHealth" xml:space="preserve">
     <value>/items/potions/Large_Life_Flask_inventory_icon.png</value>
   </data>
+  <data name="potion/smallStrength" xml:space="preserve">
+    <value>/items/potions/small_strength.png</value>
+  </data>
+  <data name="regular/goatHorn" xml:space="preserve">
+    <value>/items/regular/horn.png</value>
+  </data>
+  <data name="regular/wolveFang" xml:space="preserve">
+    <value>/items/regular/fang.png</value>
+  </data>
   <data name="weapon/aresBlade" xml:space="preserve">
-    <value />
+    <value>/items/weapon/Legion_Sword_inventory_icon.png</value>
   </data>
 </root>
