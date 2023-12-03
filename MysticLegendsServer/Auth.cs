@@ -95,6 +95,7 @@ public sealed class Auth: IDisposable
     {
         ObjectDisposedException.ThrowIf(disposed, this);
 
+        // TODO: check minumal password length >=7
         username = username.Trim();
         if (username == "" || password == "")
             return null;

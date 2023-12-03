@@ -9,6 +9,7 @@ Uživatel si bude moci vytvořit postavu za kterou hraje, plnit různé úkoly, 
 ## Definice cíle
 Hlavním cílem této hry je vylepšování postavy, plnění úkolů, obchodování s předměty s NPC (Non-Player Character) i s jinými hráči.
 Díky online serverům se ke hře lze připojit odkudkoliv, pomocí svého účtu.
+Systém je realizovaný jako desktopová aplikace s okny.
 
 ## Persony
 ### Persona A
@@ -59,20 +60,64 @@ James si cení her, které nabízejí strategickou hloubku a pocit úspěchu.
 Jeho herní seance jsou kombinací sólových dobrodružství a spolupráce s přáteli ve více hráčích.
 
 ## Use Case - Přihlašovací obrazovka
+Uživatel se chce přihlásit do systému a očekává:
+- zadání username
+- zadaání hesla
+- možnost si heslo zapamatovat
+- tlačítko pro přihlášení
+
+Pokud účet nemá očekává možnost registrace.
 
 ## Scénář - Přihlašovací obrazovka
+- Systém zobrazí přihlašovací obrazovku a čeká na vyplnění požadavků a stisknutí talčítka pro přihlášení.
+- Pokud uživatel údaje zadá špatně, systém uživatele informuje o nesprávnosti.
+- Pokud se uživatel chce registrovat systém mu zobrazí formulář pro registraci.
+- Po úspěšném přihlášení/reguistraci, zobrazí okno pro Výběr postavy.
 
 ## Logický design - Přihlašovací obrazovka
 
 ## Use Case - Registrace
+Uživatel nemá účet a chce se zaregistrovat. Očekává
+- zadání svého jména (username)
+- hesla
+- tlačítko pro registraci
 
 ## Scénář - Registrace
+- Systém zobrazí registrační okno s:
+  - políčkem pro username
+  - políčkem pro heslo
+  - políčkem pro opětovné zadání hesla
+  - a čeká na vyplnění požadavků a stisknutí tlačítka pro registraci.
+  - Ve formuláři musí být zapsané username, který není prázdný a neobsahuje speciální znaky.
+  - Obě hesla musejí být stejná
+  - Heslo nesmí být prázdné a musí být alespoň 7 znaků
+- Pokud něco nevyhovuje sytém uživatele upozorní.
+- Pokud je vše v pořádku sytém uživatele registruje a zobrazí okno pro výběr postavy
 
 ## Logický design - Registrace
 
 ## Use Case - Výběr postavy
+Uživatel vstupuje do hry a chce:
+- vidět své postavy
+- vybrat si postavu
+- vytvořit novou postavu
+  - vybrat si *class* postavy
+  - zadat jméno postavy
+  - zrušit akci a vrátit se zpět na výběr postav
+  - potvrdit akci
+- po výběru / vytvoření postavy vstoupit do hry
 
 ## Scénář - Výběr postavy
+- Systém uživateli zobrazí seznam postav s možností pro vybrání
+- tlačítko pro vytvoření nové postavy
+- Zobrazí hlášku, že uživatel žádnou postavu nemá
+
+Při vytváření nové postavy
+- ukáže tlačítko pro návrat do výběru postav
+1. zobrazí seznam *class* ze kterých si uživatel může vyrat
+2. vyzve uživatele pro zadání jména postavy
+3. pokud taková postavu již existuje upozorní uživatele
+4. vpustí uživatele do hry
 
 ## Logický design - Výběr postavy
 
