@@ -59,6 +59,11 @@ Po večerech se uchyluje do svého herního doupěte, kde relaxuje u taktických
 James si cení her, které nabízejí strategickou hloubku a pocit úspěchu.
 Jeho herní seance jsou kombinací sólových dobrodružství a spolupráce s přáteli ve více hráčích.
 
+---
+
+> &#9432; Všechny **use cases** a **scénáře** implicitně předpokládají **základní ovládání** a chování okna v běžném desktopovém operačním systému (Windows, Mac, GNU/Linux s GUI),
+tj. minimalizace, úprava velikosti, zavření okna.
+
 ## Use Case - Přihlašovací obrazovka
 Uživatel se chce přihlásit do systému a očekává:
 - zadání username
@@ -122,8 +127,25 @@ Při vytváření nové postavy
 ## Logický design - Výběr postavy
 
 ## Use Case - Hlavní obrazovka (město)
+Uživatel chce mít základní přehled o jeho prostředcích.
+- jaký má jeho postava level
+- kolik má peněz
+- kde se nachází (město)
+
+Dále se chce dostat k různým postavám a funkcím samotné hry.
+- očekává možnosti co může ve městě dělat
+- tlačítko pro změnu postavy
+- tlačítko pro odhlášení
 
 ## Scénář - Hlavní obrazovka (město)
+Systém zobrazí hlavní okno. Pokud je toto okno zavřeno křížkem, celý program končí včetně podoken.
+- zobrazuje název aktuálního města kde se uživatel nachází
+- level postavy a progress k dalšímu levelu
+- kolik má uživatel herní měny
+- seznam postav, které se ve městě nacházejí s možností otevřít jejich nabídku.
+- tlačíko pro otevření mapy světa
+- tlačítko otevření detailu postavy
+- tlačítko s menu, kde je možnost změny postavy, odhlášení se
 
 ## Logický design - Hlavní obrazovka (město)
 
