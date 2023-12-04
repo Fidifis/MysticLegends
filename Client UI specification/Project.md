@@ -61,7 +61,7 @@ Jeho herní seance jsou kombinací sólových dobrodružství a spolupráce s p�
 
 ---
 
-> &#9432; Všechny **use cases** a **scénáře** implicitně předpokládají **základní ovládání** a chování okna v běžném desktopovém operačním systému (Windows, Mac, GNU/Linux s GUI),
+> Všechny **use cases** a **scénáře** implicitně předpokládají **základní ovládání** a chování okna v běžném desktopovém operačním systému (Windows, Mac, GNU/Linux s GUI),
 tj. minimalizace, úprava velikosti, zavření okna.
 
 ## Use Case - Přihlašovací obrazovka
