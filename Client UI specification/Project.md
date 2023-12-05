@@ -7,9 +7,26 @@ která se prezentuje jako online RPG ve stylu hry Shakes and Fidget s důrazem n
 Uživatel si bude moci vytvořit postavu za kterou hraje, plnit různé úkoly, vydávat se na výpravy a obchodovat s itemy.
 
 ## Definice cíle
-Hlavním cílem této hry je vylepšování postavy, plnění úkolů, obchodování s předměty s NPC (Non-Player Character) i s jinými hráči.
+Hlavním cílem této hry je vylepšování postavy, plnění úkolů, porážení nepřátel, obchodování s předměty s NPC (Non-Player Character) i s jinými hráči.
 Díky online serverům se ke hře lze připojit odkudkoliv, pomocí svého účtu.
 Systém je realizovaný jako desktopová aplikace s okny.
+
+### Postava
+Uživatel bude moci získávat zkušenosti za splněné úkoly nebo poražení nepřátel, což mu umožní zvyšování úrovně a odemčení lepších předmětů a úkolů.
+
+### Úkoly
+Hra bude poskytovat seznam úkolů, které může hráč plnit.
+Po úspěšném dokončení úkolu získá hráč odměny, jako jsou zkušenosti nebo herní měna.
+
+### Souboje
+Hra bude mít implementovaný bojový systém, kde hráč může čelit různým nepřátelům.
+
+### Obchodování
+Hra umožní hráčům obchodovat s virtuálními postavami v herním světě. NPC obchodníci budou nabízet různé předměty za herní měnu.
+Kromě obchodování s NPC bude existovat možnost hráčského obchodování. Hráči budou moci nabízet své předměty ostatním.
+
+### Přihlášení / Registrace
+Hra bude vyžadovat, aby uživatel vytvořil účet nebo se přihlásil pomocí existujícího účtu. To umožní uživateli ukládat svůj herní postup a přistupovat k hře z různých zařízení.
 
 ## Persony
 ### Persona A
@@ -150,34 +167,88 @@ Systém zobrazí hlavní okno. Pokud je toto okno zavřeno křížkem, celý pro
 ## Logický design - Hlavní obrazovka (město)
 
 ## Use Case - Přehled postavy
+Uživatel se chce:
+- podívat na statistiky své postvy
+- předměty které má u sebe
+- statisktiky těchto předmětů
 
 ## Scénář - Přehled postavy
+Systém uživateli zobrazí:
+- výčet statistik jeho postavy
+- předměty které má jeho postava nasazené
+- předměty v inventáři
 
 ## Logický design - Přehled postavy
 
 ## Use Case - Svět
+Uživatel očekává mapu světa na které uvidí místa kam může cestovat
 
 ## Scénář - Svět
+Systém uživateli ukáže mapu světa na které uvidí místa kam může cestovat.
+- po kliknutí na nějaké místo se uživatele zeptá jestli si je jistý
+- při kladné odpovědi se zavře okno města a jeho podokna a ukáže se obrazovka s cesttováním
 
 ## Logický design - Svět
 
 ## Use Case - Obchodník - Nákup
+Uživatel chce:
+- vidět co si může koupit
+- cenu
+- level, a další atributy
+- provést nákup
 
 ## Scénář - Obchodník - Nákup
+- Systém zobrazí nabídku předmětů k nákupu
+- Umožní provést nákup klepnutím na předmět a potvrzením nákupu
+- Umožní provést nákup přetažením předmětu do inventáře postavy
 
 ## Logický design - Obchodník - Nákup
 
 ## Use Case - Obchodník - Prodej
+Uživatel chce prodat své předměty a vidět cenu, za kterou je může prodat
 
 ## Scénář - Obchodník - Prodej
+- Systém uživateli poskytne pole kam může umístit předměty které chce prodat
+- po vložení / vyjmutí předmětu se přepočítá cena za prodej
+- tlačítko pro prodej tyto předměty prodá a systém hráči připíše herní měnu
 
 ## Logický design - Obchodník - Prodej
 
 ## Use Case - Obchodník - Úkoly
+Uživatel chce vidět:
+- seznam úkolů co daný obchodník (NPC) nabízí
+- u každého úkolu vidět přibližně o čem je
+- zda ho již přijmul nebo ještě ne
+- rozkliknout si podrobnosti
 
 ## Scénář - Obchodník - Úkoly
+Systém uživateli zobrazí seznam úkolů.
+
+Každý úkol zobrazuje:
+- název
+- krátků úrivek z popisku
+- stav (accepted / not accepted)
+- možnost otevřít podrobnosti
 
 ## Logický design - Obchodník - Úkoly
+
+## Use Case - Podrobnosti úkolu
+Uživatel se chce dozvědět o úkolu více a očekává:
+- o čem úkol je
+- požadavky na splnění
+- odměnu
+- možnost úkol příjmout nebo opustit
+
+## Scénář - Podrobnosti úkolu
+Systém uživateli zobrazí okno s podrobnostmi o úkolu
+- název
+- celý popisek
+- požadované předměty, které musí získat pro splnění úkolu a jejich počet
+- výší odběny ve zkušenostech a herní měně
+- požadovaný level, aby úkol mohl přijmout
+- tlačítko pro přijmutí / opuštění / dokončení úkolu (záleží na aktuálním stavu úkolu)
+
+## Logický design - Podrobnosti úkolu
 
 ## Use Case - Trade Market
 
@@ -190,4 +261,5 @@ Systém zobrazí hlavní okno. Pokud je toto okno zavřeno křížkem, celý pro
 ## Zdroje
 - HAVLÍČEK, Tomáš. Bakalářská práce: Volné téma v oblasti User Experience Design. Online, vedoucí Josef Pavlíček. ČZU, 2014. Dostupné z: https://moodle.czu.cz/pluginfile.php/440218/mod_resource/content/0/UI%20specifikaceHavlicek.pdf. [cit. 2023-12-03].
 - OPENAI. ChatGPT 3.5. [online]. ©2023 [cit. 2023-12-03]. Dostupné z: https://chat.openai.com/.
-  Prompts: "Make 3 personas for UI design specification of a online rpg computer game. It should include their name, age, gender, marriage, job, hobbies, genres of played games, type of computer, description of usual day"
+  Prompts: "Make 3 personas for UI design specification of a online rpg computer game. It should include their name, age, gender, marriage, job, hobbies, genres of played games, type of computer, description of usual day",
+  "[snippet] můžeš rozvést jednotlivé body?"
