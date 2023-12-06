@@ -91,7 +91,8 @@ Uživatel se chce přihlásit do systému a očekává:
 Pokud účet nemá očekává možnost registrace.
 
 ## Scénář - Přihlašovací obrazovka
-- Systém zobrazí přihlašovací obrazovku a čeká na vyplnění požadavků a stisknutí talčítka pro přihlášení.
+- Systém zobrazí přihlašovací obrazovku a čeká na vyplnění údajů (username, heslo, popř. server)
+a stisknutí talčítka pro přihlášení.
 - Pokud uživatel údaje zadá špatně, systém uživatele informuje o nesprávnosti.
 - Pokud se uživatel chce registrovat systém mu zobrazí formulář pro registraci.
 - Po úspěšném přihlášení/reguistraci, zobrazí okno pro Výběr postavy.
