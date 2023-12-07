@@ -269,7 +269,7 @@ VALUES ('demo', 'fe01ce2a7fbac8fafaed7c982a04e229'),
        ('nemo', 'e587f6146ebfbdefdc028c591643f220');
 
 INSERT INTO "refresh_token" (record_id, username, refresh_token, expiration)
-VALUES (1, 'nemo', 'f427f6146ebfbdefdc028c591643e453', '12/01/2023 12:20:50');
+VALUES (1, 'demo', 'f427f6146ebfbdefdc028c591643e453', '12/01/2023 12:20:50');
 
 INSERT INTO city (city_name)
 VALUES ('Ayreim'),
@@ -348,12 +348,12 @@ VALUES ('burger', 10),
        ('qwertz', 10);
 
 INSERT INTO npc (npc_id, city_name, npc_type, currency_gold)
-VALUES (0, 'Ayreim', 100, 1000000),
+VALUES (0, 'Ayreim', 0, 500),
        (1, 'Ayreim', 1, 500),
-       (2, 'Ayreim', 0, 500),
-       (3, 'Ayreim', 2, 500),
-       (4, 'Ayreim', 3, 500),
-       (5, 'Ayreim', 4, 500),
+       (2, 'Ayreim', 2, 500),
+       (3, 'Ayreim', 3, 500),
+       (4, 'Ayreim', 4, 500),
+       (5, 'Ayreim', 100, 1000000),
        (6, 'Tisling', 0, 500),
        (7, 'Tisling', 1, 500),
        (8, 'Tisling', 2, 500),
@@ -376,7 +376,7 @@ VALUES                     (1,          'burger',                        NULL,  
                            (5,           NULL,                          'hellmanz',      NULL,   2,       5,     1,           1),
                            (6,           NULL,                          'hellmanz',      NULL,   3,       5,     1,           5),
                            (7,          'hellmanz',                      NULL,           NULL,   5,       NULL,  8,           0),
-                           (8,           NULL,                           NULL,           2,      1,       3,     1,           0),
+                           (8,           NULL,                           NULL,           0,      1,       3,     1,           0),
                            (9,           NULL,                           NULL,           6,      2,       5,     1,           0),
                            (10,          NULL,                           NULL,           11,     3,       3,     1,           0),
                            (11,          NULL,                           NULL,           15,     4,       9,     1,           0),
@@ -432,10 +432,10 @@ TRUE, TRUE, 1),
 (2, 1, 'The Cursed Fang',
 'Master Alarics alchemical prowess faces a dire challenge. The cure for a potent ailment lies within the venomous fang of the elusive Shadow Serpent, a creature rumored to haunt the forbidden Mistwood Forest. The demand for this rare potion is urgent, and Master Alaric implores the bravest of adventurers to embark on a perilous quest.',
 FALSE, TRUE, 20),
-(3, 0, 'Research',
+(3, 5, 'Research',
 'Our royal alchemists are researching new potion. They need a lot of resources for experimenting. Can you bring some?',
 TRUE, TRUE, 7),
-(4, 5, 'Medicine',
+(4, 4, 'Medicine',
 'Please help. My wife is ill. She is very week. I need a health potion for her.',
 FALSE, TRUE, 1);
 

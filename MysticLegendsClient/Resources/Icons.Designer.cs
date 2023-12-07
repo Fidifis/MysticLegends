@@ -79,6 +79,15 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
+        ///   Vyhledá lokalizovaný řetězec podobný /icons/gear-solid.svg.
+        /// </summary>
+        public static string bar_menu {
+            get {
+                return ResourceManager.GetString("bar/menu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Vyhledá lokalizovaný řetězec podobný /icons/compass-regular.svg.
         /// </summary>
         public static string bar_worldMap {

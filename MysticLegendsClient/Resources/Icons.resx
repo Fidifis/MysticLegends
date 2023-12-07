@@ -123,6 +123,9 @@
   <data name="bar/gold" xml:space="preserve">
     <value>/icons/coins-solid.svg</value>
   </data>
+  <data name="bar/menu" xml:space="preserve">
+    <value>/icons/gear-solid.svg</value>
+  </data>
   <data name="bar/worldMap" xml:space="preserve">
     <value>/icons/compass-regular.svg</value>
   </data>

@@ -24,7 +24,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" FlowDirection="RightToLeft">
-                <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" InnerPadding="5" SvgSource="/icons/gear-solid.svg" Click="Options_Click"/>
+                <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" InnerPadding="5" SvgSource="{x:Static resources:Icons.bar_menu}" Click="Options_Click"/>
                 <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" TextGap = "7" InnerPadding="5" SvgSource="{x:Static resources:Icons.bar_worldMap}" LabelText="World" Click="CityModuleButton_Click"/>
                 <controls:CityModuleButton FlowDirection="LeftToRight" Margin="10 0" FontSize="17" TextGap = "7" InnerPadding="5" SvgSource="{x:Static resources:Icons.bar_character}" LabelText="Character" Click="CharacterButton_Click"/>
             </StackPanel>

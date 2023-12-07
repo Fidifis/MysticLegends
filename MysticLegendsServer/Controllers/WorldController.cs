@@ -25,6 +25,7 @@ public class WorldController : Controller
         Ok(
             await dbContext.Npcs
             .Where(npc => npc.CityName == city)
+            .OrderBy(npc => npc.NpcId)
             .ToListAsync()
         );
 }
