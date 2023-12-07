@@ -98,6 +98,7 @@ a stisknutí talčítka pro přihlášení.
 - Po úspěšném přihlášení/reguistraci, zobrazí okno pro Výběr postavy.
 
 ## Logický design - Přihlašovací obrazovka
+![login](logic%20design/Login.png)
 
 ## Use Case - Registrace
 Uživatel nemá účet a chce se zaregistrovat. Očekává
@@ -118,6 +119,7 @@ Uživatel nemá účet a chce se zaregistrovat. Očekává
 - Pokud je vše v pořádku sytém uživatele registruje a zobrazí okno pro výběr postavy
 
 ## Logický design - Registrace
+![Register](logic%20design/Register.png)
 
 ## Use Case - Výběr postavy
 Uživatel vstupuje do hry a chce:
@@ -143,6 +145,7 @@ Při vytváření nové postavy
 4. vpustí uživatele do hry
 
 ## Logický design - Výběr postavy
+![Character select](logic%20design/Characer%20select.png)
 
 ## Use Case - Hlavní obrazovka (město)
 Uživatel chce mít základní přehled o jeho prostředcích.
@@ -166,6 +169,7 @@ Systém zobrazí hlavní okno. Pokud je toto okno zavřeno křížkem, celý pro
 - tlačítko s menu, kde je možnost změny postavy, odhlášení se
 
 ## Logický design - Hlavní obrazovka (město)
+![Main Window](logic%20design/Main%20Window.png)
 
 ## Use Case - Přehled postavy
 Uživatel se chce:
@@ -180,6 +184,7 @@ Systém uživateli zobrazí:
 - předměty v inventáři
 
 ## Logický design - Přehled postavy
+![Character](logic%20design/Character.png)
 
 ## Use Case - Svět
 Uživatel očekává mapu světa na které uvidí místa kam může cestovat
@@ -190,6 +195,7 @@ Systém uživateli ukáže mapu světa na které uvidí místa kam může cestov
 - při kladné odpovědi se zavře okno města a jeho podokna a ukáže se obrazovka s cesttováním
 
 ## Logický design - Svět
+![World](logic%20design/Map.png)
 
 ## Use Case - Obchodník - Nákup
 Uživatel chce:
@@ -204,6 +210,7 @@ Uživatel chce:
 - Umožní provést nákup přetažením předmětu do inventáře postavy
 
 ## Logický design - Obchodník - Nákup
+![buy](logic%20design/NPC%20Buy.png)
 
 ## Use Case - Obchodník - Prodej
 Uživatel chce prodat své předměty a vidět cenu, za kterou je může prodat
@@ -214,6 +221,7 @@ Uživatel chce prodat své předměty a vidět cenu, za kterou je může prodat
 - tlačítko pro prodej tyto předměty prodá a systém hráči připíše herní měnu
 
 ## Logický design - Obchodník - Prodej
+![sell](logic%20design/NPC%20Sell.png)
 
 ## Use Case - Obchodník - Úkoly
 Uživatel chce vidět:
@@ -232,6 +240,7 @@ Každý úkol zobrazuje:
 - možnost otevřít podrobnosti
 
 ## Logický design - Obchodník - Úkoly
+![quests](logic%20design/NPC%20Quests.png)
 
 ## Use Case - Podrobnosti úkolu
 Uživatel se chce dozvědět o úkolu více a očekává:
@@ -250,6 +259,7 @@ Systém uživateli zobrazí okno s podrobnostmi o úkolu
 - tlačítko pro přijmutí / opuštění / dokončení úkolu (záleží na aktuálním stavu úkolu)
 
 ## Logický design - Podrobnosti úkolu
+![quest details](logic%20design/Quest%20Details.png)
 
 ## Use Case - Trade Market
 
@@ -258,6 +268,17 @@ Systém uživateli zobrazí okno s podrobnostmi o úkolu
 ## Logický design - Trade Market
 
 ## Grafický design
+![](graphic%20design/login.png)
+![](graphic%20design/characterselect.png)
+![](graphic%20design/city.png)
+![](graphic%20design/character.png)
+![](graphic%20design/buy.png)
+![](graphic%20design/sell.png)
+![](graphic%20design/quests.png)
+![](graphic%20design/details.png)
+
+## Figma Projekt
+[figma.com](https://www.figma.com/file/whiAqWHlBIiq8EHYUEyMl8/MysticLegends-UI?type=design&node-id=0%3A1&mode=design&t=YWiBlLBAOVQU686F-1)
 
 ## Zdroje
 - HAVLÍČEK, Tomáš. Bakalářská práce: Volné téma v oblasti User Experience Design. Online, vedoucí Josef Pavlíček. ČZU, 2014. Dostupné z: https://moodle.czu.cz/pluginfile.php/440218/mod_resource/content/0/UI%20specifikaceHavlicek.pdf. [cit. 2023-12-03].
