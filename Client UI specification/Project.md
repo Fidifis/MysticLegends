@@ -28,65 +28,50 @@ Kromě obchodování s NPC bude existovat možnost hráčského obchodování. H
 ### Přihlášení / Registrace
 Hra bude vyžadovat, aby uživatel vytvořil účet nebo se přihlásil pomocí existujícího účtu. To umožní uživateli ukládat svůj herní postup a přistupovat k hře z různých zařízení.
 
+[//]: <> (TODO: Předělat persony - Primární, sekundární, antipersona)
 ## Persony
 ### Persona A
-- Jméno: Alex Martinez
-- Věk: 28 let
-- Pohlaví: Muž:
+- Jméno: Alex Rodriguez
+- Věk: 27 let
+- Pohlaví: Muž
 - Rodinný stav: Svobodný
-- Zaměstnání: Zaměstnanec: Vývojář softwaru
-- Koníčky: Vývojářský programátor: Bojová umění, čtení fantasy románů, streamování na Twitchi
-- Žánry hraných her: RPG, Strategické hry
-- Typ počítače: Herní počítač vyšší třídy
+- Zaměstnání: Vývojář softwaru
+- Koníčky: hraní, kódování vedlejších projektů, návštěva herních kongresů
+- Žánry hraných her: MMORPG, MOBA, střílečky z pohledu první osoby
+- Typ počítače: Herní počítač vyšší třídy s nejnovější grafickou kartou a periferiemi
 
-Alex přes den pracuje jako softwarový vývojář.
-Po večerech cvičí bojová umění a pro inspiraci čte fantasy romány.
-Večery tráví streamováním svých herních seancí na Twitchi, kde se věnuje svému publiku.
-Alex má rád pohlcující RPG a strategické hry, které jsou výzvou pro jeho intelekt.
-Jeho herní seance se obvykle zaměřují na plnění náročných úkolů a prozkoumávání bohatých herních příběhů.
+Přes den pracuje na dálku jako vývojář softwaru, večery tráví u online RPG. Rád zkoumá složité herní mechanismy a oceňuje dobře navržené uživatelské rozhraní, které umocňuje herní zážitek. V RPG hrách vyhledává především poutavý a náročný příběh.
 
 ### Persona B
-- Jméno: Emily Johnson
-- Věk: 22 let
-- Pohlaví: Žena
-- Rodinný stav: Ve vztahu
-- Zaměstnání: Studentka vysoké školy (informatika)
-- Záliby: Digitální umění, Cosplay, Hra na housle
-- Žánry hraných her: MMORPG, Sandboxové hry
-- Typ počítače: Herní notebook střední třídy
+- Jméno: Sarah Williamsová
+- Věk: 34 let
+- Pohlaví: žena
+- Rodinný stav: Vdaná se dvěma dětmi
+- Zaměstnání: Marketingová manažerka
+- Záliby: Čtení fantasy románů, zahradničení, příležitostné hraní her
+- Žánry hraných her: logické hry, příležitostné RPG hry
+- Typ počítače: Notebook střední třídy pro práci i hraní her
 
-Emily je studentka vysoké školy, která studuje informatiku.
-Její dny jsou naplněny výukou, ale vždy si najde čas na své kreativní aktivity, jako je digitální umění a cosplay.
-Po večerech ráda hraje MMORPG a ponořuje se do rozsáhlých virtuálních světů.
-Emily oceňuje hry, které jí umožňují vyjádřit svou kreativitu a spojit se s ostatními hráči v rámci společenského života.
+Balancuje mezi náročnou prací v marketingu a rodinnými povinnostmi. Ráda si odpočine několika hodinami hraní po uložení dětí ke spánku. Preferuje hry s poutavým příběhem a vizuálně příjemnou estetikou. Oceňuje uživatelsky přívětivá rozhraní a zjednodušenou hratelnost, aby se přizpůsobil omezenému hernímu času. Zajímá ji kooperativní hraní a sociální interakce ve hře.
 
 ### Persona C
-- Jméno: James Rodriguez
-- Věk: 35 let
+- Jméno: Richard Thompson
+- Věk: 45 let
 - Pohlaví: Muž
-- Rodinný stav: ženatý, dvě děti
+- Rodinný stav: Rozvedený
 - Zaměstnání: IT konzultant
-- Záliby: Elektronika pro kutily, stolní hry, jízda na kole
-- Žánry hraných her: Taktické RPG hry, Simulační hry
-- Typ počítače: Herní počítač na zakázku
+- Žánry hraných her: Zřídkakdy hraje hry, skeptický k online hrám a pohlcujícím zážitkům
+- Typ počítače: Starý stolní počítač pro práci, skeptický k hernímu hardwaru
 
-James vyvažuje svou kariéru IT konzultanta s rodinným životem.
-Rád tráví víkendy v přírodě, jezdí s rodinou na kole a hraje deskové hry.
-Po večerech se uchyluje do svého herního doupěte, kde relaxuje u taktických RPG a simulačních her.
-James si cení her, které nabízejí strategickou hloubku a pocit úspěchu.
-Jeho herní seance jsou kombinací sólových dobrodružství a spolupráce s přáteli ve více hráčích.
+Většinu dne tráví řešením problémů s IT. Online RPG hry považuje za ztrátu času a zpochybňuje hodnotu pohlcujících herních zážitků. Dává přednost tradičním formám zábavy a brání se přijímání nových technologií v oblasti her. Obecně je skeptický k času a penězům vynaloženým na videohry.
 
 ---
-
-> Všechny **use cases** a **scénáře** implicitně předpokládají **základní ovládání** a chování okna v běžném desktopovém operačním systému (Windows, Mac, GNU/Linux s GUI),
-tj. minimalizace, úprava velikosti, zavření okna.
 
 ## Use Case - Přihlašovací obrazovka
 Uživatel se chce přihlásit do systému a očekává:
 - zadání username
 - zadaání hesla
 - možnost si heslo zapamatovat
-- tlačítko pro přihlášení
 
 Pokud účet nemá očekává možnost registrace.
 
@@ -104,7 +89,6 @@ a stisknutí talčítka pro přihlášení.
 Uživatel nemá účet a chce se zaregistrovat. Očekává
 - zadání svého jména (username)
 - hesla
-- tlačítko pro registraci
 
 ## Scénář - Registrace
 - Systém zobrazí registrační okno s:
@@ -115,6 +99,7 @@ Uživatel nemá účet a chce se zaregistrovat. Očekává
   - Ve formuláři musí být zapsané username, který není prázdný a neobsahuje speciální znaky.
   - Obě hesla musejí být stejná
   - Heslo nesmí být prázdné a musí být alespoň 7 znaků
+  - Musí být příjmuty podmínky použití a ochrana osobních údajů
 - Pokud něco nevyhovuje sytém uživatele upozorní.
 - Pokud je vše v pořádku sytém uživatele registruje a zobrazí okno pro výběr postavy
 
@@ -155,8 +140,8 @@ Uživatel chce mít základní přehled o jeho prostředcích.
 
 Dále se chce dostat k různým postavám a funkcím samotné hry.
 - očekává možnosti co může ve městě dělat
-- tlačítko pro změnu postavy
-- tlačítko pro odhlášení
+- možnost pro změnu postavy
+- možnost pro odhlášení
 
 ## Scénář - Hlavní obrazovka (město)
 Systém zobrazí hlavní okno. Pokud je toto okno zavřeno křížkem, celý program končí včetně podoken.
@@ -228,7 +213,7 @@ Uživatel chce vidět:
 - seznam úkolů co daný obchodník (NPC) nabízí
 - u každého úkolu vidět přibližně o čem je
 - zda ho již přijmul nebo ještě ne
-- rozkliknout si podrobnosti
+- zobrazit si podrobnosti
 
 ## Scénář - Obchodník - Úkoly
 Systém uživateli zobrazí seznam úkolů.
@@ -266,6 +251,7 @@ Systém uživateli zobrazí okno s podrobnostmi o úkolu
 ## Scénář - Trade Market
 
 ## Logický design - Trade Market
+![trade market](logic%20design/Trade%20Market.png)
 
 ## Grafický design
 ![](graphic%20design/login.png)
