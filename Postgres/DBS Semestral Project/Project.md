@@ -1,6 +1,9 @@
 # Semestrální projekt - Databáze
+
 Autor: Filip Digrín
+
 ## Popis
+
 Jedná se o databázový systém k online RPG hře Mystic Legends (klient i server jsou také součástí tohoto repozitáře).
 
 Ve hře se můžete registrovat nebo přihlásit do systému.
@@ -28,9 +31,11 @@ Hráč pro získání nějakého předmětu, který nejde (nebo nechce) koupit, 
 Z nich může získat nejrůznější předměty od běžných po velmi vzácné.
 
 ## Konceptuální schéma
+
 ![schéma](Conceptual%20schema.jpg)
 
 ## Integritní omezení
+
 - U žádného atributu nejsou dovoleny záporné hodnoty, s vyjímkou peněz-*currency_gold* obchodníka (*npc*).
 - Pokud je předmět (*inventory_item*) na prodej na trhu (existuje v tabulce *trade_market*), musí zároveň mít cenu (*price*).
 - Pokud předmět (*inventory_item*) není na prodej na trhu (*trade_market*) ani ho neprodává obchodník (*npc*), nesmí existovat cena (*price*).
@@ -40,6 +45,7 @@ Z nich může získat nejrůznější předměty od běžných po velmi vzácné
 - Atribut *listed_since* na trhu (*trade_market*) musí být menší roven aktuálnímu datu a času.
 
 ## Diskuse smyček
+
 Ve schématu se nachází smyčky (hodně).
 
 Vzhledem k velkému množstvý smyček jsem se je rozhodl okomentovat 3 nejsložitější. Celkově jsem se pokusil všechny smyčky zakreslit do obrázku, jelikož vypsání všech možných kombinací není v mých silách.
@@ -47,6 +53,7 @@ Vzhledem k velkému množstvý smyček jsem se je rozhodl okomentovat 3 nejslož
 Pod obrázkem vizualizace smyček jsem vytvořil jiný náhled na schéma (*dependency tree*), které pomůže určit jestli je schéma "realizovatelné".
 
 ### 3 Okomentované
+
 **character - travel - area - mob - mob_item_drop - item - inventory_item - character**
 - Zde se jedná o Postavu (*Character*), která cestuje (*travel*) do oblasti (*area*) kde se nachází jedna či více příšer/zvířat (*mob*). Příšera může *"dropnout"* předmět nějakého typu (entita *item*).
 - Tady je potřeba si vysvětlit jaký je rozdíl mezi entitou *item* a *inventory_item*. *Itemů* je konečné možství a jsou přidávány s aktualizací hry. Dalo by se přirovnat k abstraktní třídě. *inventory_item* už je konkrétní reprezentace *itemu* a může být umístěn do inventáře. *Inventory_itemů* je teoreticky nekonečno, protože vznikají (i zanikají) při hraní hry. Toto by se dalo přirovnat k instanci třídy.
@@ -61,9 +68,11 @@ Pod obrázkem vizualizace smyček jsem vytvořil jiný náhled na schéma (*depe
 - Tato situace je naprosto v pořádku a v určitém případě i vyžadována, viz **integritní omezení**.
 
 ### Smyčky vizuálně
+
 ![schéma_se_smyčkai](Loops.jpg)
 
 ### Dependency tree
+
 Schéma jsem se pokusil přetransformovat do jiné podoby a udělat jakoby dependency tree. S tím že ořežu entity které nejsou ve smyčce (třeba user je mimo smyčku) a nechám jen ty které ve smyčce jsou.
 
 Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jednu úroveň. Entity na jedné úrovni mohou být vytvořeny jen v případě že existují entity z vyší úrovně. Na sousedech a nižší úrovni nezáleží. Vazba *required* vždy směřuje nahoru. Cardinalita *Many* je vždy dole.
@@ -75,11 +84,13 @@ Na vrcholu jsou entity které na ničem nezávisí. Každý řádek tvoří jedn
 ![dependency_tree](dependency.jpg)
 
 ## Relační schéma
+
 Omlovám se že to vypadá jako to vypadá, ovládání ERD toolu v PGAdminu pro mě není intuitivní.
 
 ![ERD](ERD.png)
 
 ## Dotazy
+
 1. postavy které mají level větší roven 5
     ```
     character(level>=5)[character_name, level]
@@ -431,10 +442,12 @@ Omlovám se že to vypadá jako to vypadá, ovládání ERD toolu v PGAdminu pro
 
 
 ## Script
+
 - Script pro vytvoření a naplnění daty: [db init script.sql](../db%20init%20script.sql)
 - Schéma pro [kreslítko](https://dbs.fit.cvut.cz/kreslitko/): [database schema.json](../database%20schema.json)
 
 ## Závěr
+
 Tato práce byla po dlouhé době studia konečně něco zajímavého.
 Možná je schéma rozsáhlejší a složitější, než je třeba, ale aspoň je to trochu challenge a nejen nějaká semetrálka co je za den hotová.
 Na práci mi nejvíce času a úsilí zabralo napsat všechny dotazy, a ještě aby pokryli všechny kategorie z tabulky. Při psaní dotazů, mi byla nějvětší pomocí vzorová práce Zoo ve skluzu.
