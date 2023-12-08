@@ -28,7 +28,6 @@ Kromě obchodování s NPC bude existovat možnost hráčského obchodování. H
 ### Přihlášení / Registrace
 Hra bude vyžadovat, aby uživatel vytvořil účet nebo se přihlásil pomocí existujícího účtu. To umožní uživateli ukládat svůj herní postup a přistupovat k hře z různých zařízení.
 
-[//]: <> (TODO: Předělat persony - Primární, sekundární, antipersona)
 ## Persony
 ### Persona A
 - Jméno: Alex Rodriguez
@@ -132,25 +131,29 @@ Při vytváření nové postavy
 ## Logický design - Výběr postavy
 ![Character select](logic%20design/Characer%20select.png)
 
-## Use Case - Hlavní obrazovka (město)
+## Use Case - Přehled (Hlavní obrazovka / město)
 Uživatel chce mít základní přehled o jeho prostředcích.
 - jaký má jeho postava level
 - kolik má peněz
 - kde se nachází (město)
 
-Dále se chce dostat k různým postavám a funkcím samotné hry.
+## Scénář - Přehled (Hlavní obrazovka / město)
+Systém zobrazí:
+- název aktuálního města kde se uživatel nachází
+- level postavy a progress k dalšímu levelu
+- kolik má uživatel herní měny
+- tlačítko otevření detailu postavy
+
+## Use Case - NPCs (Hlavní obrazovka / město)
+Uživatel se chce dostat k různým postavám a funkcím samotné hry.
 - očekává možnosti co může ve městě dělat
 - možnost pro změnu postavy
 - možnost pro odhlášení
 
-## Scénář - Hlavní obrazovka (město)
-Systém zobrazí hlavní okno. Pokud je toto okno zavřeno křížkem, celý program končí včetně podoken.
-- zobrazuje název aktuálního města kde se uživatel nachází
-- level postavy a progress k dalšímu levelu
-- kolik má uživatel herní měny
+## Scénář - NPCs (město)
+Systém zobrazí:
 - seznam postav, které se ve městě nacházejí s možností otevřít jejich nabídku.
 - tlačíko pro otevření mapy světa
-- tlačítko otevření detailu postavy
 - tlačítko s menu, kde je možnost změny postavy, odhlášení se
 
 ## Logický design - Hlavní obrazovka (město)
@@ -247,8 +250,18 @@ Systém uživateli zobrazí okno s podrobnostmi o úkolu
 ![quest details](logic%20design/Quest%20Details.png)
 
 ## Use Case - Trade Market
+Uživatel chce:
+- vidět předměty co ostatní nabízejí a za kolik
+- koupit předmět
+- prodat vlastní předmět
 
 ## Scénář - Trade Market
+Systém zobrazí:
+- seznam předmětů které je možné si koupit.
+- po kliknutí zobrazí detail předmětu s jeho cenou a možností pro koupi
+- políčko pro vložení vlastního předmětu
+- políčko pro stanovení ceny
+- tlačítko pro prodej
 
 ## Logický design - Trade Market
 ![trade market](logic%20design/Trade%20Market.png)
