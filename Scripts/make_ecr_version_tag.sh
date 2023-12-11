@@ -30,7 +30,7 @@ done
 
 # Increment the version
 if [ -z $LATEST_VERSION ]; then
-  INCREMENTED_VERSION="${VERSION}.1"
+  INCREMENTED_VERSION="${VERSION}.0"
 else
   INCREMENTED_VERSION="${VERSION}.$((LATEST_VERSION + 1))"
 fi
