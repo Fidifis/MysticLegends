@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using MysticLegendsClient.Dialogs;
+using System.Windows;
 
 namespace MysticLegendsClient;
 
@@ -7,10 +8,21 @@ namespace MysticLegendsClient;
 /// </summary>
 public partial class TravelWindow : Window
 {
-    public static void DoTravel(int seconds, string city)
+    public static void DoTravelToCity(int seconds, string city)
     {
         new TravelWindow(seconds, () => {
             new CityWindow(city).Show();
+        }).Show();
+    }
+
+    public static void DoTravelToArea(int seconds, string city, FightResultDialog.DisplayData data)
+    {
+        new TravelWindow(seconds, () =>
+        {
+            var cityWindow = new CityWindow(city);
+            cityWindow.Show();
+
+            new FightResultDialog(data) { Owner = cityWindow }.Show();
         }).Show();
     }
 

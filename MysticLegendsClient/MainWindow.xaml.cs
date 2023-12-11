@@ -54,7 +54,7 @@ namespace MysticLegendsClient
                 var city = data["city"];
 
                 if (data.TryGetValue("travel", out string? travelTime))
-                    TravelWindow.DoTravel(int.Parse(travelTime), city);
+                    TravelWindow.DoTravelToCity(int.Parse(travelTime), city);
                 else
                     new CityWindow(city).Show();
             });

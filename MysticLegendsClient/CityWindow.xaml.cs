@@ -31,7 +31,7 @@ namespace MysticLegendsClient
 
         private readonly string cityName;
 
-        private readonly List<SingleInstanceWindow> singletonWindows = new(15);
+        private readonly List<SingleInstanceWindow> singletonWindows = new();
         private readonly SingleInstanceWindow<CharacterWindow> characterWindow = new();
 
         public CityWindow(string cityName): this(cityName, CityNameToSplash(cityName))

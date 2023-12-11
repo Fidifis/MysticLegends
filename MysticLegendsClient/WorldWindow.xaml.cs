@@ -1,4 +1,5 @@
-﻿using MysticLegendsShared.Models;
+﻿using MysticLegendsClient.Dialogs;
+using MysticLegendsShared.Models;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -7,7 +8,7 @@ namespace MysticLegendsClient
     /// <summary>
     /// Interakční logika pro WorldWindow.xaml
     /// </summary>
-    public partial class WorldWindow : Window
+    public partial class WorldWindow : Window, ISingleInstanceWindow
     {
         private readonly string? filterCity = null;
         public WorldWindow()
@@ -18,6 +19,11 @@ namespace MysticLegendsClient
         public WorldWindow(string filterCity):this()
         {
             this.filterCity = filterCity;
+        }
+
+        public void ShowWindow()
+        {
+            SingleInstanceWindow.CommonShowWindowTasks(this);
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -92,13 +98,13 @@ namespace MysticLegendsClient
             if (time == -1)
                 return;
 
-            TravelWindow.DoTravel(time, city);
+            TravelWindow.DoTravelToCity(time, city);
 
             DialogResult = true;
             Close();
         }
 
-        private void AreaButtonClick(object? sender, RoutedEventArgs e)
+        private async void AreaButtonClick(object? sender, RoutedEventArgs e)
         {
             var area = ((Button?)sender)?.Content as string;
             if (area is null)
@@ -106,8 +112,26 @@ namespace MysticLegendsClient
                 MessageBox.Show("Error in reading area name", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            if (MessageBox.Show($"Do you really want to travel to {area}?", "travel", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+
+            Mob[] mobs;
+            try
+            {
+                mobs = await ApiCalls.WorldCall.GetMobsInArea(area);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
+            }
+
+            var dialog = new MobsInAreaDialog(mobs);
+
+            if (dialog.ShowDialog() != true)
+                return;
+
+            TravelWindow.DoTravelToArea(15, "Ayreim", new(dialog.SelectedMob!, new InventoryItem[0]));
+            DialogResult = true;
+            Close();
         }
     }
 }

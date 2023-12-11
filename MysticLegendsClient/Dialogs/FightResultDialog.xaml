@@ -1,14 +1,14 @@
-﻿<Window x:Class="MysticLegendsClient.MobsInArea"
+﻿<Window x:Class="MysticLegendsClient.Dialogs.FightResultDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MysticLegendsClient"
+        xmlns:local="clr-namespace:MysticLegendsClient.Dialogs"
         mc:Ignorable="d"
-        Title="MobsInArea"
-        MinHeight="300" MinWidth="200"
-        Height="450" Width="400">
+        Title="FightResultDialog" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
     <Grid>
-        <ListView x:Name="mobList"/>
+        <Label/>
     </Grid>
 </Window>
