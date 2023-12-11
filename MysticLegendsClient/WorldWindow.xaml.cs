@@ -23,12 +23,16 @@ namespace MysticLegendsClient
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             City[]? cities = null;
+            Area[]? areas = null;
             await ErrorCatcher.TryAsync(async () =>
             {
-                cities = await ApiCalls.WorldCall.GetCitiesAsync();
+                var citiesTask = ApiCalls.WorldCall.GetCitiesAsync();
+                var areasTask = ApiCalls.WorldCall.GetAreasAsync();
+                cities = await citiesTask;
+                areas = await areasTask;
             });
 
-            if (cities is null)
+            if (cities is null || areas is null)
                 return;
 
             foreach (var city in cities)
@@ -37,20 +41,36 @@ namespace MysticLegendsClient
                     continue;
                 AddCityButton(city.CityName);
             }
+
+            foreach (var area in areas)
+            {
+                if (area.AreaName == filterCity)
+                    continue;
+                AddAreaButton(area.AreaName);
+            }
         }
 
         private void AddCityButton(string city)
         {
-            var btn = new Button
-            { 
-                Margin = new Thickness(5), 
-                FontSize = 20,
-                Height = 50,
-                Content = city,
-            };
+            var btn = AddButton(city);
             btn.Click += ButtonClick;
             citiesStack.Children.Add(btn);
         }
+
+        private void AddAreaButton(string area)
+        {
+            var btn = AddButton(area);
+            btn.Click += AreaButtonClick;
+            areasStack.Children.Add(btn);
+        }
+
+        private static Button AddButton(string content) => new Button
+        {
+            Margin = new Thickness(5),
+            FontSize = 20,
+            Height = 50,
+            Content = content,
+        };
 
         private async void ButtonClick(object? sender, RoutedEventArgs e)
         {
@@ -60,7 +80,7 @@ namespace MysticLegendsClient
                 MessageBox.Show("Error in reading city name", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            if (MessageBox.Show($"Do you really want to travel to {city}?", "travel", MessageBoxButton.YesNoCancel) != MessageBoxResult.Yes)
+            if (MessageBox.Show($"Do you really want to travel to {city}?", "travel", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
                 return;
 
             int time = -1;
@@ -76,6 +96,18 @@ namespace MysticLegendsClient
 
             DialogResult = true;
             Close();
+        }
+
+        private void AreaButtonClick(object? sender, RoutedEventArgs e)
+        {
+            var area = ((Button?)sender)?.Content as string;
+            if (area is null)
+            {
+                MessageBox.Show("Error in reading area name", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            if (MessageBox.Show($"Do you really want to travel to {area}?", "travel", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                return;
         }
     }
 }

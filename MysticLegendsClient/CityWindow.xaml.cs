@@ -161,6 +161,7 @@ namespace MysticLegendsClient
         {
             await ErrorCatcher.TryAsync(async () =>
             {
+                // TODO: this data is required to fill level and money only, but the following call also requests character items. Make an api call to request only necessary data.
                 var character = await ApiCalls.CharacterCall.GetCharacterServerCallAsync(GameState.Current.CharacterName);
                 CharacterStatsChanged(this, new(character));
             });
