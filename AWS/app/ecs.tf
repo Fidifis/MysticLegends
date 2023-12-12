@@ -78,7 +78,7 @@ module "ec_alb_segr" {
   vpc_id = module.vpc.vpc_id
   open_ports = {
     ecs_alb = {
-      ingress     = [80, 443]
+      ingress     = [443]
       protocol    = "tcp"
       open_egress = false
     }
@@ -93,7 +93,7 @@ module "ecs_node_segr" {
   vpc_id = module.vpc.vpc_id
   open_ports = {
     ecs_node = {
-      ingress         = [ 0 ]
+      ingress         = [0]
       protocol        = "-1"
       open_egress     = true
       security_groups = [module.ec_alb_segr.security_groups_ids.ecs_alb]
@@ -137,14 +137,14 @@ resource "aws_ecs_task_definition" "task_definition" {
         "memory" : 452,
         "memoryReservation" : 256,
         "essential" : true,
-        "logConfiguration": {
-            "logDriver": "awslogs",
-            "options": {
-               "awslogs-group" : "${aws_cloudwatch_log_group.container_logs.name}",
-               "awslogs-region": "${var.meta.region}",
-               "awslogs-stream-prefix": "ecs"
-            }
-         },
+        "logConfiguration" : {
+          "logDriver" : "awslogs",
+          "options" : {
+            "awslogs-group" : "${aws_cloudwatch_log_group.container_logs.name}",
+            "awslogs-region" : "${var.meta.region}",
+            "awslogs-stream-prefix" : "ecs"
+          }
+        },
         "portMappings" : [
           {
             "containerPort" : 80,
@@ -280,11 +280,6 @@ resource "aws_ecs_service" "ecs_service" {
   tags = { Module = "ecs" }
 }
 
-resource "aws_lb_listener_certificate" "my-certificate" {
-  listener_arn = aws_lb_listener.ecs_alb_listener.arn
-  certificate_arn = module.acm.arns["mysticlegends.fidifis.com"]
-}
-
 resource "aws_lb" "ecs_alb" {
   name               = "ecs-alb"
   internal           = false
@@ -299,8 +294,11 @@ resource "aws_lb" "ecs_alb" {
 
 resource "aws_lb_listener" "ecs_alb_listener" {
   load_balancer_arn = aws_lb.ecs_alb.arn
-  port              = 80
-  protocol          = "HTTP"
+  port              = 443
+  protocol          = "HTTPS"
+
+  ssl_policy      = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+  certificate_arn = module.acm.arns["mysticlegends.fidifis.com"]
 
   default_action {
     type             = "forward"
@@ -321,7 +319,7 @@ resource "aws_lb_target_group" "server_target" {
 }
 
 resource "aws_cloudwatch_log_group" "container_logs" {
-  name = "/mysticlegends/server"
+  name              = "/mysticlegends/server"
   retention_in_days = 90
 
   tags = {
