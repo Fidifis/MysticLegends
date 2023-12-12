@@ -1,5 +1,5 @@
 locals {
   module_tags = {
-    Module = "vpc"
+    Module = "ecr"
   }
 }
