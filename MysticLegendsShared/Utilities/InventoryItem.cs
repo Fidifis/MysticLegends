@@ -4,7 +4,7 @@ public partial class InventoryItem
 {
     public InventoryItem Clone()
     {
-        return new InventoryItem()
+        var newItem = new InventoryItem()
         {
             //InvitemId = this.InvitemId, // let the database assign autoincrement
             CityName = CityName,
@@ -18,7 +18,14 @@ public partial class InventoryItem
             Level = Level,
             Durability = Durability,
             //BattleStats = new List<BattleStat>(BattleStats), // there may be bug, because we keep invitemId of original, not the id of copied item. The stats may be attached to original.
-            BattleStats = new List<BattleStat>(BattleStats.Select(stat => stat.Clone())),
         };
+        newItem.BattleStats = new List<BattleStat>(BattleStats.Select(stat =>
+        {
+            var cloned = stat.Clone();
+            cloned.InvitemId = -1;
+            cloned.Invitem = newItem;
+            return cloned;
+        }));
+        return newItem;
     }
 }

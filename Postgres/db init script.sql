@@ -388,10 +388,10 @@ VALUES                     (1,          'burger',                        NULL,  
                            (17,          'qwertz',                       NULL,           NULL,   1,       NULL,  1,           0);
 
 INSERT INTO price (invitem_id, price_gold, quantity_per_purchase)
-VALUES (8, 100, NULL),
-	   (9, 100, NULL),
-	   (10, 100, NULL),
-       (11, 100, NULL),
+VALUES (8, 100, 1),
+	   (9, 100, 1),
+	   (10, 100, 1),
+       (11, 100, 1),
        (12, 50, 5),
        (13, 90, 5),
        (14, 70, 5);
