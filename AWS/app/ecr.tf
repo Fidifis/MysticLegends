@@ -7,11 +7,20 @@ module "ecr" {
     lifecycle = [
       {
         tagStatus = "untagged"
-        daysSincePush = 1
+        type = "sinceImagePushed"
+        count = 1
       },
       {
-        daysSincePush = 7
-      }
+        tagStatus = "tagged"
+        tagPrefixList = ["latest"]
+        type = "imageCountMoreThan"
+        count = 1
+      },
+      {
+        tagStatus = "any"
+        type = "sinceImagePushed"
+        count = 7
+      },
     ]
   }
   repositories = {

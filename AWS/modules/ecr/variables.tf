@@ -13,7 +13,9 @@ variable "default_config" {
     scan = optional(bool, true)
     lifecycle = optional(list(object({
       tagStatus = optional(string, "any")
-      daysSincePush = number
+      tagPrefixList = optional(list(string))
+      type = string
+      count = number
     })))
   })
 }
@@ -24,7 +26,9 @@ variable "repositories" {
     scan = optional(bool)
     lifecycle = optional(list(object({
       tagStatus = optional(string, "any")
-      daysSincePush = number
+      tagPrefixList = optional(list(string))
+      type = string
+      count = number
     })))
   }))
 }

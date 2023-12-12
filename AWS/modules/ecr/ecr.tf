@@ -33,12 +33,15 @@ resource "aws_ecr_lifecycle_policy" "this" {
       {
         "rulePriority": i + 1,
         "description": "Expire old images",
-        "selection": {
-          "tagStatus": "${policy.tagStatus}",
-          "countType": "sinceImagePushed",
-          "countUnit": "days",
-          "countNumber": policy.daysSincePush
-        },
+        "selection": merge(
+          {
+            "tagStatus": policy.tagStatus,
+            "countType": policy.type,
+            "countNumber": policy.count
+          },
+          policy.tagPrefixList != null ? { "tagPrefixList": policy.tagPrefixList } : {},
+          policy.type == "sinceImagePushed" ? { "countUnit": "days" } : {}
+        ),
         "action": {
           "type": "expire"
         }
