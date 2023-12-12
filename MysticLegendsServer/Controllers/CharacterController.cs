@@ -12,15 +12,17 @@ namespace MysticLegendsServer.Controllers
     [ApiController]
     public class CharacterController : ControllerBase
     {
-        private Xdigf001Context dbContext;
-        private ILogger<CharacterController> logger;
-        private Auth auth;
+        private readonly Xdigf001Context dbContext;
+        private readonly ILogger<CharacterController> logger;
+        private readonly Auth auth;
+        private readonly IRNG rng;
 
-        public CharacterController(Xdigf001Context context, ILogger<CharacterController> logger, Auth auth)
+        public CharacterController(Xdigf001Context context, ILogger<CharacterController> logger, Auth auth, IRNG rng)
         {
             dbContext = context;
             this.logger = logger;
             this.auth = auth;
+            this.rng = rng;
         }
 
         private bool IsEquipable(ItemType itemType) => itemType switch
@@ -308,6 +310,72 @@ namespace MysticLegendsServer.Controllers
             }
 
             return Ok(response);
+        }
+
+        [HttpPost("{characterName}/fight")]
+        public async Task<ObjectResult> FightMethod(string characterName, [FromBody] Dictionary<string, string> paramters)
+        {
+            if (!await auth.ValidateAsync(Request.Headers, characterName))
+                return StatusCode(403, "Unauthorized");
+
+            const int travelWaitTime = 15;
+
+            var mobId = int.Parse(paramters["mobId"]);
+
+            var character = await dbContext.Characters
+                .Where(character => character.CharacterName == characterName)
+                .Include(character => character.Travel)
+                .Include(character => character.CharacterInventory)
+                    .ThenInclude(inventory => inventory!.InventoryItems)
+                .Include(character => character.InventoryItems)
+                    .ThenInclude(invitem => invitem.BattleStats)
+                .SingleAsync();
+
+            var mob = await dbContext.Mobs
+                .Include(mob => mob.MobItemDrops)
+                    .ThenInclude(drop => drop.Item)
+                .SingleAsync(mob => mob.MobId == mobId);
+
+            if (character.Travel is not null)
+            {
+                if (character.Travel.Arrival > DateTime.Now)
+                {
+                    var msg = "Cannot travel, Character already traveling";
+                    logger.LogWarning(msg);
+                    return BadRequest(msg);
+                }
+                else
+                    character.Travel = null;
+            }
+
+            character.Travel = new Travel()
+            {
+                CharacterName = characterName,
+                Arrival = DateTime.Now.AddSeconds(travelWaitTime),
+                AreaName = mob.AreaName,
+            };
+
+            var battleStatsArray = from item in character.InventoryItems where item.BattleStats is not null select new BattleStats(item.BattleStats);
+            var battleStats = new BattleStats(battleStatsArray);
+
+            // Because battle stats for mobs are not implemented yet, all mobs have same default stats
+            // TODO: change when implemented
+            var mobBattleStats = new BattleStats(new CBattleStat[]
+            {
+                new(CBattleStat.Method.Add, CBattleStat.Type.Strength, 100),
+                new(CBattleStat.Method.Add, CBattleStat.Type.Resilience, 50),
+            });
+
+            var battleResult = Fight.DecideFight(rng, battleStats, mobBattleStats);
+
+            if (!battleResult)
+            {
+                return Ok(Array.Empty<InventoryItem>());
+            }
+
+            var drops = new LinkedList<InventoryItem>();
+            // TODO: - decide droped items
+            //       - generate battlestats for items, if ItemType can have it
         }
     }
 }

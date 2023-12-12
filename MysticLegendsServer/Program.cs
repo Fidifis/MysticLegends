@@ -19,16 +19,20 @@ namespace MysticLegendsServer
 
             // Add services to the container.
 
+            // Add DB context
             builder.Services.AddDbContext<Xdigf001Context>(options => options
                 .UseNpgsql(connectionString,
                     o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
+            // Add JSON options
             builder.Services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
 
+            // Add custom services
             builder.Services.AddScoped<Auth>();
+            builder.Services.AddScoped<IRNG, BasicRandom>();
 
             // Add logging configuration
             builder.Logging.ClearProviders();

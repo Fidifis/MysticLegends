@@ -7,7 +7,7 @@ namespace MysticLegendsShared.Utilities;
 
 using StatsType = Dictionary<CBattleStat.Type, CBattleStat>;
 
-public class BattleStats: IReadOnlyDictionary<CBattleStat.Type, CBattleStat>
+public record BattleStats: IReadOnlyDictionary<CBattleStat.Type, CBattleStat>
 {
     private readonly StatsType battleStats = new();
 
@@ -19,7 +19,8 @@ public class BattleStats: IReadOnlyDictionary<CBattleStat.Type, CBattleStat>
 
     public BattleStats() { }
 
-    public BattleStats(StatsType stats) => battleStats = new StatsType(stats);
+    public BattleStats(IEnumerable<CBattleStat> stats) =>
+        battleStats = new StatsType(stats.Select(stat => new KeyValuePair<CBattleStat.Type, CBattleStat>(stat.StatType, stat)));
 
     public BattleStats(IEnumerable<BattleStat> stats)
     {

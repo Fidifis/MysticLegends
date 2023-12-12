@@ -8,7 +8,7 @@ namespace MysticLegendsClient.Dialogs
     /// </summary>
     public partial class FightResultDialog : Window
     {
-        public record DisplayData
+        public readonly struct DisplayData
         {
             public Mob Enemy { get; init; }
             public InventoryItem[] DropedItems { get; init; }
