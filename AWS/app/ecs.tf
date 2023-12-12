@@ -280,6 +280,11 @@ resource "aws_ecs_service" "ecs_service" {
   tags = { Module = "ecs" }
 }
 
+resource "aws_lb_listener_certificate" "my-certificate" {
+  listener_arn = aws_lb_listener.ecs_alb_listener.arn
+  certificate_arn = module.acm.arns["mysticlegends.fidifis.com"]
+}
+
 resource "aws_lb" "ecs_alb" {
   name               = "ecs-alb"
   internal           = false
@@ -317,6 +322,7 @@ resource "aws_lb_target_group" "server_target" {
 
 resource "aws_cloudwatch_log_group" "container_logs" {
   name = "/mysticlegends/server"
+  retention_in_days = 90
 
   tags = {
     Module = "ecs"
