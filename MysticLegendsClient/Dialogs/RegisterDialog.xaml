@@ -12,9 +12,9 @@
         <Label Content="Username" Margin="20 0"/>
         <TextBox x:Name="usernameBox" Height="25" Margin="20 0 20 20"/>
         <Label Content="Password" Margin="20 0"/>
-        <TextBox x:Name="passwordBox" Height="25" Margin="20 0 20 20"/>
+        <PasswordBox x:Name="passwordBox" Height="25" Margin="20 0 20 20"/>
         <Label Content="Confirm Password" Margin="20 0"/>
-        <TextBox x:Name="confirmPasswordBox" Height="25" Margin="20 0 20 20"/>
+        <PasswordBox x:Name="confirmPasswordBox" Height="25" Margin="20 0 20 20"/>
         <Button Content="Register" Height="30" Margin="20 0" Click="Button_Click"/>
     </StackPanel>
 </Window>

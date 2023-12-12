@@ -14,17 +14,17 @@ public partial class RegisterDialog : Window
     {
         InitializeComponent();
         usernameBox.Text = username;
-        passwordBox.Text = password;
+        passwordBox.Password = password;
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        if (usernameBox.Text.Trim() == "" || passwordBox.Text.Trim() == "" || confirmPasswordBox.Text.Trim() == "")
+        if (usernameBox.Text.Trim() == "" || passwordBox.Password.Trim() == "" || confirmPasswordBox.Password.Trim() == "")
         {
             MessageBox.Show("Please fill all fields");
             return;
         }
-        if (passwordBox.Text != confirmPasswordBox.Text)
+        if (passwordBox.Password != confirmPasswordBox.Password)
         {
             MessageBox.Show("Passwords don't match");
             return;
@@ -37,7 +37,7 @@ public partial class RegisterDialog : Window
         }
 
         Username = usernameBox.Text.Trim();
-        Password = passwordBox.Text;
+        Password = passwordBox.Password;
         DialogResult = true;
         Close();
     }
