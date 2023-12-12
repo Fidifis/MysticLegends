@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MysticLegendsServer.Models;
 
 namespace MysticLegendsServer.Controllers
 {
@@ -6,12 +7,19 @@ namespace MysticLegendsServer.Controllers
     [ApiController]
     public class HealthController : Controller
     {
-        [HttpGet]
-        public Dictionary<string, string> Get()
+        private Xdigf001Context dbContext;
+        public HealthController(Xdigf001Context context)
         {
-            return new()
+            dbContext = context;
+        }
+
+        [HttpGet]
+        public async Task<Dictionary<string, string>> Get()
+        {
+            var dbStatus = await dbContext.Database.CanConnectAsync();
+            return new Dictionary<string, string>()
             {
-                ["status"] = "ok"
+                ["status"] = dbStatus ? "ok" : "database fail"
             };
         }
     }
