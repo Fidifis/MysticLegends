@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MysticLegendsServer.Models;
+using System.Reflection;
 
 namespace MysticLegendsServer.Controllers
 {
@@ -19,7 +20,8 @@ namespace MysticLegendsServer.Controllers
             var dbStatus = await dbContext.Database.CanConnectAsync();
             return new Dictionary<string, string>()
             {
-                ["status"] = dbStatus ? "ok" : "database fail"
+                ["status"] = dbStatus ? "ok" : "database fail",
+                ["version"] = typeof(HealthController).Assembly.GetName().Version?.ToString() ?? "undefined",
             };
         }
     }
