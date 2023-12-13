@@ -12,7 +12,8 @@ Projekt serveru se nachází v [MysticLegendsServer](MysticLegendsServer/)
 ### Možnosti spuštění
 - lokálně - vyžaduje connection string k databázi
 - v dockeru - vyžaduje docker, databáze je součástí docker-compose
-- cloud - na den zápočtu a zkoušky spustím server v cloudu. Bude vám stačit klient a připojení k internetu. Pokud bude potřeba můžu na vyžádání server spustit kdykoli.
+- cloud - server běží i v cloudu. Bude vám stačit klient a připojení k internetu. Pokud zrovna neběží můžu na vyžádání server spustit kdykoliv.
+  Status je možno ověřit [zde](https://mysticlegends.fidifis.com/api/health)
 
 ### Spuštění v dockeru
 Stačí pustit příkaz a server s databází se spustí sám (\**magick*\*)
