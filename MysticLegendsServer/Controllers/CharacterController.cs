@@ -319,7 +319,7 @@ namespace MysticLegendsServer.Controllers
             if (!await auth.ValidateAsync(Request.Headers, characterName))
                 return StatusCode(403, "Unauthorized");
 
-            const int travelWaitTime = 15;
+            const int travelWaitTime = 2;//15;
 
             var mobId = int.Parse(paramters["mobId"]);
 
@@ -371,7 +371,13 @@ namespace MysticLegendsServer.Controllers
 
             if (!battleResult)
             {
-                return Ok(Array.Empty<InventoryItem>());
+                return Ok(new BattleResponse
+                {
+                    Win = false,
+                    TravelTime = travelWaitTime,
+                    DropedItems = Array.Empty<InventoryItem>(),
+                    ReturnCity = character.CityName,
+                });
             }
 
             var drops = new List<InventoryItem>();
@@ -399,7 +405,13 @@ namespace MysticLegendsServer.Controllers
             }
 
             await dbContext.SaveChangesAsync();
-            return Ok(drops);
+            return Ok(new BattleResponse
+            {
+                Win = true,
+                TravelTime = travelWaitTime,
+                DropedItems = drops,
+                ReturnCity = character.CityName,
+            });
         }
     }
 }

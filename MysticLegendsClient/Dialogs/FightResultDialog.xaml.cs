@@ -10,11 +10,13 @@ namespace MysticLegendsClient.Dialogs
     {
         public readonly struct DisplayData
         {
+            public bool Win { get; init; }
             public Mob Enemy { get; init; }
-            public InventoryItem[] DropedItems { get; init; }
+            public IReadOnlyCollection<InventoryItem> DropedItems { get; init; }
 
-            public DisplayData(Mob enemy, InventoryItem[] dropedItems)
+            public DisplayData(bool win, Mob enemy, IReadOnlyCollection<InventoryItem> dropedItems)
             {
+                Win = win;
                 Enemy = enemy;
                 DropedItems = dropedItems;
             }
@@ -23,6 +25,9 @@ namespace MysticLegendsClient.Dialogs
         public FightResultDialog(DisplayData data)
         {
             InitializeComponent();
+
+            inventoryView.Items = data.DropedItems;
+            winLabel.Content = data.Win ? "Win" : "Loose";
         }
     }
 }

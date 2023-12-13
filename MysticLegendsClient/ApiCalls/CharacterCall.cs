@@ -97,4 +97,13 @@ internal static class CharacterCall
         };
         return GameState.Current.Connection.PostAsync<int>($"/api/Character/{GameState.Current.CharacterName}/travel", parameters);
     }
+
+    public static Task<BattleResponse> FightCall(int mobId)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            ["mobId"] = mobId.ToString(),
+        };
+        return GameState.Current.Connection.PostAsync<BattleResponse>($"/api/Character/{GameState.Current.CharacterName}/fight", parameters);
+    }
 }

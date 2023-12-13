@@ -4,11 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MysticLegendsClient.Dialogs"
+        xmlns:controls="clr-namespace:MysticLegendsClient.Controls"
         mc:Ignorable="d"
-        Title="FightResultDialog" Height="450" Width="800"
+        Title="FightResultDialog" Height="450" Width="500"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <Grid>
-        <Label/>
+        <Label x:Name="winLabel" FontSize="20" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+        <Label Content="Reward:" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="20"/>
+        <controls:InventoryView x:Name="inventoryView" CounterVisibility="Hidden" Margin="0,59,0,0"/>
     </Grid>
 </Window>

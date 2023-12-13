@@ -129,7 +129,14 @@ namespace MysticLegendsClient
             if (dialog.ShowDialog() != true)
                 return;
 
-            TravelWindow.DoTravelToArea(15, "Ayreim", new(dialog.SelectedMob!, new InventoryItem[0]));
+            await ErrorCatcher.TryAsync(async () =>
+            {
+                var fightResult = await ApiCalls.CharacterCall.FightCall(dialog.SelectedMob!.MobId);
+                TravelWindow.DoTravelToArea(
+                    fightResult.TravelTime, fightResult.ReturnCity,
+                    new(fightResult.Win, dialog.SelectedMob!, fightResult.DropedItems ?? Array.Empty<InventoryItem>()));
+            });
+
             DialogResult = true;
             Close();
         }
