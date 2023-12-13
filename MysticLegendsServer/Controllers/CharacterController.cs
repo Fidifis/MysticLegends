@@ -26,17 +26,6 @@ namespace MysticLegendsServer.Controllers
             this.rng = rng;
         }
 
-        private bool IsEquipable(ItemType itemType) => itemType switch
-        {
-            ItemType.Weapon
-            or ItemType.BodyArmor
-            or ItemType.Helmet
-            or ItemType.Gloves
-            or ItemType.Boots
-            => true,
-            _ => false
-        };
-
         private async Task<Character> RequestCharacterItems(string characterName)
         {
             return await dbContext.Characters
@@ -137,7 +126,7 @@ namespace MysticLegendsServer.Controllers
 
             var itemToEquip = inventoryItems[itemToEquipIndex];
 
-            if (!IsEquipable((ItemType)itemToEquip.Item.ItemType))
+            if (!((ItemType)itemToEquip.Item.ItemType).IsEquipable())
             {
                 var msg = "this item cannot be equiped";
                 logger.LogWarning(msg);
@@ -233,7 +222,7 @@ namespace MysticLegendsServer.Controllers
             var itemToEquip = inventoryItems[itemToEquipIndex];
             var itemToUnequip = equipedItems[itemToUnequipIndex];
 
-            if (!IsEquipable((ItemType)itemToEquip.Item.ItemType))
+            if (!((ItemType)itemToEquip.Item.ItemType).IsEquipable())
             {
                 var msg = "this item cannot be equiped";
                 logger.LogWarning(msg);

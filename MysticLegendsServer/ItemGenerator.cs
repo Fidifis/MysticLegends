@@ -97,7 +97,6 @@ public static class ItemGenerator
     }
 
     private static bool CanHaveBattleStats(ItemType itemType) =>
-        itemType == ItemType.Weapon ||
         itemType == ItemType.Potion ||
-        (itemType >= ItemType.BodyArmor && itemType <= ItemType.Boots);
+        itemType.IsEquipable();
 }
