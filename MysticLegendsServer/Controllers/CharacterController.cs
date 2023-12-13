@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MysticLegendsServer.Models;
 using MysticLegendsShared.Models;
 using MysticLegendsShared.Utilities;
+using System.Collections.Immutable;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -373,9 +374,32 @@ namespace MysticLegendsServer.Controllers
                 return Ok(Array.Empty<InventoryItem>());
             }
 
-            var drops = new LinkedList<InventoryItem>();
-            // TODO: - decide droped items
-            //       - generate battlestats for items, if ItemType can have it
+            var drops = new List<InventoryItem>();
+
+            var orderedMobItemDrops = mob.MobItemDrops.OrderBy(drop => drop.DropRate);
+
+            foreach (var possibleDrop in orderedMobItemDrops)
+            {
+                var random = rng.RandomDecimal(1.0);
+                if (possibleDrop.DropRate < random)
+                {
+                    continue;
+                }
+                var invitem = ItemGenerator.MakeInventoryItem(rng, possibleDrop.Item, mob.Level, characterName, rng.RandomNumber(1,5));
+                var newPosition = InventoryHandling.FindPositionInInventory(character.CharacterInventory!);
+
+                if (newPosition is null)
+                {
+                    break;
+                }
+                invitem.Position = newPosition.Value;
+
+                drops.Add(invitem);
+                character.CharacterInventory!.InventoryItems.Add(invitem);
+            }
+
+            await dbContext.SaveChangesAsync();
+            return Ok(drops);
         }
     }
 }
