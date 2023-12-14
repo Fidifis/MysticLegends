@@ -163,7 +163,16 @@ resource "aws_ecs_task_definition" "task_definition" {
             "name" : "CONNECTIONSTRING",
             "value" : "${data.aws_ssm_parameter.connectionstring.value}"
           }
-        ]
+        ],
+        "healthCheck": {
+          "command": [
+            "CMD-SHELL",
+            "curl -f http://localhost/api/health | jq -r '.status' | grep -q '^ok$'"
+          ],
+          "interval": 30,
+          "timeout": 5,
+          "retries": 3
+        },
       }
     ]
   )
