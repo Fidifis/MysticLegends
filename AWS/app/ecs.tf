@@ -167,7 +167,7 @@ resource "aws_ecs_task_definition" "task_definition" {
         "healthCheck": {
           "command": [
             "CMD-SHELL",
-            "curl -f http://localhost/api/health | jq -r '.status' | grep -q '^ok$'"
+            "curl -f http://localhost/api/health | grep -Pq '\"status\"\\s*:\\s*\"ok\"'"
           ],
           "interval": 30,
           "timeout": 5,
