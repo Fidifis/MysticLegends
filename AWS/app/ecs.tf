@@ -134,8 +134,8 @@ resource "aws_ecs_task_definition" "task_definition" {
       {
         "name" : "${local.container_name}",
         "cpu" : 1024,
-        "memory" : 452,
-        "memoryReservation" : 256,
+        "memory" : 512,
+        "memoryReservation" : 384,
         "essential" : true,
         "logConfiguration" : {
           "logDriver" : "awslogs",
