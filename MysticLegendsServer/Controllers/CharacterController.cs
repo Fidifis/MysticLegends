@@ -256,7 +256,7 @@ namespace MysticLegendsServer.Controllers
 
             if (character.Travel is not null)
             {
-                if (character.Travel.Arrival > DateTime.Now)
+                if (character.Travel.Arrival > DateTime.UtcNow)
                 {
                     var msg = "Cannot travel, Character already traveling";
                     logger.LogWarning(msg);
@@ -269,7 +269,7 @@ namespace MysticLegendsServer.Controllers
             character.Travel = new Travel()
             {
                 CharacterName = characterName,
-                Arrival = DateTime.Now.AddSeconds(travelWaitTime),
+                Arrival = DateTime.UtcNow.AddSeconds(travelWaitTime),
             };
             character.CityName = city;
 
@@ -294,7 +294,7 @@ namespace MysticLegendsServer.Controllers
             response["city"] = character.CityName;
             if (character.Travel is not null)
             {
-                var diff = (int)(character.Travel.Arrival - DateTime.Now).TotalSeconds;
+                var diff = (int)(character.Travel.Arrival - DateTime.UtcNow).TotalSeconds;
                 if (diff > 0)
                     response["travel"] = (diff + 1).ToString();
             }
@@ -328,7 +328,7 @@ namespace MysticLegendsServer.Controllers
 
             if (character.Travel is not null)
             {
-                if (character.Travel.Arrival > DateTime.Now)
+                if (character.Travel.Arrival > DateTime.UtcNow)
                 {
                     var msg = "Cannot travel, Character already traveling";
                     logger.LogWarning(msg);
@@ -341,7 +341,7 @@ namespace MysticLegendsServer.Controllers
             character.Travel = new Travel()
             {
                 CharacterName = characterName,
-                Arrival = DateTime.Now.AddSeconds(travelWaitTime),
+                Arrival = DateTime.UtcNow.AddSeconds(travelWaitTime),
                 AreaName = mob.AreaName,
             };
 

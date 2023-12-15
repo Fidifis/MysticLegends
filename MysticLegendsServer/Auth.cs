@@ -51,7 +51,7 @@ public sealed class Auth: IDisposable
             .SingleAsync();
 
         //var dbAccessToken = character.UsernameNavigation.AccessToken;
-        if (dbAccessToken is null || dbAccessToken.Expiration < DateTime.Now)
+        if (dbAccessToken is null || dbAccessToken.Expiration < DateTime.UtcNow)
             return false;
 
         var trueToken = dbAccessToken.AccessToken1;
@@ -83,7 +83,7 @@ public sealed class Auth: IDisposable
             .SingleAsync();
 
         //var dbAccessToken = user.AccessToken;
-        if (dbAccessToken is null || dbAccessToken.Expiration < DateTime.Now)
+        if (dbAccessToken is null || dbAccessToken.Expiration < DateTime.UtcNow)
             return false;
 
         var trueToken = dbAccessToken.AccessToken1;
@@ -137,7 +137,7 @@ public sealed class Auth: IDisposable
         {
             Username = username,
             RefreshToken1 = refreshToken,
-            Expiration = DateTime.Now.AddDays(RefreshTokenExpirationDays)
+            Expiration = DateTime.UtcNow.AddDays(RefreshTokenExpirationDays)
         });
         await dbContext.SaveChangesAsync();
 
@@ -154,7 +154,7 @@ public sealed class Auth: IDisposable
             .SingleOrDefaultAsync(token => token.RefreshToken1 == refreshToken);
 
         // TODO: cleanup expired tokens
-        if (dbRefreshToken is null || dbRefreshToken.Expiration < DateTime.Now)
+        if (dbRefreshToken is null || dbRefreshToken.Expiration < DateTime.UtcNow)
             return null;
 
         var accessToken = GenerateToken(random, AccessTokenLength);
@@ -163,7 +163,7 @@ public sealed class Auth: IDisposable
         {
             Username = dbRefreshToken.Username,
             AccessToken1 = accessToken,
-            Expiration = DateTime.Now.AddMinutes(AccessTokenExpirationMinutes)
+            Expiration = DateTime.UtcNow.AddMinutes(AccessTokenExpirationMinutes)
         };
         await dbContext.SaveChangesAsync();
 
