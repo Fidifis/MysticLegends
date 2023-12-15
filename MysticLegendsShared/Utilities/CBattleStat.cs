@@ -13,9 +13,11 @@ public record struct CBattleStat
 
     public enum Type
     {
+        // TODO: basically duplicate of 10, 11, 12. Remove it.
         Strength = 0,
         Dexterity,
         Intelligence,
+        // --end
 
         PhysicalDamage = 10,
         Swiftness,

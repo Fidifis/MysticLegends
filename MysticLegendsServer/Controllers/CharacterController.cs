@@ -308,7 +308,7 @@ namespace MysticLegendsServer.Controllers
             if (!await auth.ValidateAsync(Request.Headers, characterName))
                 return StatusCode(403, "Unauthorized");
 
-            const int travelWaitTime = 2;//15;
+            const int travelWaitTime = 15;
 
             var mobId = int.Parse(paramters["mobId"]);
 
@@ -373,25 +373,33 @@ namespace MysticLegendsServer.Controllers
 
             var orderedMobItemDrops = mob.MobItemDrops.OrderBy(drop => drop.DropRate);
 
+            MobItemDrop? lastItem = null;
             foreach (var possibleDrop in orderedMobItemDrops)
             {
+                lastItem = possibleDrop;
                 var random = rng.RandomDecimal(1.0);
                 if (possibleDrop.DropRate < random)
                 {
                     continue;
                 }
-                var invitem = ItemGenerator.MakeInventoryItem(rng, possibleDrop.Item, mob.Level, characterName, rng.RandomNumber(1,5));
-                var newPosition = InventoryHandling.FindPositionInInventory(character.CharacterInventory!);
 
-                if (newPosition is null)
-                {
+                var added = AddDropedItem(rng, possibleDrop, character, ref drops);
+
+                if (!added)
                     break;
-                }
-                invitem.Position = newPosition.Value;
-
-                drops.Add(invitem);
-                character.CharacterInventory!.InventoryItems.Add(invitem);
             }
+
+            if (drops.Count == 0 && lastItem is not null)
+                AddDropedItem(rng, lastItem, character, ref drops);
+
+            var xp = character.Xp;
+            var level = character.Level;
+
+            xp += Convert.ToInt32(Math.Pow(mob.Level, 2));
+            Leveling.LevelUpIfPossible(ref level, ref xp);
+
+            character.Xp = xp;
+            character.Level = level;
 
             await dbContext.SaveChangesAsync();
             return Ok(new BattleResponse
@@ -401,6 +409,23 @@ namespace MysticLegendsServer.Controllers
                 DropedItems = drops,
                 ReturnCity = character.CityName,
             });
+        }
+
+        private static bool AddDropedItem(IRNG rng, MobItemDrop possibleDrop, Character character, ref List<InventoryItem> drops)
+        {
+            var invitem = ItemGenerator.MakeInventoryItem(rng, possibleDrop.Item, possibleDrop.Mob.Level, character.CharacterName, rng.RandomNumber(1, 5));
+            var newPosition = InventoryHandling.FindPositionInInventory(character.CharacterInventory!);
+
+            if (newPosition is null)
+            {
+                return false;
+            }
+            invitem.Position = newPosition.Value;
+
+            drops.Add(invitem);
+            character.CharacterInventory!.InventoryItems.Add(invitem);
+
+            return true;
         }
     }
 }
