@@ -2,7 +2,7 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    apt-get install -y --no-install-recommends jq curl && \
+    apt-get install -y --no-install-recommends jq curl && \ # used by health check
     rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 EXPOSE 80
