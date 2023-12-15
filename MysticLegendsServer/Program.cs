@@ -10,6 +10,7 @@ namespace MysticLegendsServer
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Get environment variables
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var connectionString = (environment == Environments.Development
                 ? builder.Configuration.GetConnectionString("GameDB")
@@ -51,7 +52,7 @@ namespace MysticLegendsServer
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection(); We are behind loadbalancer - HTTP is ok
 
             app.UseAuthorization();
 
