@@ -383,7 +383,7 @@ Omlovám se že to vypadá jako to vypadá, ovládání ERD toolu v PGAdminu pro
 
     rollback;
     ```
-26. Odstranění příjmutého questu
+26. Odstranění questu, které nejsou nabízeny
     ```sql
     begin;
     -- úprava dat (aktualně žádná data nevyhovují podmínce pro delete, tak jeden záznam změníme aby podmínce vyhověl)
