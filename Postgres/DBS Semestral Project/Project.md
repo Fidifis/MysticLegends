@@ -178,7 +178,7 @@ Omlovám se že to vypadá jako to vypadá, ovládání ERD toolu v PGAdminu pro
     select distinct inv.npc_id, inv.character_name, inv.character_inventory_character_n, inv.invitem_id, bs.stat_type, bs.value
     from inventory_item inv
     natural join battle_stats bs
-    where bs.stat_type = 0 or bs.stat_type = 1
+    where bs.stat_type = 10 or bs.stat_type = 11
     ```
 11. expirované tokeny
     ```
