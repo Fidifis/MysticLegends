@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="weapon/aresBlade" xml:space="preserve">
+    <value>/items/weapon/Legion_Sword_inventory_icon.png</value>
+  </data>
   <data name="bodyArmor/ayreimWarrior" xml:space="preserve">
     <value>/items/armor/Full_Chainmail_inventory_icon.png</value>
+  </data>
+  <data name="helmet/ayreimWarrior" xml:space="preserve">
+    <value>/items/helmet/Close_Helmet_inventory_icon.png</value>
   </data>
   <data name="boots/ayreimWarrior" xml:space="preserve">
     <value>/items/boots/Vaal_Greaves_inventory_icon.png</value>
@@ -126,20 +132,50 @@
   <data name="gloves/ayreimWarrior" xml:space="preserve">
     <value>/items/gloves/Antique_Gauntlets_inventory_icon.png</value>
   </data>
-  <data name="helmet/ayreimWarrior" xml:space="preserve">
-    <value>/items/helmet/Close_Helmet_inventory_icon.png</value>
+  <data name="potion/smallHealth" xml:space="preserve">
+    <value>/items/potions/Large_Life_Flask_inventory_icon.png</value>
   </data>
   <data name="potion/mediumHealth" xml:space="preserve">
     <value>/items/potions/Greater_Life_Flask_inventory_icon.png</value>
   </data>
+  <data name="potion/smallStrength" xml:space="preserve">
+    <value>/items/potions/small_strength.png</value>
+  </data>
   <data name="potion/smallDexterity" xml:space="preserve">
     <value>/items/potions/small_dexterity.png</value>
   </data>
-  <data name="potion/smallHealth" xml:space="preserve">
-    <value>/items/potions/Large_Life_Flask_inventory_icon.png</value>
+  <data name="regular/copperOre" xml:space="preserve">
+    <value>/items/regular/Copper_Ore.png</value>
   </data>
-  <data name="potion/smallStrength" xml:space="preserve">
-    <value>/items/potions/small_strength.png</value>
+  <data name="regular/ironOre" xml:space="preserve">
+    <value>/items/regular/Iron_Ore.png</value>
+  </data>
+  <data name="regular/goldOre" xml:space="preserve">
+    <value>/items/regular/Gold_Ore.png</value>
+  </data>
+  <data name="regular/platinumOre" xml:space="preserve">
+    <value>/items/regular/Platinum_Ore.png</value>
+  </data>
+  <data name="regular/mithrilOre" xml:space="preserve">
+    <value>/items/regular/Mithril_Ore.png</value>
+  </data>
+  <data name="regular/orichalcumOre" xml:space="preserve">
+    <value>/items/regular/Orichalcum_Ore.png</value>
+  </data>
+  <data name="regular/juteScrap" xml:space="preserve">
+    <value>/items/regular/Jute_Scrap.png</value>
+  </data>
+  <data name="regular/linenScrap" xml:space="preserve">
+    <value>/items/regular/Linen_Scrap.png</value>
+  </data>
+  <data name="regular/woolScrap" xml:space="preserve">
+    <value>/items/regular/Wool_Scrap.png</value>
+  </data>
+  <data name="regular/cottonScrap" xml:space="preserve">
+    <value>/items/regular/Cotton_Scrap.png</value>
+  </data>
+  <data name="regular/silkScrap" xml:space="preserve">
+    <value>/items/regular/Silk_Scrap.png</value>
   </data>
   <data name="regular/goatHorn" xml:space="preserve">
     <value>/items/regular/horn.png</value>
@@ -147,7 +183,73 @@
   <data name="regular/wolveFang" xml:space="preserve">
     <value>/items/regular/fang.png</value>
   </data>
-  <data name="weapon/aresBlade" xml:space="preserve">
-    <value>/items/weapon/Legion_Sword_inventory_icon.png</value>
+  <data name="regular/spike" xml:space="preserve">
+    <value>/items/regular/Spike.png</value>
+  </data>
+  <data name="regular/cherry" xml:space="preserve">
+    <value>/items/regular/Cherry.png</value>
+  </data>
+  <data name="regular/asparagus" xml:space="preserve">
+    <value>/items/regular/Asparagus_Spear.png</value>
+  </data>
+  <data name="regular/blackberry" xml:space="preserve">
+    <value>/items/regular/Blackberry.png</value>
+  </data>
+  <data name="regular/carrot" xml:space="preserve">
+    <value>/items/regular/Carrot.png</value>
+  </data>
+  <data name="regular/mushroom" xml:space="preserve">
+    <value>/items/regular/Mushroom.png</value>
+  </data>
+  <data name="regular/fungus" xml:space="preserve">
+    <value>/items/regular/Fungus.png</value>
+  </data>
+  <data name="regular/mint" xml:space="preserve">
+    <value>/items/regular/Mint_Leaf.png</value>
+  </data>
+  <data name="regular/strawberry" xml:space="preserve">
+    <value>/items/regular/Strawberry.png</value>
+  </data>
+  <data name="regular/bean" xml:space="preserve">
+    <value>/items/regular/Green_Bean.png</value>
+  </data>
+  <data name="magic/eclipseDust" xml:space="preserve">
+    <value>/items/magic/Abrasive_Catalyst_inventory_icon.png</value>
+  </data>
+  <data name="magic/sunsetDust" xml:space="preserve">
+    <value>/items/magic/Accelerating_Catalyst_inventory_icon.png</value>
+  </data>
+  <data name="magic/starDust" xml:space="preserve">
+    <value>/items/magic/Fertile_Catalyst_inventory_icon.png</value>
+  </data>
+  <data name="magic/sproutDust" xml:space="preserve">
+    <value>/items/magic/Imbued_Catalyst_inventory_icon.png</value>
+  </data>
+  <data name="magic/burnDust" xml:space="preserve">
+    <value>/items/magic/Noxious_Catalyst_inventory_icon.png</value>
+  </data>
+  <data name="magic/lifeDust" xml:space="preserve">
+    <value>/items/magic/Splinter_of_Chayula_inventory_icon.png</value>
+  </data>
+  <data name="magic/akashicDust" xml:space="preserve">
+    <value>/items/magic/Splinter_of_Esh_inventory_icon.png</value>
+  </data>
+  <data name="magic/fireCrystal" xml:space="preserve">
+    <value>/items/magic/Splinter_of_Tul_inventory_icon.png</value>
+  </data>
+  <data name="magic/waterCrystal" xml:space="preserve">
+    <value>/items/magic/Splinter_of_Uul-Netol_inventory_icon.png</value>
+  </data>
+  <data name="magic/earthCrystal" xml:space="preserve">
+    <value>/items/magic/Splinter_of_Xoph_inventory_icon.png</value>
+  </data>
+  <data name="magic/windCrystal" xml:space="preserve">
+    <value>/items/magic/Turbulent_Catalyst_inventory_icon.png</value>
+  </data>
+  <data name="magic/akashCrystal" xml:space="preserve">
+    <value>/items/magic/Unstable_Catalyst_inventory_icon.png</value>
+  </data>
+  <data name="magic/vialOfTranscendence" xml:space="preserve">
+    <value>/items/magic/Vial_of_Transcendence_inventory_icon.png</value>
   </data>
 </root>

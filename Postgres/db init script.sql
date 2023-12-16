@@ -279,7 +279,7 @@ VALUES ('Ayreim'),
 
 
 INSERT INTO character (character_name, username, character_class, level, currency_gold, city_name, xp)
-VALUES ('burger', 'demo', 1, 1, 1000, 'Ayreim', 0),
+VALUES ('burger', 'demo', 1, 1, 1020, 'Ayreim', 0),
        ('hellmanz', 'nemo', 2, 20, 1200, 'Ayreim', 50),
        ('qwertz', 'nemo', 0, 5, 300, 'Ayreim', 30);
 
@@ -317,30 +317,76 @@ VALUES (1, 'Wolves', 'Vergarni Hills', 0, 1, 100),
 
 
 INSERT INTO item (item_id, name, icon, item_type, max_stack, max_durability)
-VALUES (1, 'Armor of Ayreim warriors', 'bodyArmor/ayreimWarrior', 10, 1, 100),
-       (2, 'Helmet of Ayreim warriors', 'helmet/ayreimWarrior', 11, 1, 100),
-       (3, 'Boots of Ayreim warriors', 'boots/ayreimWarrior', 13, 1, 100),
-       (4, 'Gloves of Ayreim warriors', 'gloves/ayreimWarrior', 12, 1, 100),
-       (5, 'Small Health Potion', 'potion/smallHealth', 20, 50, NULL),
-       (6, 'Medium Health Potion', 'potion/mediumHealth', 20, 50, NULL),
-       (7, 'Small Strength Potion', 'potion/smallStrength', 20, 50, NULL),
-       (8, 'Small Dexterity Potion', 'potion/smallDexterity', 20, 50, NULL),
-       (9, 'Goat horn', 'regular/goatHorn', 0, 50, NULL),
-       (10, 'Wolve fang', 'regular/wolveFang', 0, 50, NULL),
-       (11, 'Ares Blade', 'weapon/aresBlade', 5, 1, 100);
+VALUES
+        -- Armor / weapons
+        (0, 'Ares Blade', 'weapon/aresBlade', 5, 1, 100),
+        (1, 'Armor of Ayreim warriors', 'bodyArmor/ayreimWarrior', 10, 1, 100),
+        (2, 'Helmet of Ayreim warriors', 'helmet/ayreimWarrior', 11, 1, 100),
+        (3, 'Boots of Ayreim warriors', 'boots/ayreimWarrior', 13, 1, 100),
+        (4, 'Gloves of Ayreim warriors', 'gloves/ayreimWarrior', 12, 1, 100),
+
+        -- Potions
+        (100, 'Small Health Potion', 'potion/smallHealth', 20, 50, NULL),
+        (101, 'Medium Health Potion', 'potion/mediumHealth', 20, 50, NULL),
+        (102, 'Small Strength Potion', 'potion/smallStrength', 20, 50, NULL),
+        (103, 'Small Dexterity Potion', 'potion/smallDexterity', 20, 50, NULL),
+
+        -- Regular items
+        (1000, 'Copper Ore', 'regular/copperOre', 0, 50, NULL),
+        (1001, 'Iron Ore', 'regular/ironOre', 0, 50, NULL),
+        (1002, 'Gold Ore', 'regular/goldOre', 0, 50, NULL),
+        (1003, 'Platinum Ore', 'regular/platinumOre', 0, 50, NULL),
+        (1004, 'Mithril Ore', 'regular/mithrilOre', 0, 50, NULL),
+        (1005, 'Orichalcum Ore', 'regular/orichalcumOre', 0, 50, NULL),
+
+        (1010, 'Jute', 'regular/juteScrap', 0, 50, NULL),
+        (1011, 'Linen', 'regular/linenScrap', 0, 50, NULL),
+        (1012, 'Wool', 'regular/woolScrap', 0, 50, NULL),
+        (1013, 'Cotton', 'regular/cottonScrap', 0, 50, NULL),
+        (1014, 'Silk', 'regular/silkScrap', 0, 50, NULL),
+
+        (1020, 'Goat Horn', 'regular/goatHorn', 0, 50, NULL),
+        (1021, 'Wolve Fang', 'regular/wolveFang', 0, 50, NULL),
+        (1022, 'Spike', 'regular/spike', 0, 50, NULL),
+        (1023, 'Cherry', 'regular/cherry', 0, 50, NULL),
+        (1024, 'Asparagus', 'regular/asparagus', 0, 50, NULL),
+        (1025, 'Blackberry', 'regular/blackberry', 0, 50, NULL),
+        (1026, 'Carrot', 'regular/carrot', 0, 50, NULL),
+        (1027, 'Mushroom', 'regular/mushroom', 0, 50, NULL),
+        (1028, 'Fungus', 'regular/fungus', 0, 50, NULL),
+        (1029, 'Mint', 'regular/mint', 0, 50, NULL),
+        (1030, 'Strawberry', 'regular/strawberry', 0, 50, NULL),
+        (1031, 'Mr.Bean', 'regular/bean', 0, 50, NULL),
+
+        -- Magic items
+        (2000, 'Eclipse Dust', 'magic/eclipseDust', 1, 50, NULL),
+        (2001, 'Sunset Dust', 'magic/sunsetDust', 1, 50, NULL),
+        (2002, 'Star Dust', 'magic/starDust', 1, 50, NULL),
+        (2003, 'Sprout Dust', 'magic/sproutDust', 1, 50, NULL),
+        (2004, 'Burn Dust', 'magic/burnDust', 1, 50, NULL),
+        (2005, 'Life Dust', 'magic/lifeDust', 1, 50, NULL),
+        (2006, 'Akashic Dust', 'magic/akashicDust', 1, 50, NULL),
+
+        (2010, 'Fire Crystal', 'magic/fireCrystal', 1, 50, NULL),
+        (2011, 'Water Crystal', 'magic/waterCrystal', 1, 50, NULL),
+        (2012, 'Earth Crystal', 'magic/earthCrystal', 1, 50, NULL),
+        (2013, 'Wind Crystal', 'magic/windCrystal', 1, 50, NULL),
+        (2014, 'Akash Crystal', 'magic/akashCrystal', 1, 50, NULL),
+
+        (2020, 'Vial of Transcendence', 'magic/vialOfTranscendence', 1, 1, NULL);
 
 
 INSERT INTO mob_item_drop (mob_id, item_id, drop_rate)
-VALUES (1, 10, 0.9),
-       (2, 10, 0.92),
-       (3, 9, 0.9),
-       (4, 8, 0.5),
-       (5, 8, 0.58),
-       (6, 10, 0.91),
-       (7, 10, 0.93),
-       (9, 7, 0.3),
-       (9, 8, 0.3),
-       (9, 6, 0.3);
+VALUES (1, 1021, 0.9),
+       (2, 1021, 0.92),
+       (3, 1020, 0.9),
+       (4, 103, 0.5),
+       (5, 103, 0.58),
+       (6, 1021, 0.91),
+       (7, 1021, 0.93),
+       (9, 102, 0.3),
+       (9, 103, 0.3),
+       (9, 101, 0.3);
 
 
 INSERT INTO character_inventory (character_name, capacity)
@@ -376,18 +422,18 @@ VALUES                     (1,          'burger',                        NULL,  
                            (4,           NULL,                          'hellmanz',      NULL,   1,       5,     1,           4),
                            (5,           NULL,                          'hellmanz',      NULL,   2,       5,     1,           1),
                            (6,           NULL,                          'hellmanz',      NULL,   3,       5,     1,           5),
-                           (7,          'hellmanz',                      NULL,           NULL,   5,       NULL,  8,           0),
+                           (7,          'hellmanz',                      NULL,           NULL,   100,     NULL,  8,           0),
                            (8,           NULL,                           NULL,           0,      1,       3,     100,         0),
                            (9,           NULL,                           NULL,           6,      2,       5,     100,         0),
                            (10,          NULL,                           NULL,           11,     3,       3,     100,         0),
                            (11,          NULL,                           NULL,           15,     4,       9,     100,         0),
-                           (12,          NULL,                           NULL,           1,      5,       NULL,  300,         0),
-                           (13,          NULL,                           NULL,           1,      6,       NULL,  200,         0),
-                           (14,          NULL,                           NULL,           1,      7,       NULL,  150,         0),
-                           (15,          NULL,                           NULL,           1,      8,       NULL,  150,         0),
+                           (12,          NULL,                           NULL,           1,      100,     NULL,  300,         0),
+                           (13,          NULL,                           NULL,           1,      101,     NULL,  200,         0),
+                           (14,          NULL,                           NULL,           1,      102,     NULL,  150,         0),
+                           (15,          NULL,                           NULL,           1,      103,     NULL,  150,         0),
                            (16,          'hellmanz',                     NULL,           NULL,   1,       NULL,  1,           1),
                            (17,          'qwertz',                       NULL,           NULL,   1,       NULL,  1,           0),
-                           (18,           NULL,                          NULL,           0,      11,      4,     100,         0);
+                           (18,           NULL,                          NULL,           0,      0,       4,     100,         0);
 
 INSERT INTO price (invitem_id, price_gold, quantity_per_purchase)
 VALUES (8, 100, 1),
@@ -444,15 +490,15 @@ TRUE, TRUE, 7),
 FALSE, TRUE, 1);
 
 INSERT INTO quest_requirement (quest_id, item_id, amount)
-VALUES (1, 6, 10),
-       (2, 10, 3),
-       (3, 9, 21),
-       (3, 10, 42),
-       (4, 5, 1);
+VALUES (1, 101, 10),
+       (2, 1021, 3),
+       (3, 1020, 21),
+       (3, 1021, 42),
+       (4, 100, 1);
 
 INSERT INTO quest_reward (quest_id, currency_gold, xp)
 VALUES (1, 100, 20),
-       (2, 500, 1000),
+       (2, 500, 1020),
        (3, 30, 30),
        (4, 10, 15);
 
