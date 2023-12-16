@@ -57,7 +57,8 @@ public class ItemDropEventArgs: EventArgs
 public interface IItemView
 {
     public delegate void ItemDropEventHandler(IItemView sender, ItemDropEventArgs args);
-    public IReadOnlyCollection<InventoryItem> Items { get; set; }
+    //public IReadOnlyCollection<InventoryItem> Items { get; set; }
+    public IEnumerable<InventoryItem> Items { get; set; }
     //public void Update();
     public void AddItem(InventoryItem item);
     public void UpdateItem(InventoryItem updatedItem);
@@ -88,7 +89,7 @@ public interface IItemView
 
 public abstract class ItemViewUserControl : UserControl, IItemView
 {
-    public abstract IReadOnlyCollection<InventoryItem> Items { get; set; }
+    public abstract IEnumerable<InventoryItem> Items { get; set; }
 
     //public abstract void Update();
     public abstract void AddItem(InventoryItem item);

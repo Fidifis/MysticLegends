@@ -38,7 +38,7 @@ namespace MysticLegendsClient.Controls
         private readonly List<SlotTuple> Slots;
 
         //private List<InventoryItem> data = new List<InventoryItem>();
-        public override IReadOnlyCollection<InventoryItem> Items
+        public override IEnumerable<InventoryItem> Items
         {
             get => Slots.Where(slot => slot.ItemSlot.Item is not null).Select(slot => slot.ItemSlot.Item!).ToList();
             set => FillData(value);

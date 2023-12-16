@@ -38,7 +38,7 @@ namespace MysticLegendsClient.Controls
         private int ItemCount => ItemSlots.Where(slot => slot.ItemSlot.Item is not null).Count();
         private string CapacityCounter => InfinityMode ? ItemCount.ToString() : $"{ItemCount}/{Capacity}";
 
-        public override IReadOnlyCollection<InventoryItem> Items
+        public override IEnumerable<InventoryItem> Items
         {
             get => ItemSlots.Where((slot) => slot.ItemSlot.Item is not null).Select((slot) => slot.ItemSlot.Item!).ToList();
             set => FillData(value);
@@ -73,15 +73,15 @@ namespace MysticLegendsClient.Controls
         public override void UpdateItem(InventoryItem updatedItem) =>
             SwapItems(GetSlotByItem(updatedItem)!, ItemSlots[updatedItem.Position].ItemSlot);
 
-        public void FillData(IReadOnlyCollection<InventoryItem> items, int capacity)
+        public void FillData(IEnumerable<InventoryItem> items, int capacity)
         {
             Capacity = capacity;
             FillData(items);
         }
 
-        private void FillData(IReadOnlyCollection<InventoryItem> items)
+        private void FillData(IEnumerable<InventoryItem> items)
         {
-            var capacity = InfinityMode ? items.Count : Capacity;
+            var capacity = InfinityMode ? items.Count() : Capacity;
 
             UpdateSlots(capacity);
             for (int i = 0; i < ItemSlots.Count; i++)
@@ -102,14 +102,14 @@ namespace MysticLegendsClient.Controls
             UpdateCapacityCounter();
         }
 
-        private void SwapItemsData(ItemSlot slot1, ItemSlot slot2)
+        private static void SwapItemsData(ItemSlot slot1, ItemSlot slot2)
         {
             var item = slot1.Item;
             slot1.Item = slot2.Item;
             slot2.Item = item;
         }
 
-        private void SwapItemsPostion(ItemSlot slot1, ItemSlot slot2)
+        private static void SwapItemsPostion(ItemSlot slot1, ItemSlot slot2)
         {
             var position = slot1.GridPosition;
             if (slot1.Item is not null)

@@ -5,16 +5,16 @@ namespace MysticLegendsClient.ApiCalls;
 
 internal static class NpcCall
 {
-    public static Task<List<InventoryItem>> GetOfferedItemsServerCallAsync(int npcId)
+    public static Task<InventoryItem[]> GetOfferedItemsServerCallAsync(int npcId)
     {
         var parameters = new Dictionary<string, string>
         {
             ["characterName"] = GameState.Current.CharacterName,
         };
-        return GameState.Current.Connection.GetAsync<List<InventoryItem>>($"api/NpcShop/{npcId}/offered-items", parameters);
+        return GameState.Current.Connection.GetAsync<InventoryItem[]>($"api/NpcShop/{npcId}/offered-items", parameters);
     }
 
-    public static Task<int> GetOfferedPriceServerCallAsync(int npcId, IReadOnlyCollection<InventoryItem> items)
+    public static Task<int> GetOfferedPriceServerCallAsync(int npcId, IEnumerable<InventoryItem> items)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -24,7 +24,7 @@ internal static class NpcCall
         return GameState.Current.Connection.PostAsync<int>($"api/NpcShop/{npcId}/estimate-sell-price", parameters);
     }
 
-    public static async Task SellItemsServerCallAsync(object? sender, int npcId, IReadOnlyCollection<InventoryItem> items)
+    public static async Task SellItemsServerCallAsync(object? sender, int npcId, IEnumerable<InventoryItem> items)
     {
         var parameters = new Dictionary<string, string>
         {

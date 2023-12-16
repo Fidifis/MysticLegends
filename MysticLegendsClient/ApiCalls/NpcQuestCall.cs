@@ -4,13 +4,13 @@ namespace MysticLegendsClient.ApiCalls;
 
 internal static class NpcQuestCall
 {
-    public static Task<List<Quest>> GetOfferedQuestsServerCallAsync(int npcId, string characterName)
+    public static Task<Quest[]> GetOfferedQuestsServerCallAsync(int npcId, string characterName)
     {
         var parameters = new Dictionary<string, string>
         {
             ["characterName"] = characterName,
         };
-        return GameState.Current.Connection.GetAsync<List<Quest>>($"api/NpcQuest/{npcId}/offered-quests", parameters);
+        return GameState.Current.Connection.GetAsync<Quest[]>($"api/NpcQuest/{npcId}/offered-quests", parameters);
     }
 
     public static Task<bool> GetQuestCompletableCallAsync(int questId, string characterName)

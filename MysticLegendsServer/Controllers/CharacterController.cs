@@ -360,6 +360,7 @@ namespace MysticLegendsServer.Controllers
 
             if (!battleResult)
             {
+                await dbContext.SaveChangesAsync(); // save travel info
                 return Ok(new BattleResponse
                 {
                     Win = false,

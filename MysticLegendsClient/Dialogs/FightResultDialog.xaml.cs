@@ -26,8 +26,13 @@ namespace MysticLegendsClient.Dialogs
         {
             InitializeComponent();
 
+            var winVis = data.Win ? Visibility.Visible : Visibility.Hidden;
+            var loseVis = data.Win ? Visibility.Hidden : Visibility.Visible;
+
             inventoryView.Items = data.DropedItems;
-            winLabel.Content = data.Win ? "Win" : "Loose";
+            winLabel.Visibility = winVis;
+            rewardLabel.Visibility = winVis;
+            loseLabel.Visibility = loseVis;
         }
     }
 }

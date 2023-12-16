@@ -10,8 +10,9 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <Grid>
-        <Label x:Name="winLabel" FontSize="20" VerticalAlignment="Top" HorizontalAlignment="Center"/>
-        <Label Content="Reward:" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="20"/>
-        <controls:InventoryView x:Name="inventoryView" CounterVisibility="Hidden" Margin="0,59,0,0"/>
+        <Label x:Name="winLabel" Content="Win" FontSize="20" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+        <Label x:Name="rewardLabel" Content="Reward:" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="20"/>
+        <Label x:Name="loseLabel" Content="Lose" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <controls:InventoryView x:Name="inventoryView" CounterVisibility="Hidden" Margin="0,30,0,0"/>
     </Grid>
 </Window>

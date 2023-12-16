@@ -37,6 +37,8 @@ public class WorldController : Controller
         Ok(
             await dbContext.Mobs
             .Where(mob => mob.AreaName == area)
+            .Include(mob => mob.MobItemDrops)
+                .ThenInclude(drops => drops.Item)
             .OrderBy(mob => mob.Type)
             .ThenBy(mob => mob.Level)
             .ToListAsync()

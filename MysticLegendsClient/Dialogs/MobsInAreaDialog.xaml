@@ -4,10 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MysticLegendsClient.Dialogs"
+        xmlns:controls="clr-namespace:MysticLegendsClient.Controls"
         mc:Ignorable="d"
         Title="MobsInArea"
         MinHeight="300" MinWidth="200"
-        Height="450" Width="400"
+        Height="474" Width="680"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -16,16 +17,20 @@
         </Grid.ColumnDefinitions>
 
         <Label Content="Mobs:" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <ListView x:Name="mobList" Grid.Column="0" SelectionChanged="mobList_SelectionChanged" Margin="0 30 0 0"/>
-        
+        <ListView x:Name="mobList" Grid.Column="0" SelectionChanged="MobList_SelectionChanged" Margin="0 30 60 00"/>
+
+        <Label Content="Mob level:" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+        <ListView x:Name="levelList" Grid.Row="0" Margin="0 30 0 0" HorizontalAlignment="Right" Width="60"/>
+
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="1*" MaxHeight="500"/>
-                <RowDefinition Height="1*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="100"/>
             </Grid.RowDefinitions>
 
-            <Label Content="Mob level:" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-            <ListView x:Name="levelList" Grid.Row="0" Margin="0 30 0 0"/>
+            <Label Content="Possible rewards:" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="20 0"/>
+
+            <controls:InventoryView x:Name="rewardView" CounterVisibility="Hidden"/>
 
             <Button Content="Fight" Width="70" Height="25" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="20" Click="Button_Click"/>
         </Grid>

@@ -57,11 +57,11 @@ public static class ItemGenerator
                 size = 2;
                 break;
             case 7:
-                type = CBattleStat.Type.Strength;
+                type = CBattleStat.Type.PhysicalDamage;
                 size = 1;
                 break;
             case 8:
-                type = CBattleStat.Type.Dexterity;
+                type = CBattleStat.Type.Swiftness;
                 size = 1;
                 break;
             default:
@@ -83,7 +83,7 @@ public static class ItemGenerator
             ItemId = item.ItemId,
             Item = item,
             StackCount = stack,
-            Level = itemLevel,
+            Level = (ItemType)item.ItemType == ItemType.RegularItem ? null : itemLevel,
             Durability = item.MaxDurability,
         };
 
