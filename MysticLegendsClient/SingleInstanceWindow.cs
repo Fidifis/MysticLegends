@@ -19,8 +19,11 @@ public sealed class SingleInstanceWindow<T> : IDisposable where T : ISingleInsta
         get
         {
             ObjectDisposedException.ThrowIf(disposed, this);
-            instance ??= new T();
-            instance.Closed += (object? s, EventArgs e) => { instance = null; };
+            if (instance is null)
+            {
+                instance ??= new T();
+                instance.Closed += (object? s, EventArgs e) => { instance = null; };
+            }
             return instance;
         }
     }
@@ -58,8 +61,11 @@ public sealed class SingleInstanceWindow : IDisposable
         get
         {
             ObjectDisposedException.ThrowIf(disposed, this);
-            instance ??= (ISingleInstanceWindow)(Activator.CreateInstance(instatiationType, args) ?? throw new NullReferenceException());
-            instance.Closed += (object? s, EventArgs e) => { instance = null; };
+            if (instance is null)
+            {
+                instance = (ISingleInstanceWindow)(Activator.CreateInstance(instatiationType, args) ?? throw new NullReferenceException());
+                instance.Closed += (object? s, EventArgs e) => { instance = null; };
+            }
             return instance;
         }
     }

@@ -4,6 +4,7 @@ using System.Text.Json;
 
 namespace MysticLegendsClient;
 
+// TODO: use serialization
 internal class ConfigStore
 {
     public readonly string StorePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Mystic Legends\config.json";

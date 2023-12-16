@@ -6,7 +6,7 @@ public enum NpcType
     PotionsCrafter,
     Trader,
     StorageKeeper,
-    Scout,
+    RelicTrader,
 
 
     // City specific NPCs //

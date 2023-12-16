@@ -326,7 +326,8 @@ VALUES (1, 'Armor of Ayreim warriors', 'bodyArmor/ayreimWarrior', 10, 1, 100),
        (7, 'Small Strength Potion', 'potion/smallStrength', 20, 50, NULL),
        (8, 'Small Dexterity Potion', 'potion/smallDexterity', 20, 50, NULL),
        (9, 'Goat horn', 'regular/goatHorn', 0, 50, NULL),
-       (10, 'Wolve fang', 'regular/wolveFang', 0, 50, NULL);
+       (10, 'Wolve fang', 'regular/wolveFang', 0, 50, NULL),
+       (11, 'Ares Blade', 'weapon/aresBlade', 5, 1, 100);
 
 
 INSERT INTO mob_item_drop (mob_id, item_id, drop_rate)
@@ -385,7 +386,8 @@ VALUES                     (1,          'burger',                        NULL,  
                            (14,          NULL,                           NULL,           1,      7,       NULL,  150,         0),
                            (15,          NULL,                           NULL,           1,      8,       NULL,  150,         0),
                            (16,          'hellmanz',                     NULL,           NULL,   1,       NULL,  1,           1),
-                           (17,          'qwertz',                       NULL,           NULL,   1,       NULL,  1,           0);
+                           (17,          'qwertz',                       NULL,           NULL,   1,       NULL,  1,           0),
+                           (18,           NULL,                          NULL,           0,      11,      4,     100,         0);
 
 INSERT INTO price (invitem_id, price_gold, quantity_per_purchase)
 VALUES (8, 100, 1),
@@ -394,7 +396,8 @@ VALUES (8, 100, 1),
        (11, 100, 1),
        (12, 50, 5),
        (13, 90, 5),
-       (14, 70, 5);
+       (14, 70, 5),
+       (18, 200, 1);
 
 INSERT INTO battle_stats (stat_type, method, invitem_id, value)
 VALUES (11, 0, 1, 42),
@@ -419,6 +422,7 @@ VALUES (11, 0, 1, 42),
        (10, 0, 9, 14),
        (10, 0, 10, 86),
        (10, 0, 11, 41),
+       (10, 0, 18, 100),
 
        -- potions --
        (10, 1, 14, 2.5),
