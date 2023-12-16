@@ -97,7 +97,7 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
-        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Unstable_Catalyst_inventory_icon.png.
+        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Splinter_of_Chayula_inventory_icon.png.
         /// </summary>
         internal static string magic_akashCrystal {
             get {
@@ -106,7 +106,7 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
-        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Splinter_of_Esh_inventory_icon.png.
+        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Imbued_Catalyst_inventory_icon.png.
         /// </summary>
         internal static string magic_akashicDust {
             get {
@@ -115,7 +115,7 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
-        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Noxious_Catalyst_inventory_icon.png.
+        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Fertile_Catalyst_inventory_icon.png.
         /// </summary>
         internal static string magic_burnDust {
             get {
@@ -124,7 +124,7 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
-        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Splinter_of_Xoph_inventory_icon.png.
+        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Splinter_of_Uul-Netol_inventory_icon.png.
         /// </summary>
         internal static string magic_earthCrystal {
             get {
@@ -133,7 +133,7 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
-        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Abrasive_Catalyst_inventory_icon.png.
+        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Turbulent_Catalyst_inventory_icon.png.
         /// </summary>
         internal static string magic_eclipseDust {
             get {
@@ -142,7 +142,7 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
-        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Splinter_of_Tul_inventory_icon.png.
+        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Splinter_of_Xoph_inventory_icon.png.
         /// </summary>
         internal static string magic_fireCrystal {
             get {
@@ -151,7 +151,7 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
-        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Splinter_of_Chayula_inventory_icon.png.
+        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Noxious_Catalyst_inventory_icon.png.
         /// </summary>
         internal static string magic_lifeDust {
             get {
@@ -160,7 +160,7 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
-        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Imbued_Catalyst_inventory_icon.png.
+        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Accelerating_Catalyst_inventory_icon.png.
         /// </summary>
         internal static string magic_sproutDust {
             get {
@@ -169,7 +169,7 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
-        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Fertile_Catalyst_inventory_icon.png.
+        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Unstable_Catalyst_inventory_icon.png.
         /// </summary>
         internal static string magic_starDust {
             get {
@@ -178,7 +178,7 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
-        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Accelerating_Catalyst_inventory_icon.png.
+        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Abrasive_Catalyst_inventory_icon.png.
         /// </summary>
         internal static string magic_sunsetDust {
             get {
@@ -196,7 +196,7 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
-        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Splinter_of_Uul-Netol_inventory_icon.png.
+        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Splinter_of_Esh_inventory_icon.png.
         /// </summary>
         internal static string magic_waterCrystal {
             get {
@@ -205,7 +205,7 @@ namespace MysticLegendsClient.Resources {
         }
         
         /// <summary>
-        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Turbulent_Catalyst_inventory_icon.png.
+        ///   Vyhledá lokalizovaný řetězec podobný /items/magic/Splinter_of_Tul_inventory_icon.png.
         /// </summary>
         internal static string magic_windCrystal {
             get {

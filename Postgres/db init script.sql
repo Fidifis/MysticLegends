@@ -300,7 +300,12 @@ VALUES ('Ayreim', 'burger', 100),
 
 INSERT INTO area (area_name)
 VALUES ('Vergarni Hills'),
-       ('Dagos Valley');
+       ('Dagos Valley'),
+       ('Mellow Woodland'),
+       ('Croyware Wood'),
+       ('Draysor Thicket'),
+       ('Starlight Oasis'),
+       ('Frostfeather Mountains');
 
 
 INSERT INTO mob (mob_id, mob_name, area_name, type, level, group_size)
@@ -313,7 +318,43 @@ VALUES (1, 'Wolves', 'Vergarni Hills', 0, 1, 100),
        (6, 'Wolves', 'Dagos Valley', 0, 6, 70),
        (7, 'Wolves', 'Dagos Valley', 0, 14, 30),
        (8, 'Hare', 'Dagos Valley', 3, 1, 754),
-       (9, 'Sigil', 'Dagos Valley', 4, 32, 202);
+       (9, 'Sigil', 'Dagos Valley', 4, 32, 202),
+
+       (10, 'Frostbite Falcon', 'Vergarni Hills', 3, 15, 60),
+       (11, 'Shadow Lynx', 'Vergarni Hills', 1, 25, 40),
+       (12, 'Ethereal Stag', 'Vergarni Hills', 5, 22, 80),
+       (13, 'Crystal Golem', 'Vergarni Hills', 6, 35, 20),
+
+       (14, 'Flameback Scorpion', 'Dagos Valley', 7, 18, 150),
+       (15, 'Venomous Viper', 'Dagos Valley', 2, 12, 90),
+       (16, 'Dagos Shaman', 'Dagos Valley', 8, 40, 5),
+       (17, 'Rockhide Boar', 'Dagos Valley', 1, 10, 200),
+
+       (18, 'Whispering Willow Wisp', 'Mellow Woodland', 5, 8, 300),
+       (19, 'Meadow Fairy', 'Mellow Woodland', 9, 20, 50),
+       (20, 'Barkskin Bear', 'Mellow Woodland', 1, 15, 75),
+       (21, 'Moonlight Moth', 'Mellow Woodland', 3, 5, 500),
+
+       (22, 'Croyware Centaur', 'Croyware Wood', 0, 28, 25),
+       (23, 'Mystic Fox', 'Croyware Wood', 1, 12, 100),
+       (24, 'Vine Entangler', 'Croyware Wood', 6, 35, 30),
+       (25, 'Spirit Owl', 'Croyware Wood', 3, 18, 85),
+
+       (26, 'Thicket Troll', 'Draysor Thicket', 0, 33, 10),
+       (27, 'Draysor Dryad', 'Draysor Thicket', 9, 27, 40),
+       (28, 'Thorned Serpent', 'Draysor Thicket', 2, 21, 60),
+       (29, 'Razorwing Butterfly', 'Draysor Thicket', 3, 14, 200),
+
+       (30, 'Oasis Djinn', 'Starlight Oasis', 8, 38, 15),
+       (31, 'Mirage Manticore', 'Starlight Oasis', 0, 30, 20),
+       (32, 'Sand Whisperer', 'Starlight Oasis', 5, 24, 90),
+       (33, 'Solar Scorpion', 'Starlight Oasis', 7, 20, 140),
+
+       (34, 'Icefang Yeti', 'Frostfeather Mountains', 0, 40, 5),
+       (35, 'Glacial Griffin', 'Frostfeather Mountains', 3, 35, 10),
+       (36, 'Frost Elemental', 'Frostfeather Mountains', 6, 28, 30),
+       (37, 'Snowdrift Owl', 'Frostfeather Mountains', 3, 17, 80);
+
 
 
 INSERT INTO item (item_id, name, icon, item_type, max_stack, max_durability)
@@ -386,7 +427,48 @@ VALUES (1, 1021, 0.9),
        (7, 1021, 0.93),
        (9, 102, 0.3),
        (9, 103, 0.3),
-       (9, 101, 0.3);
+       (9, 101, 0.3),
+
+       (10, 2003, 0.2), -- Frostbite Falcon
+       (11, 2014, 0.15), -- Shadow Lynx
+       (12, 2006, 0.25), -- Ethereal Stag
+       (13, 2004, 0.1), -- Crystal Golem
+
+-- Item drops for Dagos Valley mobs
+       (14, 2002, 0.3), -- Flameback Scorpion
+       (15, 1022, 0.7), -- Venomous Viper
+       (16, 2020, 0.05), -- Dagos Shaman
+       (17, 1021, 0.8), -- Rockhide Boar
+
+-- Item drops for Mellow Woodland mobs
+       (18, 2005, 0.4), -- Whispering Willow Wisp
+       (19, 2011, 0.2), -- Meadow Fairy
+       (20, 1020, 0.6), -- Barkskin Bear
+       (21, 2001, 0.5), -- Moonlight Moth
+
+-- Item drops for Croyware Wood mobs
+       (22, 2013, 0.25), -- Croyware Centaur
+       (23, 1023, 0.9), -- Mystic Fox
+       (24, 2002, 0.15), -- Vine Entangler
+       (25, 2000, 0.35), -- Spirit Owl
+
+-- Item drops for Draysor Thicket mobs
+       (26, 2005, 0.2), -- Thicket Troll
+       (27, 2012, 0.3), -- Draysor Dryad
+       (28, 1022, 0.5), -- Thorned Serpent
+       (29, 1030, 0.8), -- Razorwing Butterfly
+
+-- Item drops for Starlight Oasis mobs
+       (30, 2006, 0.1), -- Oasis Djinn
+       (31, 2004, 0.3), -- Mirage Manticore
+       (32, 1024, 0.9), -- Sand Whisperer
+       (33, 2010, 0.4), -- Solar Scorpion
+
+-- Item drops for Frostfeather Mountains mobs
+       (34, 2003, 0.2), -- Icefang Yeti
+       (35, 2014, 0.15), -- Glacial Griffin
+       (36, 2002, 0.3), -- Frost Elemental
+       (37, 2001, 0.4); -- Snowdrift Owl
 
 
 INSERT INTO character_inventory (character_name, capacity)

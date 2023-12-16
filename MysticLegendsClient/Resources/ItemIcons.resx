@@ -214,40 +214,40 @@
     <value>/items/regular/Green_Bean.png</value>
   </data>
   <data name="magic/eclipseDust" xml:space="preserve">
-    <value>/items/magic/Abrasive_Catalyst_inventory_icon.png</value>
-  </data>
-  <data name="magic/sunsetDust" xml:space="preserve">
-    <value>/items/magic/Accelerating_Catalyst_inventory_icon.png</value>
-  </data>
-  <data name="magic/starDust" xml:space="preserve">
-    <value>/items/magic/Fertile_Catalyst_inventory_icon.png</value>
-  </data>
-  <data name="magic/sproutDust" xml:space="preserve">
-    <value>/items/magic/Imbued_Catalyst_inventory_icon.png</value>
-  </data>
-  <data name="magic/burnDust" xml:space="preserve">
-    <value>/items/magic/Noxious_Catalyst_inventory_icon.png</value>
-  </data>
-  <data name="magic/lifeDust" xml:space="preserve">
-    <value>/items/magic/Splinter_of_Chayula_inventory_icon.png</value>
-  </data>
-  <data name="magic/akashicDust" xml:space="preserve">
-    <value>/items/magic/Splinter_of_Esh_inventory_icon.png</value>
-  </data>
-  <data name="magic/fireCrystal" xml:space="preserve">
-    <value>/items/magic/Splinter_of_Tul_inventory_icon.png</value>
-  </data>
-  <data name="magic/waterCrystal" xml:space="preserve">
-    <value>/items/magic/Splinter_of_Uul-Netol_inventory_icon.png</value>
-  </data>
-  <data name="magic/earthCrystal" xml:space="preserve">
-    <value>/items/magic/Splinter_of_Xoph_inventory_icon.png</value>
-  </data>
-  <data name="magic/windCrystal" xml:space="preserve">
     <value>/items/magic/Turbulent_Catalyst_inventory_icon.png</value>
   </data>
-  <data name="magic/akashCrystal" xml:space="preserve">
+  <data name="magic/sunsetDust" xml:space="preserve">
+    <value>/items/magic/Abrasive_Catalyst_inventory_icon.png</value>
+  </data>
+  <data name="magic/starDust" xml:space="preserve">
     <value>/items/magic/Unstable_Catalyst_inventory_icon.png</value>
+  </data>
+  <data name="magic/sproutDust" xml:space="preserve">
+    <value>/items/magic/Accelerating_Catalyst_inventory_icon.png</value>
+  </data>
+  <data name="magic/burnDust" xml:space="preserve">
+    <value>/items/magic/Fertile_Catalyst_inventory_icon.png</value>
+  </data>
+  <data name="magic/lifeDust" xml:space="preserve">
+    <value>/items/magic/Noxious_Catalyst_inventory_icon.png</value>
+  </data>
+  <data name="magic/akashicDust" xml:space="preserve">
+    <value>/items/magic/Imbued_Catalyst_inventory_icon.png</value>
+  </data>
+  <data name="magic/fireCrystal" xml:space="preserve">
+    <value>/items/magic/Splinter_of_Xoph_inventory_icon.png</value>
+  </data>
+  <data name="magic/waterCrystal" xml:space="preserve">
+    <value>/items/magic/Splinter_of_Esh_inventory_icon.png</value>
+  </data>
+  <data name="magic/earthCrystal" xml:space="preserve">
+    <value>/items/magic/Splinter_of_Uul-Netol_inventory_icon.png</value>
+  </data>
+  <data name="magic/windCrystal" xml:space="preserve">
+    <value>/items/magic/Splinter_of_Tul_inventory_icon.png</value>
+  </data>
+  <data name="magic/akashCrystal" xml:space="preserve">
+    <value>/items/magic/Splinter_of_Chayula_inventory_icon.png</value>
   </data>
   <data name="magic/vialOfTranscendence" xml:space="preserve">
     <value>/items/magic/Vial_of_Transcendence_inventory_icon.png</value>
