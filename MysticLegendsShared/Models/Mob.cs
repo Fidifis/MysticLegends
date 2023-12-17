@@ -19,5 +19,7 @@ public partial class Mob
 
     public virtual Area AreaNameNavigation { get; set; } = null!;
 
+    public virtual ICollection<BattleStat> BattleStats { get; set; } = new List<BattleStat>();
+
     public virtual ICollection<MobItemDrop> MobItemDrops { get; set; } = new List<MobItemDrop>();
 }

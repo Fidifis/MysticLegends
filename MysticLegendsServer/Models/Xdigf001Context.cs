@@ -115,18 +115,26 @@ public partial class Xdigf001Context : DbContext
 
         modelBuilder.Entity<BattleStat>(entity =>
         {
-            entity.HasKey(e => new { e.StatType, e.Method, e.InvitemId }).HasName("pk_battle_stats");
+            entity.HasKey(e => e.StatId).HasName("pk_battle_stats");
 
             entity.ToTable("battle_stats");
 
-            entity.Property(e => e.StatType).HasColumnName("stat_type");
-            entity.Property(e => e.Method).HasColumnName("method");
+            entity.Property(e => e.StatId).HasColumnName("stat_id");
             entity.Property(e => e.InvitemId).HasColumnName("invitem_id");
+            entity.Property(e => e.Method).HasColumnName("method");
+            entity.Property(e => e.MobId).HasColumnName("mob_id");
+            entity.Property(e => e.StatType).HasColumnName("stat_type");
             entity.Property(e => e.Value).HasColumnName("value");
 
             entity.HasOne(d => d.Invitem).WithMany(p => p.BattleStats)
                 .HasForeignKey(d => d.InvitemId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_battle_stats_inventory_item");
+
+            entity.HasOne(d => d.Mob).WithMany(p => p.BattleStats)
+                .HasForeignKey(d => d.MobId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_battle_stats_mob");
         });
 
         modelBuilder.Entity<Character>(entity =>
