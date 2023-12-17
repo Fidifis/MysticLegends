@@ -348,13 +348,7 @@ namespace MysticLegendsServer.Controllers
             var battleStatsArray = from item in character.InventoryItems where item.BattleStats is not null select new BattleStats(item.BattleStats);
             var battleStats = new BattleStats(battleStatsArray);
 
-            // Because battle stats for mobs are not implemented yet, all mobs have same default stats
-            // TODO: change when implemented
-            var mobBattleStats = new BattleStats(new CBattleStat[]
-            {
-                new(CBattleStat.Method.Add, CBattleStat.Type.Strength, 100),
-                new(CBattleStat.Method.Add, CBattleStat.Type.Resilience, 50),
-            });
+            var mobBattleStats = new BattleStats(mob.BattleStats);
 
             var battleResult = Fight.DecideFight(rng, battleStats, mobBattleStats);
 
@@ -414,7 +408,8 @@ namespace MysticLegendsServer.Controllers
 
         private static bool AddDropedItem(IRNG rng, MobItemDrop possibleDrop, Character character, ref List<InventoryItem> drops)
         {
-            var invitem = ItemGenerator.MakeInventoryItem(rng, possibleDrop.Item, possibleDrop.Mob.Level, character.CharacterName, rng.RandomNumber(1, 5));
+            var stack = rng.RandomNumber(1, 5); // TODO: here
+            var invitem = ItemGenerator.MakeInventoryItem(rng, possibleDrop.Item, possibleDrop.Mob.Level, character.CharacterName, stack);
             var newPosition = InventoryHandling.FindPositionInInventory(character.CharacterInventory!);
 
             if (newPosition is null)
