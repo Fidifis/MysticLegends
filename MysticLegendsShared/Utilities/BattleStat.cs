@@ -11,16 +11,28 @@ public partial class BattleStat
         InvitemId = InvitemId,
         Value = Value,
         Invitem = Invitem,
+        MobId = MobId,
+        Mob = Mob,
     };
 
     public BattleStat() { }
 
-    public BattleStat(CBattleStat battleStat, InventoryItem linkedItem)
+    private BattleStat(CBattleStat battleStat)
     {
         StatType = (int)battleStat.StatType;
         Method = (int)battleStat.StatMethod;
-        InvitemId = linkedItem.InvitemId;
-        Invitem = linkedItem;
         Value = battleStat.Value;
+    }
+
+    public BattleStat(CBattleStat battleStat, InventoryItem linkedItem): this(battleStat)
+    {
+        Invitem = linkedItem;
+        InvitemId = linkedItem.InvitemId;
+    }
+
+    public BattleStat(CBattleStat battleStat, Mob linkedmob) : this(battleStat)
+    {
+        MobId = linkedmob.MobId;
+        Mob = linkedmob;
     }
 }
