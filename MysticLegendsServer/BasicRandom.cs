@@ -12,7 +12,7 @@ public class BasicRandom : IRNG
 
     public int RandomNumber(int max) => random.Next(max);
 
-    public double RandomDecimal(double min, double max) => random.NextDouble() * max + min;
+    public double RandomDecimal(double min, double max) => random.NextDouble() * (max - min) + min;
 
     public double RandomDecimal(double max) => random.NextDouble() * max;
 }
