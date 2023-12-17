@@ -120,7 +120,8 @@ ALTER TABLE mob ADD CONSTRAINT pk_mob PRIMARY KEY (mob_id);
 CREATE TABLE mob_item_drop (
     item_id INTEGER NOT NULL,
     mob_id INTEGER NOT NULL,
-    drop_rate DOUBLE PRECISION NOT NULL
+    drop_rate DOUBLE PRECISION NOT NULL,
+    max_amount INTEGER NOT NULL
 );
 ALTER TABLE mob_item_drop ADD CONSTRAINT pk_mob_item_drop PRIMARY KEY (item_id, mob_id);
 

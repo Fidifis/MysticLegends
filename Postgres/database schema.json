@@ -366,6 +366,13 @@
           "unique": false,
           "nullable": false,
           "type": "double"
+        },
+        {
+          "name": "max_amount",
+          "primary": false,
+          "unique": false,
+          "nullable": false,
+          "type": "integer"
         }
       ],
       "transform": {
