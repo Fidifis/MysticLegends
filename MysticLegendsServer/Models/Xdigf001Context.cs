@@ -322,6 +322,7 @@ public partial class Xdigf001Context : DbContext
             entity.Property(e => e.ItemId).HasColumnName("item_id");
             entity.Property(e => e.MobId).HasColumnName("mob_id");
             entity.Property(e => e.DropRate).HasColumnName("drop_rate");
+            entity.Property(e => e.MaxAmount).HasColumnName("max_amount");
 
             entity.HasOne(d => d.Item).WithMany(p => p.MobItemDrops)
                 .HasForeignKey(d => d.ItemId)

@@ -11,6 +11,8 @@ public partial class MobItemDrop
 
     public double DropRate { get; set; }
 
+    public int MaxAmount { get; set; }
+
     public virtual Item Item { get; set; } = null!;
 
     public virtual Mob Mob { get; set; } = null!;
