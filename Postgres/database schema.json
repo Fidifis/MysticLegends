@@ -69,15 +69,22 @@
       "parent": null,
       "attr": [
         {
-          "name": "stat_type",
+          "name": "stat_id",
           "primary": true,
+          "unique": false,
+          "nullable": false,
+          "type": "serial"
+        },
+        {
+          "name": "stat_type",
+          "primary": false,
           "unique": false,
           "nullable": false,
           "type": "integer"
         },
         {
           "name": "method",
-          "primary": true,
+          "primary": false,
           "unique": false,
           "nullable": false,
           "type": "integer"
@@ -91,8 +98,8 @@
         }
       ],
       "transform": {
-        "x": 885.4285697937012,
-        "y": 679.5,
+        "x": 888.4285697937012,
+        "y": 659.5,
         "width": 184,
         "height": 93
       }
@@ -1051,12 +1058,8 @@
           },
           "points": [
             {
-              "x": 806.8571395874023,
-              "y": 794.9999847412109
-            },
-            {
-              "x": 806.8571395874023,
-              "y": 726
+              "x": 862.1428546905518,
+              "y": 794.9999831579626
             }
           ],
           "manual": true
@@ -1067,21 +1070,25 @@
         "identifying": true,
         "optional": false,
         "cardinality": 0,
-        "xor": null,
+        "xor": "3ce230ab76f5c81e3ce230ab8ecccada",
         "name": null,
         "transform": {
           "anchor": {
-            "x": 885.4285697937012,
-            "y": 726,
-            "edge": 3
+            "x": 958.8571395874023,
+            "y": 752.5,
+            "edge": 2
           },
           "points": [
             {
-              "x": 806.8571395874023,
-              "y": 726
+              "x": 958.8571395874023,
+              "y": 794.9999815747142
+            },
+            {
+              "x": 862.1428546905518,
+              "y": 794.9999831579626
             }
           ],
-          "manual": false
+          "manual": true
         }
       }
     ],
@@ -1266,6 +1273,64 @@
             }
           ],
           "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Mob",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 1041.2857093811035,
+            "y": 1192.718734741211,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 1109.8337020874023,
+              "y": 1192.718734741211
+            },
+            {
+              "x": 1109.8337020872284,
+              "y": 994.7187347412109
+            }
+          ],
+          "manual": true
+        }
+      },
+      {
+        "entity": "Battle_stats",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 0,
+        "xor": "3ce230ab76f5c81e3ce230ab8ecccada",
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 1010.8571395874023,
+            "y": 752.5,
+            "edge": 2
+          },
+          "points": [
+            {
+              "x": 1010.8571395874023,
+              "y": 796.7187347412109
+            },
+            {
+              "x": 1109.8337020870545,
+              "y": 796.7187347412109
+            },
+            {
+              "x": 1109.8337020872284,
+              "y": 994.7187347412109
+            }
+          ],
+          "manual": true
         }
       }
     ],

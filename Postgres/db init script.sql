@@ -43,12 +43,14 @@ CREATE TABLE area (
 ALTER TABLE area ADD CONSTRAINT pk_area PRIMARY KEY (area_name);
 
 CREATE TABLE battle_stats (
+    stat_id SERIAL NOT NULL,
+    invitem_id INTEGER,
+    mob_id INTEGER,
     stat_type INTEGER NOT NULL,
     method INTEGER NOT NULL,
-    invitem_id INTEGER NOT NULL,
     value DOUBLE PRECISION NOT NULL
 );
-ALTER TABLE battle_stats ADD CONSTRAINT pk_battle_stats PRIMARY KEY (stat_type, method, invitem_id);
+ALTER TABLE battle_stats ADD CONSTRAINT pk_battle_stats PRIMARY KEY (stat_id);
 
 CREATE TABLE city (
     city_name VARCHAR(32) NOT NULL
@@ -198,6 +200,7 @@ ALTER TABLE accepted_quest ADD CONSTRAINT fk_accepted_quest_quest FOREIGN KEY (q
 ALTER TABLE access_token ADD CONSTRAINT fk_access_token_users FOREIGN KEY (username) REFERENCES users (username) ON DELETE CASCADE;
 
 ALTER TABLE battle_stats ADD CONSTRAINT fk_battle_stats_inventory_item FOREIGN KEY (invitem_id) REFERENCES inventory_item (invitem_id) ON DELETE CASCADE;
+ALTER TABLE battle_stats ADD CONSTRAINT fk_battle_stats_mob FOREIGN KEY (mob_id) REFERENCES mob (mob_id) ON DELETE CASCADE;
 
 ALTER TABLE city_inventory ADD CONSTRAINT fk_city_inventory_city FOREIGN KEY (city_name) REFERENCES city (city_name) ON DELETE CASCADE;
 ALTER TABLE city_inventory ADD CONSTRAINT fk_city_inventory_character FOREIGN KEY (character_name) REFERENCES character (character_name) ON DELETE CASCADE;
@@ -235,6 +238,8 @@ ALTER TABLE trade_market ADD CONSTRAINT fk_trade_market_inventory_item FOREIGN K
 
 ALTER TABLE travel ADD CONSTRAINT fk_travel_character FOREIGN KEY (character_name) REFERENCES character (character_name) ON DELETE CASCADE;
 ALTER TABLE travel ADD CONSTRAINT fk_travel_area FOREIGN KEY (area_name) REFERENCES area (area_name) ON DELETE CASCADE;
+
+ALTER TABLE battle_stats ADD CONSTRAINT xc_battle_stats_invitem_id_mob_ CHECK ((invitem_id IS NOT NULL AND mob_id IS NULL) OR (invitem_id IS NULL AND mob_id IS NOT NULL));
 
 ALTER TABLE inventory_item ADD CONSTRAINT xc_inventory_item_city_name_cha CHECK ((city_name IS NOT NULL AND character_name IS NULL AND character_inventory_character_n IS NULL AND npc_id IS NULL) OR (city_name IS NULL AND character_name IS NOT NULL AND character_inventory_character_n IS NULL AND npc_id IS NULL) OR (city_name IS NULL AND character_name IS NULL AND character_inventory_character_n IS NOT NULL AND npc_id IS NULL) OR (city_name IS NULL AND character_name IS NULL AND character_inventory_character_n IS NULL AND npc_id IS NOT NULL));
 
@@ -629,4 +634,5 @@ PERFORM setval('mob_mob_id_seq', (SELECT max(mob_id) FROM mob));
 PERFORM setval('npc_npc_id_seq', (SELECT max(npc_id) FROM npc));
 PERFORM setval('quest_quest_id_seq', (SELECT max(quest_id) FROM quest));
 PERFORM setval('refresh_token_record_id_seq', (SELECT max(record_id) FROM refresh_token));
+PERFORM setval('battle_stats_stat_id_seq', (SELECT max(stat_id) FROM battle_stats));
 END $$;
