@@ -5,7 +5,6 @@ using System.Windows.Media;
 using MysticLegendsClient.Resources;
 using System.Windows.Input;
 using MysticLegendsShared.Models;
-using MysticLegendsShared.Utilities;
 
 namespace MysticLegendsClient.Controls
 {
@@ -14,6 +13,8 @@ namespace MysticLegendsClient.Controls
     /// </summary>
     public partial class InventoryView : ItemViewUserControl
     {
+        private static readonly SolidColorBrush transparentWhiteBrush = new(Color.FromArgb(170, 255, 255, 255));
+
         private readonly struct SlotTuple
         {
             public ItemSlot ItemSlot { get; init; }
@@ -159,9 +160,11 @@ namespace MysticLegendsClient.Controls
             label = new Label
             {
                 FontSize = 20,
-                HorizontalContentAlignment = HorizontalAlignment.Right,
-                VerticalContentAlignment = VerticalAlignment.Bottom,
-                Margin = new Thickness(3),
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Margin = new Thickness(8),
+                Padding = new Thickness(0),
+                Background = transparentWhiteBrush,
             };
             image = new Image
             {
@@ -183,8 +186,9 @@ namespace MysticLegendsClient.Controls
             grid.Drop += Image_Drop;
             grid.MouseLeftButtonDown += Image_MouseLeftButtonDown;
 
-            grid.Children.Add(label);
+            grid.Children.Add(new Label()); // fixes a case when item drop is not hitting the slot when its empty
             grid.Children.Add(border);
+            grid.Children.Add(label);
 
             ToolTipService.SetInitialShowDelay(grid, 0);
 

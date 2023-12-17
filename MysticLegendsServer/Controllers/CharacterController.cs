@@ -408,7 +408,7 @@ namespace MysticLegendsServer.Controllers
 
         private static bool AddDropedItem(IRNG rng, MobItemDrop possibleDrop, Character character, ref List<InventoryItem> drops)
         {
-            var stack = rng.RandomNumber(1, 5); // TODO: here
+            var stack = rng.RandomNumber(1, possibleDrop.MaxAmount);
             var invitem = ItemGenerator.MakeInventoryItem(rng, possibleDrop.Item, possibleDrop.Mob.Level, character.CharacterName, stack);
             var newPosition = InventoryHandling.FindPositionInInventory(character.CharacterInventory!);
 
