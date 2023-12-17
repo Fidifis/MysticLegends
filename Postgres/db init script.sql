@@ -279,7 +279,7 @@ VALUES ('Ayreim'),
 
 
 INSERT INTO character (character_name, username, character_class, level, currency_gold, city_name, xp)
-VALUES ('burger', 'demo', 1, 1, 1020, 'Ayreim', 0),
+VALUES ('burger', 'demo', 1, 30, 1000, 'Ayreim', 0),
        ('hellmanz', 'nemo', 2, 20, 1200, 'Ayreim', 50),
        ('qwertz', 'nemo', 0, 5, 300, 'Ayreim', 30);
 
@@ -372,14 +372,15 @@ VALUES
         (102, 'Small Strength Potion', 'potion/smallStrength', 20, 50, NULL),
         (103, 'Small Dexterity Potion', 'potion/smallDexterity', 20, 50, NULL),
 
-        -- Regular items
-        (1000, 'Copper Ore', 'regular/copperOre', 0, 50, NULL),
-        (1001, 'Iron Ore', 'regular/ironOre', 0, 50, NULL),
-        (1002, 'Gold Ore', 'regular/goldOre', 0, 50, NULL),
-        (1003, 'Platinum Ore', 'regular/platinumOre', 0, 50, NULL),
-        (1004, 'Mithril Ore', 'regular/mithrilOre', 0, 50, NULL),
-        (1005, 'Orichalcum Ore', 'regular/orichalcumOre', 0, 50, NULL),
+        -- Armor materials
+        (1000, 'Copper Ore', 'regular/copperOre', 17, 50, NULL),
+        (1001, 'Iron Ore', 'regular/ironOre', 17, 50, NULL),
+        (1002, 'Gold Ore', 'regular/goldOre', 17, 50, NULL),
+        (1003, 'Platinum Ore', 'regular/platinumOre', 17, 50, NULL),
+        (1004, 'Mithril Ore', 'regular/mithrilOre', 17, 50, NULL),
+        (1005, 'Orichalcum Ore', 'regular/orichalcumOre', 17, 50, NULL),
 
+        -- Regular items
         (1010, 'Jute', 'regular/juteScrap', 0, 50, NULL),
         (1011, 'Linen', 'regular/linenScrap', 0, 50, NULL),
         (1012, 'Wool', 'regular/woolScrap', 0, 50, NULL),
@@ -389,15 +390,17 @@ VALUES
         (1020, 'Goat Horn', 'regular/goatHorn', 0, 50, NULL),
         (1021, 'Wolve Fang', 'regular/wolveFang', 0, 50, NULL),
         (1022, 'Spike', 'regular/spike', 0, 50, NULL),
-        (1023, 'Cherry', 'regular/cherry', 0, 50, NULL),
-        (1024, 'Asparagus', 'regular/asparagus', 0, 50, NULL),
-        (1025, 'Blackberry', 'regular/blackberry', 0, 50, NULL),
-        (1026, 'Carrot', 'regular/carrot', 0, 50, NULL),
-        (1027, 'Mushroom', 'regular/mushroom', 0, 50, NULL),
-        (1028, 'Fungus', 'regular/fungus', 0, 50, NULL),
-        (1029, 'Mint', 'regular/mint', 0, 50, NULL),
-        (1030, 'Strawberry', 'regular/strawberry', 0, 50, NULL),
-        (1031, 'Mr.Bean', 'regular/bean', 0, 50, NULL),
+
+        -- Potion materials
+        (1023, 'Cherry', 'regular/cherry', 25, 50, NULL),
+        (1024, 'Asparagus', 'regular/asparagus', 25, 50, NULL),
+        (1025, 'Blackberry', 'regular/blackberry', 25, 50, NULL),
+        (1026, 'Carrot', 'regular/carrot', 25, 50, NULL),
+        (1027, 'Mushroom', 'regular/mushroom', 25, 50, NULL),
+        (1028, 'Fungus', 'regular/fungus', 25, 50, NULL),
+        (1029, 'Mint', 'regular/mint', 25, 50, NULL),
+        (1030, 'Strawberry', 'regular/strawberry', 25, 50, NULL),
+        (1031, 'Mr.Bean', 'regular/bean', 25, 50, NULL),
 
         -- Magic items
         (2000, 'Eclipse Dust', 'magic/eclipseDust', 1, 50, NULL),
@@ -406,69 +409,97 @@ VALUES
         (2003, 'Sprout Dust', 'magic/sproutDust', 1, 50, NULL),
         (2004, 'Burn Dust', 'magic/burnDust', 1, 50, NULL),
         (2005, 'Life Dust', 'magic/lifeDust', 1, 50, NULL),
-        (2006, 'Akashic Dust', 'magic/akashicDust', 1, 50, NULL),
+        (2006, 'Akasha Dust', 'magic/akashicDust', 1, 50, NULL),
 
-        (2010, 'Fire Crystal', 'magic/fireCrystal', 1, 50, NULL),
-        (2011, 'Water Crystal', 'magic/waterCrystal', 1, 50, NULL),
-        (2012, 'Earth Crystal', 'magic/earthCrystal', 1, 50, NULL),
-        (2013, 'Wind Crystal', 'magic/windCrystal', 1, 50, NULL),
-        (2014, 'Akash Crystal', 'magic/akashCrystal', 1, 50, NULL),
+        (2010, 'Water Crystal', 'magic/waterCrystal', 1, 50, NULL),
+        (2011, 'Earth Crystal', 'magic/earthCrystal', 1, 50, NULL),
+        (2012, 'Air Crystal', 'magic/windCrystal', 1, 50, NULL),
+        (2013, 'Fire Crystal', 'magic/fireCrystal', 1, 50, NULL),
+        (2014, 'Akasha Crystal', 'magic/akashCrystal', 1, 50, NULL),
 
         (2020, 'Vial of Transcendence', 'magic/vialOfTranscendence', 1, 1, NULL);
 
 
 INSERT INTO mob_item_drop (mob_id, item_id, drop_rate)
-VALUES (1, 1021, 0.9),
-       (2, 1021, 0.92),
-       (3, 1020, 0.9),
-       (4, 103, 0.5),
-       (5, 103, 0.58),
-       (6, 1021, 0.91),
-       (7, 1021, 0.93),
-       (9, 102, 0.3),
-       (9, 103, 0.3),
-       (9, 101, 0.3),
+VALUES
+        -- By ChatGPT
+        -- Regular item or potion/armor material drops for each mob
+        (1, 1010, 0.8), -- Jute from Wolves in Vergarni Hills
+        (2, 1011, 0.85), -- Linen from Wolves in Vergarni Hills
+        (3, 1020, 0.9), -- Goat Horn from Goat in Vergarni Hills
+        (4, 1013, 0.7), -- Cotton from Driftshade Serpent in Vergarni Hills
+        (5, 1014, 0.75), -- Silk from Twilightcoil Serpent in Vergarni Hills
+        (6, 1000, 0.8), -- Copper Ore from Wolves in Dagos Valley
+        (7, 1001, 0.85), -- Iron Ore from Wolves in Dagos Valley
+        (8, 1002, 0.9), -- Gold Ore from Hare in Dagos Valley
+        (9, 1003, 0.7), -- Platinum Ore from Sigil in Dagos Valley
+        (10, 1004, 0.75), -- Mithril Ore from Frostbite Falcon in Vergarni Hills
+        (11, 1005, 0.8), -- Orichalcum Ore from Shadow Lynx in Vergarni Hills
+        (12, 1020, 0.85), -- Goat Horn from Ethereal Stag in Vergarni Hills
+        (13, 1021, 0.9), -- Wolve Fang from Crystal Golem in Vergarni Hills
+        (14, 1022, 0.7), -- Spike from Flameback Scorpion in Dagos Valley
+        (15, 1023, 0.75), -- Cherry from Venomous Viper in Dagos Valley
+        (16, 1024, 0.8), -- Asparagus from Dagos Shaman in Dagos Valley
+        (17, 1025, 0.85), -- Blackberry from Rockhide Boar in Dagos Valley
+        (18, 1026, 0.9), -- Carrot from Whispering Willow Wisp in Mellow Woodland
+        (19, 1027, 0.7), -- Mushroom from Meadow Fairy in Mellow Woodland
+        (20, 1028, 0.75), -- Fungus from Barkskin Bear in Mellow Woodland
+        (21, 1029, 0.8), -- Mint from Moonlight Moth in Mellow Woodland
+        (22, 1030, 0.85), -- Strawberry from Croyware Centaur in Croyware Wood
+        (23, 1031, 0.9), -- Mr.Bean from Mystic Fox in Croyware Wood
+        (24, 1010, 0.7), -- Jute from Vine Entangler in Croyware Wood
+        (25, 1011, 0.75), -- Linen from Spirit Owl in Croyware Wood
+        (26, 1012, 0.8), -- Wool from Thicket Troll in Draysor Thicket
+        (27, 1013, 0.85), -- Cotton from Draysor Dryad in Draysor Thicket
+        (28, 1014, 0.9), -- Silk from Thorned Serpent in Draysor Thicket
+        (29, 1000, 0.7), -- Copper Ore from Razorwing Butterfly in Draysor Thicket
+        (30, 1001, 0.75), -- Iron Ore from Oasis Djinn in Starlight Oasis
+        (31, 1002, 0.8), -- Gold Ore from Mirage Manticore in Starlight Oasis
+        (32, 1003, 0.85), -- Platinum Ore from Sand Whisperer in Starlight Oasis
+        (33, 1004, 0.9), -- Mithril Ore from Solar Scorpion in Starlight Oasis
+        (34, 1005, 0.7), -- Orichalcum Ore from Icefang Yeti in Frostfeather Mountains
+        (35, 1020, 0.75), -- Goat Horn from Glacial Griffin in Frostfeather Mountains
+        (36, 1021, 0.8), -- Wolve Fang from Frost Elemental in Frostfeather Mountains
+        (37, 1022, 0.85), -- Spike from Snowdrift Owl in Frostfeather Mountains
 
-       (10, 2003, 0.2), -- Frostbite Falcon
-       (11, 2014, 0.15), -- Shadow Lynx
-       (12, 2006, 0.25), -- Ethereal Stag
-       (13, 2004, 0.1), -- Crystal Golem
-
--- Item drops for Dagos Valley mobs
-       (14, 2002, 0.3), -- Flameback Scorpion
-       (15, 1022, 0.7), -- Venomous Viper
-       (16, 2020, 0.05), -- Dagos Shaman
-       (17, 1021, 0.8), -- Rockhide Boar
-
--- Item drops for Mellow Woodland mobs
-       (18, 2005, 0.4), -- Whispering Willow Wisp
-       (19, 2011, 0.2), -- Meadow Fairy
-       (20, 1020, 0.6), -- Barkskin Bear
-       (21, 2001, 0.5), -- Moonlight Moth
-
--- Item drops for Croyware Wood mobs
-       (22, 2013, 0.25), -- Croyware Centaur
-       (23, 1023, 0.9), -- Mystic Fox
-       (24, 2002, 0.15), -- Vine Entangler
-       (25, 2000, 0.35), -- Spirit Owl
-
--- Item drops for Draysor Thicket mobs
-       (26, 2005, 0.2), -- Thicket Troll
-       (27, 2012, 0.3), -- Draysor Dryad
-       (28, 1022, 0.5), -- Thorned Serpent
-       (29, 1030, 0.8), -- Razorwing Butterfly
-
--- Item drops for Starlight Oasis mobs
-       (30, 2006, 0.1), -- Oasis Djinn
-       (31, 2004, 0.3), -- Mirage Manticore
-       (32, 1024, 0.9), -- Sand Whisperer
-       (33, 2010, 0.4), -- Solar Scorpion
-
--- Item drops for Frostfeather Mountains mobs
-       (34, 2003, 0.2), -- Icefang Yeti
-       (35, 2014, 0.15), -- Glacial Griffin
-       (36, 2002, 0.3), -- Frost Elemental
-       (37, 2001, 0.4); -- Snowdrift Owl
+        -- Optional magic item drops with significantly lower drop rates
+        (1, 2000, 0.2), -- Eclipse Dust from Wolves in Vergarni Hills
+        (2, 2001, 0.15), -- Sunset Dust from Wolves in Vergarni Hills
+        (3, 2002, 0.1), -- Star Dust from Goat in Vergarni Hills
+        (4, 2003, 0.05), -- Sprout Dust from Driftshade Serpent in Vergarni Hills
+        (5, 2004, 0.08), -- Burn Dust from Twilightcoil Serpent in Vergarni Hills
+        (6, 2005, 0.1), -- Life Dust from Wolves in Dagos Valley
+        (7, 2006, 0.05), -- Akasha Dust from Wolves in Dagos Valley
+        (8, 2010, 0.08), -- Water Crystal from Hare in Dagos Valley
+        (9, 2011, 0.1), -- Earth Crystal from Sigil in Dagos Valley
+        (10, 2012, 0.05), -- Air Crystal from Frostbite Falcon in Vergarni Hills
+        (11, 2013, 0.08), -- Fire Crystal from Shadow Lynx in Vergarni Hills
+        (12, 2014, 0.01), -- Akasha Crystal from Ethereal Stag in Vergarni Hills
+        (13, 2000, 0.05), -- Eclipse Dust from Crystal Golem in Vergarni Hills
+        (14, 2001, 0.08), -- Sunset Dust from Flameback Scorpion in Dagos Valley
+        (15, 2002, 0.1), -- Star Dust from Venomous Viper in Dagos Valley
+        (16, 2003, 0.05), -- Sprout Dust from Dagos Shaman in Dagos Valley
+        (17, 2004, 0.08), -- Burn Dust from Rockhide Boar in Dagos Valley
+        (18, 2005, 0.1), -- Life Dust from Whispering Willow Wisp in Mellow Woodland
+        (19, 2006, 0.05), -- Akasha Dust from Meadow Fairy in Mellow Woodland
+        (20, 2010, 0.08), -- Water Crystal from Barkskin Bear in Mellow Woodland
+        (21, 2011, 0.1), -- Earth Crystal from Moonlight Moth in Mellow Woodland
+        (22, 2012, 0.05), -- Air Crystal from Croyware Centaur in Croyware Wood
+        (23, 2013, 0.08), -- Fire Crystal from Mystic Fox in Croyware Wood
+        (24, 2014, 0.01), -- Akasha Crystal from Vine Entangler in Croyware Wood
+        (25, 2000, 0.05), -- Eclipse Dust from Spirit Owl in Croyware Wood
+        (26, 2001, 0.08), -- Sunset Dust from Thicket Troll in Draysor Thicket
+        (27, 2002, 0.1), -- Star Dust from Draysor Dryad in Draysor Thicket
+        (28, 2003, 0.05), -- Sprout Dust from Thorned Serpent in Draysor Thicket
+        (29, 2004, 0.08), -- Burn Dust from Razorwing Butterfly in Draysor Thicket
+        (30, 2005, 0.1), -- Life Dust from Oasis Djinn in Starlight Oasis
+        (31, 2006, 0.05), -- Akasha Dust from Mirage Manticore in Starlight Oasis
+        (32, 2010, 0.08), -- Water Crystal from Sand Whisperer in Starlight Oasis
+        (33, 2011, 0.1), -- Earth Crystal from Solar Scorpion in Starlight Oasis
+        (34, 2012, 0.05), -- Air Crystal from Icefang Yeti in Frostfeather Mountains
+        (35, 2013, 0.08), -- Fire Crystal from Glacial Griffin in Frostfeather Mountains
+        (36, 2014, 0.01), -- Akasha Crystal from Frost Elemental in Frostfeather Mountains
+        (37, 2000, 0.05); -- Eclipse Dust from Snowdrift Owl in Frostfeather
 
 
 INSERT INTO character_inventory (character_name, capacity)

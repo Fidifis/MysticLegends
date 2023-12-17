@@ -12,5 +12,8 @@ public enum ItemType
 	Gloves,
 	Boots,
 
+	ArmorMaterial = 17,
+
 	Potion = 20,
+	PotionMaterial = 25,
 }
