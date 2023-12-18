@@ -11,7 +11,7 @@
     <Grid>
         <TextBlock x:Name="title" Text="Quest Title" FontSize="25" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20"/>
         <controls:StatLabel x:Name="level" StaticContent="Level: " Margin="20 60" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Grid Margin="20,85,20,75">
+        <Grid Margin="20,85,20,80">
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*"/>
                 <RowDefinition Height="1*" MinHeight="115"/>
@@ -23,6 +23,7 @@
             <Label Grid.Row="1" Content="Requirements:" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <controls:InventoryView Grid.Row="1" x:Name="requirementsView" CounterVisibility="Collapsed"/>
         </Grid>
+        <Label x:Name="repeatable" Content="Quest is repeatable" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="30 60"/>
         <controls:StatLabel x:Name="reward" StaticContent="Reward in golds: " VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="30 40"/>
         <controls:StatLabel x:Name="xps" StaticContent="XPs: " VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="30 20"/>
         

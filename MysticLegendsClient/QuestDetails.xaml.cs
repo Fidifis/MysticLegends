@@ -39,13 +39,14 @@ namespace MysticLegendsClient
         private void ChangeAllButtonsState(Quest quest)
         {
             var questState = GetQuestState(quest);
-            ChangeAllButtonsState(questState);
+            ChangeAllButtonsState(questState, quest.IsRepeable);
         }
 
-        private void ChangeAllButtonsState(QuestState questState)
+        private void ChangeAllButtonsState(QuestState questState, bool isRepeatable = false)
         {
-            ChangeByQuestState(questState);
+            ChangeByQuestState(questState, isRepeatable);
             CompletableButton(questState);
+            ChangeRepeatableLabel(isRepeatable);
         }
 
         private QuestState GetQuestState(Quest quest) => ((QuestState?)quest.AcceptedQuests.FirstOrDefault()?.QuestState) ?? QuestState.NotAccepted;
@@ -92,6 +93,9 @@ namespace MysticLegendsClient
                 completeButton.Visibility = vis ? Visibility.Visible : Visibility.Hidden;
             });
         }
+
+        private void ChangeRepeatableLabel(bool isRepeatable) =>
+            repeatable.Visibility = isRepeatable ? Visibility.Visible : Visibility.Hidden;
 
         private void acceptButton_Click(object sender, RoutedEventArgs e)
         {
