@@ -107,14 +107,6 @@ resource "aws_launch_template" "ecs" {
   user_data              = base64encode("#!/bin/bash\necho ECS_CLUSTER='${local.ecs_cluster_name}' >> /etc/ecs/ecs.config")
   update_default_version = true
 
-  block_device_mappings {
-    device_name = "/dev/xvda"
-
-    ebs {
-      volume_size = 8
-    }
-  }
-
   iam_instance_profile {
     arn = aws_iam_instance_profile.ecs_node.arn
   }
