@@ -324,6 +324,7 @@ namespace MysticLegendsServer.Controllers
             var mob = await dbContext.Mobs
                 .Include(mob => mob.MobItemDrops)
                     .ThenInclude(drop => drop.Item)
+                .Include(mob => mob.BattleStats)
                 .SingleAsync(mob => mob.MobId == mobId);
 
             if (character.Travel is not null)
