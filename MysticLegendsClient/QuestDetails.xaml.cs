@@ -49,7 +49,7 @@ namespace MysticLegendsClient
         }
 
         private QuestState GetQuestState(Quest quest) => ((QuestState?)quest.AcceptedQuests.FirstOrDefault()?.QuestState) ?? QuestState.NotAccepted;
-        private void ChangeByQuestState(QuestState state)
+        private void ChangeByQuestState(QuestState state, bool isRepeatable = false)
         {
             switch (state)
             {
@@ -61,10 +61,20 @@ namespace MysticLegendsClient
                     acceptButton.Visibility = Visibility.Hidden;
                     abandonButton.Visibility = Visibility.Visible;
                     break;
-                default:
-                    acceptButton.Visibility = Visibility.Hidden;
-                    abandonButton.Visibility = Visibility.Hidden;
+                case QuestState.Completed:
+                    if (isRepeatable)
+                    {
+                        acceptButton.Visibility = Visibility.Visible;
+                        abandonButton.Visibility = Visibility.Hidden;
+                    }
+                    else
+                    {
+                        acceptButton.Visibility = Visibility.Hidden;
+                        abandonButton.Visibility = Visibility.Hidden;
+                    }
                     break;
+                default:
+                    throw new ArgumentException("Invalid quest state");
             }
         }
 
