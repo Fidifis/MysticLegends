@@ -4,7 +4,7 @@ Autor: Filip Digrín
 ## Jak spustit klienta
 Projekt klienta se nachází v [MysticLegendsClient](MysticLegendsClient/)
 - Pro build ve Visual Studiu je potřeba mít stažený obsah z git LFS. Jinak bude padat při načítání obrázků.
-- Doporučuji stáhnout source code z [releases](https://github.com/Fidifis/MysticLegends/releases)
+- Doporučuji stáhnout source code a nebo už buildnutého clienta z [releases](https://github.com/Fidifis/MysticLegends/releases)
 - Nebo mít nainstalovaný Git + LFS a spustit
 ```sh
 git clone https://github.com/Fidifis/MysticLegends.git
