@@ -5,7 +5,11 @@ Autor: Filip Digrín
 Projekt klienta se nachází v [MysticLegendsClient](MysticLegendsClient/)
 - Pro fungování programu je potřeba mít stažený obsah z git LFS. Jinak bude padat při načítání obrázků.
 - Doporučuji stáhnout source code z [releases](https://github.com/Fidifis/MysticLegends/releases)
-- Nebo mít nainstalovaný Git + LFS a spustit `git clone https://github.com/Fidifis/MysticLegends.git`
+- Nebo mít nainstalovaný Git + LFS a spustit
+```sh
+git clone https://github.com/Fidifis/MysticLegends.git
+git lfs pull
+```
 
 ## Jak spustit server
 Projekt serveru se nachází v [MysticLegendsServer](MysticLegendsServer/)
