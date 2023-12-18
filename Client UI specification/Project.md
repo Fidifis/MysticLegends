@@ -5,8 +5,15 @@ Autor: Filip Digrín
 ## Motivace
 
 Motivací k vytvoření této UI specifikace je potřeba návrhu rozhraní pro počítačovou hru,
-která se prezentuje jako online RPG ve stylu hry Shakes and Fidget s důrazem na ekonomiku.
+která se prezentuje jako online RPG ve stylu hry Shakes and Fidget se zaměřením na ekonomiku.
 Uživatel si bude moci vytvořit postavu za kterou hraje, plnit různé úkoly, vydávat se na výpravy a obchodovat s itemy.
+
+## Prohlášení o produktu
+Online RPG hra pro nenáročné hráče.
+
+## Business požadavky
+- Vytvořit online RPG hru pro Windows
+- Vzájemná interakce hráčů ovlivňuje herní ekonomiku
 
 ## Definice cíle
 
@@ -60,7 +67,7 @@ Přes den pracuje na dálku jako vývojář softwaru, večery tráví u online R
 - Zaměstnání: Marketingová manažerka
 - Záliby: Čtení fantasy románů, zahradničení, příležitostné hraní her
 - Žánry hraných her: logické hry, příležitostné RPG hry
-- Typ počítače: Notebook střední třídy pro práci i hraní her
+- Typ počítače: Notebook střední třídy pro práci
 
 Balancuje mezi náročnou prací v marketingu a rodinnými povinnostmi. Ráda si odpočine několika hodinami hraní po uložení dětí ke spánku. Preferuje hry s poutavým příběhem a vizuálně příjemnou estetikou. Oceňuje uživatelsky přívětivá rozhraní a zjednodušenou hratelnost, aby se přizpůsobil omezenému hernímu času. Zajímá ji kooperativní hraní a sociální interakce ve hře.
 
@@ -326,11 +333,12 @@ Systém zobrazí:
 
 ## Figma Projekt
 
-[figma.com](https://www.figma.com/file/whiAqWHlBIiq8EHYUEyMl8/MysticLegends-UI?type=design&node-id=0%3A1&mode=design&t=YWiBlLBAOVQU686F-1)
+[https://www.figma.com/file/whiAqWHlBIiq8EHYUEyMl8/MysticLegends-UI](https://www.figma.com/file/whiAqWHlBIiq8EHYUEyMl8/MysticLegends-UI)
 
 ## Zdroje
 
 - HAVLÍČEK, Tomáš. Bakalářská práce: Volné téma v oblasti User Experience Design. Online, vedoucí Josef Pavlíček. ČZU, 2014. Dostupné z: https://moodle.czu.cz/pluginfile.php/440218/mod_resource/content/0/UI%20specifikaceHavlicek.pdf. [cit. 2023-12-03].
+- Semester work example [online]. [cit. 2023-12-18]. Dostupné z: https://docs.google.com.mcas.ms/presentation/d/1rPWGeWBczv_nmkJS0bGqdHF82uTOyP1oguCB1mC-Hoo
 - OPENAI. ChatGPT 3.5. [online]. ©2023 [cit. 2023-12-03]. Dostupné z: https://chat.openai.com/.
   Prompts: "Make 3 personas for UI design specification of a online rpg computer game. It should include their name, age, gender, marriage, job, hobbies, genres of played games, type of computer, description of usual day",
   "[snippet] můžeš rozvést jednotlivé body?"
