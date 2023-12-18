@@ -21,7 +21,7 @@ public sealed class SingleInstanceWindow<T> : IDisposable where T : ISingleInsta
             ObjectDisposedException.ThrowIf(disposed, this);
             if (instance is null)
             {
-                instance ??= new T();
+                instance = new T();
                 instance.Closed += (object? s, EventArgs e) => { instance = null; };
             }
             return instance;

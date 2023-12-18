@@ -90,7 +90,7 @@ namespace MysticLegendsClient
                     AddButton("Trade Market", Icons.city_tradeMarket, (_, _) => { window.Instance.ShowWindow(); });
                     break;
                 case NpcType.StorageKeeper:
-                    window = new(typeof(BlacksmithNpc), npcId);
+                    window = new(typeof(StorageWindow), cityName);
                     AddButton("Storage", Icons.city_storage, (_, _) => { window.Instance.ShowWindow(); });
                     break;
                 case NpcType.RelicTrader:
