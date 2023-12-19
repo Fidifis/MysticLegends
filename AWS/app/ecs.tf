@@ -58,15 +58,11 @@ resource "aws_iam_instance_profile" "ecs_node" {
 
 data "aws_ami" "ec2_amz23_ami" {
   most_recent = true
+  owners = [ "amazon" ]
 
   filter {
     name   = "name"
     values = ["al2023-ami-ecs-hvm-2023.*-x86_64"]
-  }
-
-  filter {
-    name   = "owner-alias"
-    values = ["amazon"]
   }
 }
 
