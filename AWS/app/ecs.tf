@@ -211,6 +211,12 @@ resource "aws_autoscaling_group" "ecs_asg" {
     value               = "ecs"
     propagate_at_launch = true
   }
+
+  tag {
+    key                 = "Name"
+    value               = "${var.meta.project}-cluster-node"
+    propagate_at_launch = true
+  }
 }
 
 resource "aws_ecs_capacity_provider" "ecs_capacity_provider" {
