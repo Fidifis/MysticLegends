@@ -1,5 +1,5 @@
 module "ecr" {
-  source = "../modules/ecr"
+  source = "../terraform-modules/ecr"
   meta = var.meta
 
   default_config = {

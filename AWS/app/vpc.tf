@@ -1,7 +1,7 @@
 data "aws_availability_zones" "this" {}
 
 module "vpc" {
-  source = "../modules/vpc"
+  source = "../terraform-modules/vpc"
   meta = var.meta
 
   supernet = "10.0.0.0"

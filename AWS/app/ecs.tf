@@ -71,7 +71,7 @@ data "aws_ami" "ec2_amz23_ami" {
 }
 
 module "ec_alb_segr" {
-  source = "../modules/security-groups"
+  source = "../terraform-modules/security-groups"
   meta   = var.meta
   prefix = local.common_prefix
 
@@ -86,7 +86,7 @@ module "ec_alb_segr" {
 }
 
 module "ecs_node_segr" {
-  source = "../modules/security-groups"
+  source = "../terraform-modules/security-groups"
   meta   = var.meta
   prefix = local.common_prefix
 
