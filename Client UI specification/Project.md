@@ -325,10 +325,9 @@ Systém zobrazí:
 ![](graphic%20design/login.png)
 ![](graphic%20design/characterselect.png)
 ![](graphic%20design/city.png)
+![](graphic%20design/world.png)
 ![](graphic%20design/character.png)
-![](graphic%20design/buy.png)
 ![](graphic%20design/sell.png)
-![](graphic%20design/quests.png)
 ![](graphic%20design/details.png)
 
 ## Figma Projekt
