@@ -32,31 +32,31 @@
         <Viewbox Margin="200,40,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform">
             <Grid Width="450" Height="320">
                 <Grid x:Name="bodyArmorSlot" Margin="0,0,0,20" VerticalAlignment="Bottom" HorizontalAlignment="Center" AllowDrop="True" MouseDown="Grid_MouseDown" Drop="Grid_Drop">
-                    <Border BorderThickness="3" BorderBrush="Black">
+                    <Border BorderThickness="2" BorderBrush="Black" CornerRadius="10">
                         <Image x:Name="bodyArmorImage" Width="100" Height="150" />
                     </Border>
                     <Label/>
                 </Grid>
                 <Grid x:Name="helmetSlot" Margin="0,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" AllowDrop="True" MouseDown="Grid_MouseDown" Drop="Grid_Drop">
-                    <Border BorderThickness="3" BorderBrush="Black">
+                    <Border BorderThickness="2" BorderBrush="Black" CornerRadius="10">
                         <Image x:Name="helmetImage" Width="100" Height="100" />
                     </Border>
                     <Label/>
                 </Grid>
                 <Grid x:Name="weaponSlot" Margin="20,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" AllowDrop="True" MouseDown="Grid_MouseDown" Drop="Grid_Drop">
-                    <Border BorderThickness="3" BorderBrush="Black">
+                    <Border BorderThickness="2" BorderBrush="Black" CornerRadius="10">
                         <Image x:Name="weaponImage" Width="100" Height="200" />
                     </Border>
                     <Label/>
                 </Grid>
                 <Grid x:Name="glovesSlot" Margin="0,40,20,0" VerticalAlignment="Top" HorizontalAlignment="Right" AllowDrop="True" MouseDown="Grid_MouseDown" Drop="Grid_Drop">
-                    <Border BorderThickness="3" BorderBrush="Black">
+                    <Border BorderThickness="2" BorderBrush="Black" CornerRadius="10">
                         <Image x:Name="glovesImage" Width="100" Height="100" />
                     </Border>
                     <Label/>
                 </Grid>
                 <Grid x:Name="bootsSlot" Margin="0,0,20,40" VerticalAlignment="Bottom" HorizontalAlignment="Right" AllowDrop="True" MouseDown="Grid_MouseDown" Drop="Grid_Drop">
-                    <Border BorderThickness="3" BorderBrush="Black">
+                    <Border BorderThickness="2" BorderBrush="Black" CornerRadius="10">
                         <Image x:Name="bootsImage" Width="100" Height="100" />
                     </Border>
                     <Label/>

@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:MysticLegendsClient.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="250">
-    <Border BorderThickness="1" BorderBrush="Black">
+    <Border BorderThickness="1" BorderBrush="Black" CornerRadius="10">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="3*"/>

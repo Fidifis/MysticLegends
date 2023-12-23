@@ -174,7 +174,8 @@ namespace MysticLegendsClient.Controls
             var border = new Border
             {
                 Margin = new Thickness(5),
-                BorderThickness = new Thickness(3),
+                BorderThickness = new Thickness(2),
+                CornerRadius = new CornerRadius(5),
                 BorderBrush = Brushes.Black,
                 Child = image,
             };
