@@ -291,7 +291,7 @@ VALUES ('burger', 'demo', 1, 30, 1000, 'Ayreim', 0),
 
 
 INSERT INTO city_inventory (city_name, character_name, capacity)
-VALUES ('Ayreim', 'burger', 100),
+VALUES -- ('Ayreim', 'burger', 100),  test case for undefined inventory
        ('Ayreim', 'hellmanz', 100),
        ('Ayreim', 'qwertz', 100),
        ('Tisling', 'burger', 100),
