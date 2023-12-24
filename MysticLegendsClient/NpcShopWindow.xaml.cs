@@ -1,6 +1,5 @@
 ﻿using MysticLegendsClient.Controls;
 using MysticLegendsShared.Models;
-using System.Text.Json;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -138,14 +137,14 @@ namespace MysticLegendsClient
             await RefreshBuyView();
         }
 
-        protected void SellButton_Click(object sender, RoutedEventArgs e)
+        protected void SellButton_Click(object? sender, RoutedEventArgs? e)
         {
             ChangeToView(sellView);
 
-            sellViewInventory.FillData(new List<InventoryItem>(), 20);
+            sellViewInventory.FillData(new List<InventoryItem>(), 18);
         }
 
-        protected async void QuestsButton_Click(object sender, RoutedEventArgs e)
+        protected async void QuestsButton_Click(object? sender, RoutedEventArgs? e)
         {
             ChangeToView(questsView);
             await RefreshQuestView();
