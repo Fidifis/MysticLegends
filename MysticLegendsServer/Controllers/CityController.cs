@@ -34,22 +34,94 @@ public class CityController : Controller
         return cinv;
     }
 
+    private async Task<CityInventory> GetCityInventoryAsync(string city, string characterName)
+    {
+        var invitems = await dbContext.CityInventories
+             .Where(citem => citem.CharacterName == characterName && citem.CityName == city)
+             .Include(citem => citem.InventoryItems)
+                 .ThenInclude(invitem => invitem.Item)
+             .Include(citem => citem.InventoryItems)
+                 .ThenInclude(invitem => invitem.BattleStats)
+             .SingleOrDefaultAsync();
+
+        invitems ??= await CreateCityInventory(characterName, city);
+        return invitems;
+    }
+
     [HttpGet("{city}/storage")]
     public async Task<ObjectResult> GetStorage(string city, string characterName)
     {
         if (!await auth.ValidateAsync(Request.Headers, characterName))
             return StatusCode(403, "Unauthorized");
 
-        var invitems = await dbContext.CityInventories
-            .Where(citem => citem.CharacterName == characterName && citem.CityName == city)
-            .Include(citem => citem.InventoryItems)
-                .ThenInclude(invitem => invitem.Item)
-            .Include(citem => citem.InventoryItems)
-                .ThenInclude(invitem => invitem.BattleStats)
-            .SingleOrDefaultAsync();
+        return Ok(await GetCityInventoryAsync(city, characterName));
+    }
 
-        invitems ??= await CreateCityInventory(characterName, city);
+    [HttpPost("{city}/storage/swap")]
+    public async Task<ObjectResult> SwapStorageItem(string city, [FromBody] Dictionary<string, string> paramters)
+    {
+        var characterName = paramters["characterName"];
+        var itemToMove = int.Parse(paramters["itemId"]);
+        var targetPosition = int.Parse(paramters["position"]);
 
-        return Ok(invitems);
+        if (!await auth.ValidateAsync(Request.Headers, characterName))
+            return StatusCode(403, "Unauthorized");
+
+        var storage = await GetCityInventoryAsync(city, characterName);
+
+        var itemList = storage.InventoryItems;
+
+        var sourceItem = itemList.SingleOrDefault(item => item.InvitemId == itemToMove);
+        var targetItem = itemList.SingleOrDefault(item => item.Position == targetPosition);
+
+        if (sourceItem is null)
+        {
+            var msg = "swaping empty positions";
+            logger.LogWarning(msg);
+            return BadRequest(msg);
+        }
+
+        var sourcePosition = sourceItem.Position;
+        sourceItem.Position = targetPosition;
+
+
+        if (targetItem is not null)
+        {
+            targetItem.Position = sourcePosition;
+        }
+
+        await dbContext.SaveChangesAsync();
+
+        return Ok(storage);
+    }
+
+    [HttpPost("{city}/storage/store")]
+    public async Task<ObjectResult> StoreItem(string city, [FromBody] Dictionary<string, string> paramters)
+    {
+        var characterName = paramters["characterName"];
+        var itemToMove = int.Parse(paramters["itemId"]);
+        var targetPosition = int.Parse(paramters["position"]);
+
+        if (!await auth.ValidateAsync(Request.Headers, characterName))
+            return StatusCode(403, "Unauthorized");
+
+        var inventory = await dbContext.CharacterInventories
+            .Include(inventory => inventory.InventoryItems)
+                .ThenInclude(item => item.Item)
+            .Include(inventory => inventory.InventoryItems)
+                .ThenInclude(item => item.BattleStats)
+            .SingleAsync(inv => inv.CharacterName == characterName);
+
+        var storage = await GetCityInventoryAsync(city, characterName);
+
+        var invItems = inventory.InventoryItems;
+        var storageItems = storage.InventoryItems;
+
+        var sourceIndex = invItems.Where(item => item.InvitemId == itemToMove);
+
+
+        await dbContext.SaveChangesAsync();
+
+        return Ok(storage);
     }
 }

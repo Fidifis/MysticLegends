@@ -80,26 +80,24 @@ namespace MysticLegendsServer.Controllers
                 .SingleAsync(inv => inv.CharacterName == characterName);
 
 
-            var itemList = (List<InventoryItem>)inventory.InventoryItems;
+            var itemList = inventory.InventoryItems;
 
-            var sourceIndex = itemList.FindIndex(item => item.InvitemId == itemToMove);
-            var targetIndex = itemList.FindIndex(item => item.Position == targetPosition);
+            var sourceItem = itemList.SingleOrDefault(item => item.InvitemId == itemToMove);
+            var targetItem = itemList.SingleOrDefault(item => item.Position == targetPosition);
 
-            if (sourceIndex < 0)
+            if (sourceItem is null)
             {
                 var msg = "swaping empty positions";
                 logger.LogWarning(msg);
                 return BadRequest(msg);
             }
 
-            var sourceItem = inventory.InventoryItems.ElementAt(sourceIndex);
             var sourcePosition = sourceItem.Position;
             sourceItem.Position = targetPosition;
 
 
-            if (targetIndex >= 0)
+            if (targetItem is not null)
             {
-                var targetItem = inventory.InventoryItems.ElementAt(targetIndex);
                 targetItem.Position = sourcePosition;
             }
 
@@ -115,16 +113,14 @@ namespace MysticLegendsServer.Controllers
                 return StatusCode(403, "Unauthorized");
 
             var character = await RequestCharacterItems(characterName);
-            var inventoryItems = (List<InventoryItem>)character.CharacterInventory!.InventoryItems;
-            var equipedItems = (List<InventoryItem>)character.InventoryItems;
+            var inventoryItems = character.CharacterInventory!.InventoryItems;
+            var equipedItems = character.InventoryItems;
 
             var itemToEquipId = int.Parse(paramters["equipItemId"]);
-            var itemToEquipIndex = inventoryItems.FindIndex(item => item.InvitemId == itemToEquipId);
+            var itemToEquip = inventoryItems.SingleOrDefault(item => item.InvitemId == itemToEquipId);
 
-            if (itemToEquipIndex < 0)
+            if (itemToEquip is null)
                 return BadRequest("didn't find the requested item");
-
-            var itemToEquip = inventoryItems[itemToEquipIndex];
 
             if (!((ItemType)itemToEquip.Item.ItemType).IsEquipable())
             {
@@ -133,7 +129,7 @@ namespace MysticLegendsServer.Controllers
                 return BadRequest(msg);
             }
 
-            if (equipedItems.Find(item => item.Item.ItemType == itemToEquip.Item.ItemType) is not null)
+            if (equipedItems.SingleOrDefault(item => item.Item.ItemType == itemToEquip.Item.ItemType) is not null)
             {
                 var msg = "trying to equip already equiped item type";
                 logger.LogWarning(msg);
@@ -141,7 +137,7 @@ namespace MysticLegendsServer.Controllers
             }
 
             equipedItems.Add(itemToEquip);
-            inventoryItems.RemoveAt(itemToEquipIndex);
+            inventoryItems.Remove(itemToEquip);
 
             await dbContext.SaveChangesAsync();
             return Ok(character);
@@ -154,22 +150,21 @@ namespace MysticLegendsServer.Controllers
                 return StatusCode(403, "Unauthorized");
 
             var character = await RequestCharacterItems(characterName);
-            var inventoryItems = (List<InventoryItem>)character.CharacterInventory!.InventoryItems;
-            var equipedItems = (List<InventoryItem>)character.InventoryItems;
+            var inventoryItems = character.CharacterInventory!.InventoryItems;
+            var equipedItems = character.InventoryItems;
 
             var itemToUnequipId = int.Parse(paramters["unequipItemId"]);
-            var itemToUnequipIndex = equipedItems.FindIndex(item => item.InvitemId == itemToUnequipId);
+            var itemToUnequip = equipedItems.SingleOrDefault(item => item.InvitemId == itemToUnequipId);
 
             var strposition = paramters.Get("position");
 
-            if (itemToUnequipIndex < 0)
+            if (itemToUnequip is null)
             {
                 var msg = "didn't find the requested item";
                 logger.LogWarning(msg);
                 return BadRequest(msg);
             }
 
-            var itemToUnequip = equipedItems[itemToUnequipIndex];
             var desiredPosition = strposition is not null ? int.Parse(strposition) : itemToUnequip.Position;
 
             var newPosition = InventoryHandling.FindPositionInInventory(character.CharacterInventory, desiredPosition);
@@ -184,7 +179,7 @@ namespace MysticLegendsServer.Controllers
             itemToUnequip.Position = (int)newPosition;
 
             inventoryItems.Add(itemToUnequip);
-            equipedItems.RemoveAt(itemToUnequipIndex);
+            equipedItems.Remove(itemToUnequip);
 
             await dbContext.SaveChangesAsync();
             return Ok(character);
@@ -197,30 +192,27 @@ namespace MysticLegendsServer.Controllers
                 return StatusCode(403, "Unauthorized");
 
             var character = await RequestCharacterItems(characterName);
-            var inventoryItems = (List<InventoryItem>)character.CharacterInventory!.InventoryItems;
-            var equipedItems = (List<InventoryItem>)character.InventoryItems;
+            var inventoryItems = character.CharacterInventory!.InventoryItems;
+            var equipedItems = character.InventoryItems;
 
             var itemToEquipId = int.Parse(paramters["equipItemId"]);
-            var itemToEquipIndex = inventoryItems.FindIndex(item => item.InvitemId == itemToEquipId);
+            var itemToEquip = inventoryItems.SingleOrDefault(item => item.InvitemId == itemToEquipId);
 
-            if (itemToEquipIndex < 0)
+            if (itemToEquip is null)
             {
                 var msg = "didn't find the requested item";
                 logger.LogWarning(msg);
                 return BadRequest(msg);
             }
 
-            var itemToUnequipIndex = equipedItems.FindIndex(item => item.Item.ItemType == inventoryItems[itemToEquipIndex].Item.ItemType);
+            var itemToUnequip = equipedItems.SingleOrDefault(item => item.Item.ItemType == itemToEquip.Item.ItemType);
 
-            if (itemToUnequipIndex < 0)
+            if (itemToUnequip is null)
             {
                 var msg = "didn't find the right item to be unequiped";
                 logger.LogWarning(msg);
                 return BadRequest(msg);
             }
-
-            var itemToEquip = inventoryItems[itemToEquipIndex];
-            var itemToUnequip = equipedItems[itemToUnequipIndex];
 
             if (!((ItemType)itemToEquip.Item.ItemType).IsEquipable())
             {
@@ -232,9 +224,9 @@ namespace MysticLegendsServer.Controllers
             itemToUnequip.Position = itemToEquip.Position;
 
             equipedItems.Add(itemToEquip);
-            inventoryItems.RemoveAt(itemToEquipIndex);
+            inventoryItems.Remove(itemToEquip);
             inventoryItems.Add(itemToUnequip);
-            equipedItems.RemoveAt(itemToUnequipIndex);
+            equipedItems.Remove(itemToUnequip);
 
             await dbContext.SaveChangesAsync();
             return Ok(character);
