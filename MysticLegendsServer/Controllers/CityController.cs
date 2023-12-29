@@ -34,6 +34,12 @@ public class CityController : Controller
         return cinv;
     }
 
+    private Task<string> GetCharacterCityAsync(string characterName) =>
+        dbContext.Characters
+        .Where(character => character.CharacterName == characterName)
+        .Select(character => character.CityName)
+        .SingleAsync();
+
     private async Task<CityInventory> GetCityInventoryAsync(string city, string characterName)
     {
         var invitems = await dbContext.CityInventories
@@ -54,6 +60,13 @@ public class CityController : Controller
         if (!await auth.ValidateAsync(Request.Headers, characterName))
             return StatusCode(403, "Unauthorized");
 
+        if (await GetCharacterCityAsync(characterName) != city)
+        {
+            var msg = "character is not in the city";
+            logger.LogWarning(msg);
+            return BadRequest(msg);
+        }
+
         return Ok(await GetCityInventoryAsync(city, characterName));
     }
 
@@ -66,6 +79,13 @@ public class CityController : Controller
 
         if (!await auth.ValidateAsync(Request.Headers, characterName))
             return StatusCode(403, "Unauthorized");
+
+        if (await GetCharacterCityAsync(characterName) != city)
+        {
+            var msg = "character is not in the city";
+            logger.LogWarning(msg);
+            return BadRequest(msg);
+        }
 
         var storage = await GetCityInventoryAsync(city, characterName);
 
@@ -83,7 +103,6 @@ public class CityController : Controller
 
         var sourcePosition = sourceItem.Position;
         sourceItem.Position = targetPosition;
-
 
         if (targetItem is not null)
         {
@@ -105,23 +124,105 @@ public class CityController : Controller
         if (!await auth.ValidateAsync(Request.Headers, characterName))
             return StatusCode(403, "Unauthorized");
 
-        var inventory = await dbContext.CharacterInventories
-            .Include(inventory => inventory.InventoryItems)
-                .ThenInclude(item => item.Item)
-            .Include(inventory => inventory.InventoryItems)
-                .ThenInclude(item => item.BattleStats)
-            .SingleAsync(inv => inv.CharacterName == characterName);
+        if (await GetCharacterCityAsync(characterName) != city)
+        {
+            var msg = "character is not in the city";
+            logger.LogWarning(msg);
+            return BadRequest(msg);
+        }
 
         var storage = await GetCityInventoryAsync(city, characterName);
 
-        var invItems = inventory.InventoryItems;
-        var storageItems = storage.InventoryItems;
+        var sourceItem = await dbContext.InventoryItems
+            .Where(invitem => invitem.InvitemId == itemToMove)
+            .Include(invitem => invitem.BattleStats)
+            .Include(invitem => invitem.Item)
+            .SingleAsync();
 
-        var sourceIndex = invItems.Where(item => item.InvitemId == itemToMove);
+        if (sourceItem.CharacterInventoryCharacterN != characterName)
+        {
+            var msg = $"character {characterName} do not have item in inventory";
+            logger.LogWarning(msg);
+            return BadRequest(msg);
+        }
 
+        var position = InventoryHandling.FindPositionInInventory(storage, targetPosition);
+
+        if (position is null)
+        {
+            var msg = $"cannot store item. storage is full";
+            logger.LogWarning(msg);
+            return BadRequest(msg);
+        }
+
+        sourceItem.Position = position.Value;
+        sourceItem.CharacterInventoryCharacterN = null;
+        sourceItem.CityInventoryCharacterName = characterName;
+        sourceItem.CityName = city;
+
+        storage.InventoryItems.Add(sourceItem);
 
         await dbContext.SaveChangesAsync();
 
         return Ok(storage);
+    }
+
+    [HttpPost("{city}/storage/retrieve")]
+    public async Task<ObjectResult> RetreiveItem(string city, [FromBody] Dictionary<string, string> paramters)
+    {
+        var characterName = paramters["characterName"];
+        var itemToMove = int.Parse(paramters["itemId"]);
+        var targetPosition = int.Parse(paramters["position"]);
+
+        if (!await auth.ValidateAsync(Request.Headers, characterName))
+            return StatusCode(403, "Unauthorized");
+
+        var sourceItem = await dbContext.InventoryItems
+            .Where(invitem => invitem.InvitemId == itemToMove)
+            .Include(invitem => invitem.BattleStats)
+            .Include(invitem => invitem.Item)
+            .SingleAsync();
+
+        if (await GetCharacterCityAsync(characterName) != sourceItem.CityName)
+        {
+            var msg = "character is not in the city";
+            logger.LogWarning(msg);
+            return BadRequest(msg);
+        }
+
+        var inventoryItems = await dbContext.CharacterInventories
+            .Where(inventory => inventory.CharacterName == characterName)
+            .Include(inventory => inventory.InventoryItems)
+                 .ThenInclude(invitem => invitem.Item)
+             .Include(inventory => inventory.InventoryItems)
+                 .ThenInclude(invitem => invitem.BattleStats)
+             .SingleAsync();
+
+        if (sourceItem.CityInventoryCharacterName != characterName)
+        {
+            var msg = $"character {characterName} do not have item in inventory";
+            logger.LogWarning(msg);
+            return BadRequest(msg);
+        }
+
+        var position = InventoryHandling.FindPositionInInventory(inventoryItems, targetPosition);
+
+        if (position is null)
+        {
+            var msg = $"cannot retreive item. inventory is full";
+            logger.LogWarning(msg);
+            return BadRequest(msg);
+        }
+
+        sourceItem.Position = position.Value;
+        sourceItem.CharacterInventoryCharacterN = characterName;
+        sourceItem.CityInventoryCharacterName = null;
+        sourceItem.CityName = null;
+
+        inventoryItems.InventoryItems.Add(sourceItem);
+
+        await dbContext.SaveChangesAsync();
+
+        return Ok(inventoryItems);
     }
 }
