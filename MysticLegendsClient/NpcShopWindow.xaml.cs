@@ -71,7 +71,7 @@ namespace MysticLegendsClient
                 // buy item by clicking
                 var response = MessageBox.Show("Do you want to buy this item?", "buy", MessageBoxButton.YesNo);
                 if (response == MessageBoxResult.Yes)
-                    BuyItem(args.FromSlot.Item!.InvitemId, args.ToSlot.GridPosition);
+                    BuyItem(args.FromSlot.Item!.InvitemId, 0);
             }
 
             else if (args.IsHandover)
