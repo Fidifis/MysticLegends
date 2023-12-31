@@ -73,7 +73,8 @@ namespace MysticLegendsClient
         {
             if (sender == inventoryView)
             {
-                ApiCalls.CharacterCall.SwapServerCall(this, args.FromSlot.Item!.InvitemId, args.ToSlot.GridPosition);
+                if (!IItemView.IsSlotLocked(args.FromSlot) && !IItemView.IsSlotLocked(args.ToSlot))
+                    ApiCalls.CharacterCall.SwapServerCall(this, args.FromSlot.Item!.InvitemId, args.ToSlot.GridPosition);
             }
             else if (sender == characterView)
             {

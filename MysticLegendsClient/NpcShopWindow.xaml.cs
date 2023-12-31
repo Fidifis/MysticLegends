@@ -1,5 +1,6 @@
 ﻿using MysticLegendsClient.Controls;
 using MysticLegendsShared.Models;
+using System.Diagnostics;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -38,6 +39,7 @@ namespace MysticLegendsClient
         protected void ChangeToView(FrameworkElement toShow)
         {
             sellViewInventory.CloseRelations();
+            UpdateSellPrice();
             foreach (var element in views)
             {
                 if (element == toShow)
@@ -49,6 +51,12 @@ namespace MysticLegendsClient
 
         protected void UpdateSellPrice()
         {
+            if (!sellViewInventory.Items.Any())
+            {
+                priceTextBox.Text = "0";
+                return;
+            }
+            
             ErrorCatcher.Try(async () =>
             {
                 var price = await ApiCalls.NpcCall.GetOfferedPriceServerCallAsync(NpcId, sellViewInventory.Items);

@@ -85,6 +85,8 @@ public interface IItemView
     public void CloseRelations();
 
     public ItemViewRelation? GetRelationBySlot(ItemSlot slot);
+
+    public static bool IsSlotLocked(ItemSlot slot) => slot.Owner.GetRelationBySlot(slot) is not null;
 }
 
 public abstract class ItemViewUserControl : UserControl, IItemView
