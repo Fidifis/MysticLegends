@@ -75,6 +75,7 @@ public interface IItemView
         args.FromSlot.Owner.InvokeItemDropEvent(args.ToSlot.Owner, args);
     }
 
+    public bool CanMoveItems { get; }
     public bool CanTransitItems { get; }
     //public ICollection<ItemViewRelation> ViewRelations { get; }
     public void AddRelation(ItemViewRelation relation);
@@ -102,6 +103,7 @@ public abstract class ItemViewUserControl : UserControl, IItemView
 
     //public abstract ItemSlot GetSlotByPosition(int position);
 
+    public virtual bool CanMoveItems { get; set; } = false;
     public virtual bool CanTransitItems { get; set; } = false;
     protected LinkedList<ItemViewRelation> ViewRelations { get; init; } = new();
 
@@ -113,12 +115,18 @@ public abstract class ItemViewUserControl : UserControl, IItemView
 
     protected virtual void HandleDrag(ItemSlot itemSlot)
     {
+        if (!CanMoveItems)
+            return;
+
         var data = new DataObject(typeof(ItemSlot), itemSlot);
         DragDrop.DoDragDrop(this, data, DragDropEffects.Move);
     }
 
     protected virtual void HandleDrop(ItemSlot itemSlot, DragEventArgs e)
     {
+        if (!CanMoveItems)
+            return;
+
         if (e.Data.GetDataPresent(typeof(ItemSlot)))
         {
             var sourceSlot = (ItemSlot)e.Data.GetData(typeof(ItemSlot));

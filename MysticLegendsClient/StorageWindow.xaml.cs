@@ -16,6 +16,7 @@ public partial class StorageWindow : Window, ISingleInstanceWindow
         InitializeComponent();
         this.cityName = cityName;
         inventoryView.ItemDropEvent += ItemDrop;
+        inventoryView.CanMoveItems = true;
     }
 
     public void ShowWindow()

@@ -20,9 +20,11 @@ namespace MysticLegendsClient
             characterView.ItemDropEvent += InventoryDropOnCharacter;
             inventoryView.ItemDropEvent += InventoryDropOnInventory;
 
+            characterView.CanMoveItems = true;
+            inventoryView.CanMoveItems = true;
             inventoryView.CanTransitItems = true;
 
-           // TODO: Unsubscribe events - data being rerendered even when window is closed. Also the lambda captures ref to this or characterView and it cannot be garbage collected.
+            // TODO: Unsubscribe events - data being rerendered even when window is closed. Also the lambda captures ref to this or characterView and it cannot be garbage collected.
             GameState.Current.GameEvents.CharacterInventoryUpdateEvent += (object? sender, UpdateEventArgs<IReadOnlyCollection<InventoryItem>> e) =>
                 inventoryView.Items = e.Value;
 

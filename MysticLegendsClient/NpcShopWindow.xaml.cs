@@ -1,6 +1,5 @@
 ﻿using MysticLegendsClient.Controls;
 using MysticLegendsShared.Models;
-using System.Diagnostics;
 using System.Windows;
 
 namespace MysticLegendsClient
@@ -23,6 +22,8 @@ namespace MysticLegendsClient
             buyView.ItemDropEvent += ItemDropBuy;
             sellViewInventory.ItemDropEvent += ItemDropSell;
 
+            buyView.CanMoveItems = true;
+            sellViewInventory.CanMoveItems = true;
             sellViewInventory.CanTransitItems = true;
         }
 
