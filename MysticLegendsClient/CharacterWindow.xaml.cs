@@ -89,5 +89,10 @@ namespace MysticLegendsClient
             else
                 IItemView.DropEventHandover(args);
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            inventoryView.CloseRelations();
+        }
     }
 }
