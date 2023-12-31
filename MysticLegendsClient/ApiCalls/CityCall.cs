@@ -35,7 +35,7 @@ internal static class CityCall
         return GameState.Current.Connection.PostAsync<CityInventory>($"/api/City/{city}/storage/store", parameters);
     }
 
-    public static Task<CityInventory> RetreiveItemAsync(string city, int invitemId, int position)
+    public static Task<CharacterInventory> RetreiveItemAsync(string city, int invitemId, int position)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -43,6 +43,6 @@ internal static class CityCall
             ["itemId"] = invitemId.ToString(),
             ["position"] = position.ToString(),
         };
-        return GameState.Current.Connection.PostAsync<CityInventory>($"/api/City/{city}/storage/retrieve", parameters);
+        return GameState.Current.Connection.PostAsync<CharacterInventory>($"/api/City/{city}/storage/retrieve", parameters);
     }
 }

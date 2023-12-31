@@ -194,9 +194,9 @@ public class CityController : Controller
             .Where(inventory => inventory.CharacterName == characterName)
             .Include(inventory => inventory.InventoryItems)
                  .ThenInclude(invitem => invitem.Item)
-             .Include(inventory => inventory.InventoryItems)
+            .Include(inventory => inventory.InventoryItems)
                  .ThenInclude(invitem => invitem.BattleStats)
-             .SingleAsync();
+            .SingleAsync();
 
         if (sourceItem.CityInventoryCharacterName != characterName)
         {
