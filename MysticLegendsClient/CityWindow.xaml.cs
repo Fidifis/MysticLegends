@@ -86,7 +86,7 @@ namespace MysticLegendsClient
                     AddButton("Potions", Icons.city_potions, (_, _) => { window.Instance.ShowWindow(); });
                     break;
                 case NpcType.Trader:
-                    window = new(typeof(BlacksmithNpc), npcId);
+                    window = new(typeof(TradeWindow), cityName);
                     AddButton("Trade Market", Icons.city_tradeMarket, (_, _) => { window.Instance.ShowWindow(); });
                     break;
                 case NpcType.StorageKeeper:
