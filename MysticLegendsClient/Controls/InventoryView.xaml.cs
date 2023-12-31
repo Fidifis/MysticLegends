@@ -127,6 +127,13 @@ namespace MysticLegendsClient.Controls
             ItemSlots[slot2.GridPosition].Image.Source = image;
         }
 
+        private void SwapItemsStackCount(ItemSlot slot1, ItemSlot slot2)
+        {
+            var count = ItemSlots[slot1.GridPosition].Label.Content;
+            ItemSlots[slot1.GridPosition].Label.Content = ItemSlots[slot2.GridPosition].Label.Content;
+            ItemSlots[slot2.GridPosition].Label.Content = count;
+        }
+
         private void SwapItemsRelation(ItemViewRelation? relation, ItemSlot slot1, ItemSlot slot2)
         {
             
@@ -148,6 +155,7 @@ namespace MysticLegendsClient.Controls
             SwapItemsData(slot1, slot2);
             SwapItemsImage(slot1, slot2);
             SwapItemsPostion(slot1, slot2);
+            SwapItemsStackCount(slot1, slot2);
 
             var relation1 = GetRelationBySlot(slot1);
             var relation2 = GetRelationBySlot(slot2);

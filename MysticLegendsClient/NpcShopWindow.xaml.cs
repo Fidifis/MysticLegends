@@ -93,8 +93,8 @@ namespace MysticLegendsClient
             {
                 // Item leaves sell grid and new position in inventory is set
                 var relationFromSlot = sender.GetRelationBySlot(args.FromSlot)!;
-                sender.InvokeItemDropEvent(sender, new ItemDropEventArgs(relationFromSlot.ManagedSlot, args.ToSlot)); // or do a server call for inventory swap
                 sellViewInventory.CloseRelation(relationFromSlot);
+                sender.InvokeItemDropEvent(sender, new ItemDropEventArgs(relationFromSlot.ManagedSlot, args.ToSlot)); // or do a server call for inventory swap
                 UpdateSellPrice();
             }
             else
