@@ -7,20 +7,20 @@ namespace MysticLegendsServer.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class CityController : Controller
+public class StorageController : Controller
 {
     private readonly Xdigf001Context dbContext;
     private readonly ILogger<CharacterController> logger;
     private readonly Auth auth;
 
-    public CityController(ILogger<CharacterController> logger, Auth auth, Xdigf001Context context)
+    public StorageController(ILogger<CharacterController> logger, Auth auth, Xdigf001Context context)
     {
         dbContext = context;
         this.logger = logger;
         this.auth = auth;
     }
 
-    private async Task<CityInventory> CreateCityInventory(string characterName, string cityName)
+    public static CityInventory CreateCityInventory(string characterName, string cityName, Xdigf001Context dbContext)
     {
         var cinv = new CityInventory {
             CityName = cityName,
@@ -29,7 +29,7 @@ public class CityController : Controller
         };
 
         dbContext.CityInventories.Add(cinv);
-        await dbContext.SaveChangesAsync();
+        // await dbContext.SaveChangesAsync(); // I consider this as side effect
 
         return cinv;
     }
@@ -40,7 +40,7 @@ public class CityController : Controller
         .Select(character => character.CityName)
         .SingleAsync();
 
-    private async Task<CityInventory> GetCityInventoryAsync(string city, string characterName)
+    public static async Task<CityInventory> GetCityInventoryAsync(string city, string characterName, Xdigf001Context dbContext)
     {
         var invitems = await dbContext.CityInventories
              .Where(citem => citem.CharacterName == characterName && citem.CityName == city)
@@ -48,13 +48,18 @@ public class CityController : Controller
                  .ThenInclude(invitem => invitem.Item)
              .Include(citem => citem.InventoryItems)
                  .ThenInclude(invitem => invitem.BattleStats)
+             .Include(citem => citem.InventoryItems)
+                 .ThenInclude(invitem => invitem.Price)
              .SingleOrDefaultAsync();
 
-        invitems ??= await CreateCityInventory(characterName, city);
+        invitems ??= CreateCityInventory(characterName, city, dbContext);
         return invitems;
     }
 
-    [HttpGet("{city}/storage")]
+    private Task<CityInventory> GetCityInventoryAsync(string city, string characterName) =>
+        GetCityInventoryAsync(city, characterName, dbContext);
+
+    [HttpGet("{city}/list")]
     public async Task<ObjectResult> GetStorage(string city, string characterName)
     {
         if (!await auth.ValidateAsync(Request.Headers, characterName))
@@ -70,7 +75,7 @@ public class CityController : Controller
         return Ok(await GetCityInventoryAsync(city, characterName));
     }
 
-    [HttpPost("{city}/storage/swap")]
+    [HttpPost("{city}/swap")]
     public async Task<ObjectResult> SwapStorageItem(string city, [FromBody] Dictionary<string, string> paramters)
     {
         var characterName = paramters["characterName"];
@@ -114,7 +119,7 @@ public class CityController : Controller
         return Ok(storage);
     }
 
-    [HttpPost("{city}/storage/store")]
+    [HttpPost("{city}/store")]
     public async Task<ObjectResult> StoreItem(string city, [FromBody] Dictionary<string, string> paramters)
     {
         var characterName = paramters["characterName"];
@@ -167,7 +172,7 @@ public class CityController : Controller
         return Ok(storage);
     }
 
-    [HttpPost("{city}/storage/retrieve")]
+    [HttpPost("{city}/retrieve")]
     public async Task<ObjectResult> RetreiveItem(string city, [FromBody] Dictionary<string, string> paramters)
     {
         var characterName = paramters["characterName"];
@@ -181,11 +186,19 @@ public class CityController : Controller
             .Where(invitem => invitem.InvitemId == itemToMove)
             .Include(invitem => invitem.BattleStats)
             .Include(invitem => invitem.Item)
+            .Include(invitem => invitem.Price)
             .SingleAsync();
 
         if (await GetCharacterCityAsync(characterName) != sourceItem.CityName)
         {
             var msg = "character is not in the city";
+            logger.LogWarning(msg);
+            return BadRequest(msg);
+        }
+
+        if (sourceItem.Price is not null)
+        {
+            var msg = "item is offered at trade market and cannot be trasfered to inventory";
             logger.LogWarning(msg);
             return BadRequest(msg);
         }

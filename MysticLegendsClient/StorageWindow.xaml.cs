@@ -33,7 +33,7 @@ public partial class StorageWindow : Window, ISingleInstanceWindow
     {
         await ErrorCatcher.TryAsync(async () =>
         {
-            var inventory = await ApiCalls.CityCall.GetCityStorageAsync(cityName);
+            var inventory = await ApiCalls.StorageCall.GetCityStorageAsync(cityName);
             inventoryView.FillData(inventory.InventoryItems, inventory.Capacity);
         });
     }
@@ -45,7 +45,7 @@ public partial class StorageWindow : Window, ISingleInstanceWindow
             // Moving items within storage
             _=ErrorCatcher.TryAsync(async () =>
             {
-                var inventory = await ApiCalls.CityCall.SwapStorageItemAsync(cityName, args.FromSlot.Item!.InvitemId, args.ToSlot.GridPosition);
+                var inventory = await ApiCalls.StorageCall.SwapStorageItemAsync(cityName, args.FromSlot.Item!.InvitemId, args.ToSlot.GridPosition);
                 inventoryView.FillData(inventory.InventoryItems, inventory.Capacity);
             });
         }
@@ -54,7 +54,7 @@ public partial class StorageWindow : Window, ISingleInstanceWindow
             // Transfering item to character inventory
             _=ErrorCatcher.TryAsync(async () =>
             {
-                var inventory = await ApiCalls.CityCall.RetreiveItemAsync(cityName, args.FromSlot.Item!.InvitemId, args.ToSlot.GridPosition);
+                var inventory = await ApiCalls.StorageCall.RetreiveItemAsync(cityName, args.FromSlot.Item!.InvitemId, args.ToSlot.GridPosition);
                 GameState.Current.GameEvents.CharacterInventoryUpdate(sender, new(inventory.InventoryItems.AsReadOnly()));
                 await RefreshStorageItems();
             });
@@ -64,7 +64,7 @@ public partial class StorageWindow : Window, ISingleInstanceWindow
             // Transfering item to storage
             _=ErrorCatcher.TryAsync(async () =>
             {
-                var inventory = await ApiCalls.CityCall.StoreItemAsync(cityName, args.FromSlot.Item!.InvitemId, args.ToSlot.GridPosition);
+                var inventory = await ApiCalls.StorageCall.StoreItemAsync(cityName, args.FromSlot.Item!.InvitemId, args.ToSlot.GridPosition);
                 inventoryView.FillData(inventory.InventoryItems, inventory.Capacity);
                 ApiCalls.CharacterCall.UpdateCharacter(this, GameState.Current.CharacterName);
             });

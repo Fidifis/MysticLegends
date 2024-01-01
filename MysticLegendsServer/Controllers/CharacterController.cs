@@ -3,9 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using MysticLegendsServer.Models;
 using MysticLegendsShared.Models;
 using MysticLegendsShared.Utilities;
-using System.Collections.Immutable;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace MysticLegendsServer.Controllers
 {
@@ -26,9 +23,15 @@ namespace MysticLegendsServer.Controllers
             this.rng = rng;
         }
 
-        private async Task<Character> RequestCharacterItems(string characterName)
+        //public static Task<string> GetCharacterCityAsync(string characterName, Xdigf001Context dbContext) =>
+        //    dbContext.Characters
+        //        .Where(character => character.CharacterName == characterName)
+        //        .Select(character => character.CityName)
+        //        .SingleAsync();
+
+        private Task<Character> RequestCharacterItems(string characterName)
         {
-            return await dbContext.Characters
+            return dbContext.Characters
                 .Include(character => character.CharacterInventory)
                     .ThenInclude(inventory => inventory!.InventoryItems)
                     .ThenInclude(item => item.Item)
