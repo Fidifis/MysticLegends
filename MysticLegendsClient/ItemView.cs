@@ -1,4 +1,5 @@
 ﻿using MysticLegendsShared.Models;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -38,6 +39,12 @@ public class ItemViewRelation
         managedSlot.Owner.AddRelation(relation);
         transitSlot.Owner.AddRelation(relation);
         return true;
+    }
+
+    public void CloseRelation()
+    {
+        ManagedSlot.Owner.RemoveRelationFromManaged(ManagedSlot);
+        TransitSlot.Owner.RemoveRelationFromTransit(TransitSlot);
     }
 }
 
@@ -82,7 +89,7 @@ public interface IItemView
     public void RemoveRelationFromManaged(ItemSlot managed);
     public void RemoveRelationFromTransit(ItemSlot transit);
 
-    public void CloseRelation(ItemViewRelation relation);
+    //public void CloseRelation(ItemViewRelation relation);
     public void CloseRelations();
 
     public ItemViewRelation? GetRelationBySlot(ItemSlot slot);
@@ -107,9 +114,14 @@ public abstract class ItemViewUserControl : UserControl, IItemView
     public virtual bool CanTransitItems { get; set; } = false;
     protected LinkedList<ItemViewRelation> ViewRelations { get; init; } = new();
 
-    public virtual void AddRelation(ItemViewRelation relation) { }
-    public virtual void RemoveRelationFromManaged(ItemSlot managed) { }
-    public virtual void RemoveRelationFromTransit(ItemSlot transit) { }
+    public virtual void AddRelation(ItemViewRelation relation)
+    {
+        Debug.Assert(CanTransitItems, "Relation should be added only on views with transition");
+        ViewRelations.AddLast(relation);
+    }
+
+    public virtual void RemoveRelationFromManaged(ItemSlot managed) => ViewRelations.Remove(GetRelationBySlot(managed)!);
+    public virtual void RemoveRelationFromTransit(ItemSlot transit) => ViewRelations.Remove(GetRelationBySlot(transit)!);
 
     public virtual ItemViewRelation? GetRelationBySlot(ItemSlot slot) => ViewRelations.FirstOrDefault((relation) => relation.ManagedSlot == slot || relation.TransitSlot == slot);
 
@@ -136,18 +148,18 @@ public abstract class ItemViewUserControl : UserControl, IItemView
         }
     }
 
-    public void CloseRelation(ItemViewRelation relation)
-    {
-        relation.ManagedSlot.Owner.RemoveRelationFromManaged(relation.ManagedSlot);
-        relation.TransitSlot.Owner.RemoveRelationFromTransit(relation.TransitSlot);
-    }
+    //public void CloseRelation(ItemViewRelation relation)
+    //{
+    //    relation.ManagedSlot.Owner.RemoveRelationFromManaged(relation.ManagedSlot);
+    //    relation.TransitSlot.Owner.RemoveRelationFromTransit(relation.TransitSlot);
+    //}
 
     public void CloseRelations()
     {
         var relations = new List<ItemViewRelation>(ViewRelations);
         foreach (var relation in relations)
         {
-            CloseRelation(relation);
+            relation.CloseRelation();
         }
     }
 }

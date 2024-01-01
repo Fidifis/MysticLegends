@@ -94,14 +94,14 @@ namespace MysticLegendsClient
             {
                 // Item leaves sell grid and new position in inventory is set
                 var relationFromSlot = sender.GetRelationBySlot(args.FromSlot)!;
-                sellViewInventory.CloseRelation(relationFromSlot);
+                relationFromSlot.CloseRelation();
                 sender.InvokeItemDropEvent(sender, new ItemDropEventArgs(relationFromSlot.ManagedSlot, args.ToSlot)); // or do a server call for inventory swap
                 UpdateSellPrice();
             }
             else
             {
                 // remove from inventory view, add to sell grid
-                var itemCopy = PartialItemCopy(args.FromSlot.Item!);
+                var itemCopy = args.FromSlot.Item!.PartialCopy();
                 itemCopy.Position = args.ToSlot.GridPosition;
 
                 if (ItemViewRelation.EstablishRelation(args.FromSlot, args.ToSlot))
@@ -116,11 +116,6 @@ namespace MysticLegendsClient
             await ApiCalls.NpcCall.BuyItemServerCallAsync(this, NpcId, invitemId, position);
             ApiCalls.CharacterCall.UpdateCharacter(this, GameState.Current.CharacterName);
             await RefreshBuyView();
-        }
-
-        protected static InventoryItem PartialItemCopy(InventoryItem item)
-        {
-            return new InventoryItem() { InvitemId = item.InvitemId, Item = item.Item, BattleStats = item.BattleStats, StackCount = item.StackCount, Position = item.Position };
         }
 
         protected async Task RefreshBuyView()

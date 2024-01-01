@@ -28,4 +28,6 @@ public partial class InventoryItem
         }));
         return newItem;
     }
+
+    public InventoryItem PartialCopy() => new() { InvitemId = InvitemId, Item = Item, BattleStats = BattleStats, StackCount = StackCount, Position = Position };
 }

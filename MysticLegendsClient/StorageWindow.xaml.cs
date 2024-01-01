@@ -17,6 +17,7 @@ public partial class StorageWindow : Window, ISingleInstanceWindow
         this.cityName = cityName;
         inventoryView.ItemDropEvent += ItemDrop;
         inventoryView.CanMoveItems = true;
+        inventoryView.CanTransitItems = true;
     }
 
     public void ShowWindow()
@@ -69,5 +70,10 @@ public partial class StorageWindow : Window, ISingleInstanceWindow
                 ApiCalls.CharacterCall.UpdateCharacter(this, GameState.Current.CharacterName);
             });
         }
+    }
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+        inventoryView.CloseRelations();
     }
 }

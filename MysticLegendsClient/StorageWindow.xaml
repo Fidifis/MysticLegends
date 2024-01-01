@@ -7,7 +7,8 @@
         xmlns:local="clr-namespace:MysticLegendsClient"
         mc:Ignorable="d"
         Title="StorageWindow" Height="450" Width="800"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        Closed="Window_Closed">
     <Grid>
         <controls:InventoryView x:Name="inventoryView"/>
     </Grid>

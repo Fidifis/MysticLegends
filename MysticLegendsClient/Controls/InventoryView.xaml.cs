@@ -265,7 +265,7 @@ namespace MysticLegendsClient.Controls
 
         public override void AddRelation(ItemViewRelation relation)
         {
-            ViewRelations.AddLast(relation);
+            base.AddRelation(relation);
 
             if (relation.ManagedSlot.Owner == this)
             {
@@ -280,13 +280,13 @@ namespace MysticLegendsClient.Controls
 
         public override void RemoveRelationFromManaged(ItemSlot managed)
         {
-            ViewRelations.Remove(GetRelationBySlot(managed)!);
+            base.RemoveRelationFromManaged(managed);
             ItemLockVisual(managed.GridPosition, false);
         }
 
         public override void RemoveRelationFromTransit(ItemSlot transit)
         {
-            ViewRelations.Remove(GetRelationBySlot(transit)!);
+            base.RemoveRelationFromTransit(transit);
             SetSlot(transit.GridPosition, null);
         }
     }
