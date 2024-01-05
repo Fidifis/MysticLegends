@@ -43,6 +43,21 @@ Kromě obchodování s NPC bude existovat možnost hráčského obchodování. H
 
 Hra bude vyžadovat, aby uživatel vytvořil účet nebo se přihlásil pomocí existujícího účtu. To umožní uživateli ukládat svůj herní postup a přistupovat k hře z různých zařízení.
 
+## Tasklist
+
+- Registrace
+- Přihlášení
+- Výběr třídy postavy
+- Přijímání úkolů
+- Dokončování úkolů
+- Získávání zkušeností a herní měny za splněné úkoly
+- Boj s nepřátelskými postavami
+- Získávání zkušeností a předmětů z bojů
+- Nákup předmětů od obchodníků
+- Prodej předmětů s jinými hráči
+- Přesouvání předmětů v inventáři
+- Cestování mezi různými lokacemi
+
 ## Persony
 
 ### Persona A
@@ -326,9 +341,7 @@ Systém zobrazí:
 ![](graphic%20design/characterselect.png)
 ![](graphic%20design/city.png)
 ![](graphic%20design/world.png)
-![](graphic%20design/character.png)
 ![](graphic%20design/sell.png)
-![](graphic%20design/details.png)
 
 ## Figma Projekt
 
