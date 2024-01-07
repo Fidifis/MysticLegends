@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MysticLegendsServer.Models;
+using MysticLegendsShared.Models;
 using MysticLegendsShared.Utilities;
 using System.Text.Json;
 
@@ -21,9 +22,31 @@ namespace MysticLegendsServer.Controllers
             this.auth = auth;
         }
 
-        private static int EstimateSellPrice(int npcId, IReadOnlyCollection<int> items)
+        private static int EstimateSellPrice(NpcType npcType, IEnumerable<InventoryItem> items)
         {
-            return items.Count * 10;
+            return npcType switch
+            {
+                NpcType.Blacksmith => items.Where(item => ((ItemType)item.Item.ItemType).IsArmor())
+                .Sum(item => item.StackCount) * 100
+                + items.Where(item => (ItemType)item.Item.ItemType == ItemType.ArmorMaterial)
+                .Sum(item => item.StackCount) * 40
+                + items.Where(item => (ItemType)item.Item.ItemType != ItemType.ArmorMaterial && !((ItemType)item.Item.ItemType).IsArmor())
+                .Sum(item => item.StackCount) * 10,
+
+                NpcType.PotionsCrafter => items.Where(item => (ItemType)item.Item.ItemType == ItemType.PotionMaterial)
+                .Sum(item => item.StackCount) * 40
+                + items.Where(item => (ItemType)item.Item.ItemType == ItemType.Potion)
+                .Sum(item => item.StackCount) * 50
+                + items.Where(item => (ItemType)item.Item.ItemType is not (ItemType.PotionMaterial or ItemType.Potion))
+                .Sum(item => item.StackCount) * 10,
+
+                NpcType.RelicTrader => items.Where(item => (ItemType)item.Item.ItemType == ItemType.MagicItem)
+                .Sum(item => item.StackCount) * 500
+                + items.Where(item => (ItemType)item.Item.ItemType != ItemType.MagicItem)
+                .Sum(item => item.StackCount) * 10,
+
+                _ => items.Sum(item => item.StackCount) * 10,
+            };
         }
 
         [HttpGet("{npcId}/offered-items")]
@@ -50,9 +73,11 @@ namespace MysticLegendsServer.Controllers
                 return StatusCode(403, "Unauthorized");
 
             var jsonString = paramters["items"];
-            var items = JsonSerializer.Deserialize<List<int>>(jsonString)!;
+            var items = JsonSerializer.Deserialize<int[]>(jsonString)!;
 
-            return Ok(EstimateSellPrice(npcId, items));
+            var npcType = (NpcType) await dbContext.Npcs.Where(npc => npc.NpcId == npcId).Select(npc => npc.NpcType).SingleAsync();
+            var sellItems = await dbContext.InventoryItems.Where(item => items.Contains(item.InvitemId)).ToListAsync();
+            return Ok(EstimateSellPrice(npcType, sellItems));
         }
 
         [HttpPost("{npcId}/sell-items")]
@@ -65,13 +90,15 @@ namespace MysticLegendsServer.Controllers
 
             var jsonString = paramters["items"];
 
-            var items = JsonSerializer.Deserialize<List<int>>(jsonString)!;
-            var price = EstimateSellPrice(npcId, items);
-
-            var character = await dbContext.Characters.SingleAsync(character => character.CharacterName == characterString);
+            var items = JsonSerializer.Deserialize<int[]>(jsonString)!;
             var sellItems = await dbContext.InventoryItems.Where(item => items.Contains(item.InvitemId)).ToListAsync();
 
-            var npcCity = (await dbContext.Npcs.SingleAsync(npc => npc.NpcId == npcId)).CityName;
+            var character = await dbContext.Characters.SingleAsync(character => character.CharacterName == characterString);
+
+            var npc = await dbContext.Npcs.SingleAsync(npc => npc.NpcId == npcId);
+            var npcCity = npc.CityName;
+
+            var price = EstimateSellPrice((NpcType)npc.NpcType, sellItems);
 
             foreach(var item in sellItems)
             {

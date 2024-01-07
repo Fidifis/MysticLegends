@@ -14,7 +14,7 @@ public static class Extensions
 
     public static IReadOnlyCollection<T> AsReadOnly<T>(this ICollection<T> collection) => (IReadOnlyCollection<T>)collection;
 
-    public static bool IsEquipable(this ItemType itemType) => itemType switch
+    public static bool IsArmor(this ItemType itemType) => itemType switch
     {
         ItemType.Weapon
         or ItemType.BodyArmor
@@ -24,4 +24,5 @@ public static class Extensions
         => true,
         _ => false
     };
+    public static bool IsEquipable(this ItemType itemType) => IsArmor(itemType);
 }
